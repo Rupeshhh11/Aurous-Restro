@@ -7,24 +7,18 @@
     <title>Aurous Restro Lounge | Bistupur, Jamshedpur</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
-    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
 
-    <!-- Premium but Funny Preloader -->
     <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] preloader-transition">
         
-        <!-- Funny Food Plate Animation -->
         <div class="relative w-32 h-32 mb-4 flex items-center justify-center">
-            <!-- Inner plate outline -->
             <div class="w-24 h-24 bg-white/5 rounded-full border-4 border-dashed border-[#E0115F]/50 absolute animate-[spin_4s_linear_infinite]"></div>
             
-            <!-- Food element inside jumping -->
             <div class="text-6xl absolute plate-bounce">🍲</div>
             
-            <!-- Steam rising -->
             <div class="absolute -top-8 text-2xl opacity-0 animate-steam">♨️</div>
             <div class="absolute -top-10 left-8 text-xl opacity-0 animate-steam delay-300">♨️</div>
         </div>
@@ -33,13 +27,11 @@
             Cooking <span id="counter" class="text-white text-lg min-w-[3ch] ml-1">0%</span>
         </div>
         
-        <!-- Progress bar container -->
         <div class="w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
             <div id="progress-line" class="h-full bg-[#E0115F] w-0 transition-all duration-300 ease-out"></div>
         </div>
     </div>
 
-    <!-- Floating Glass Navbar -->
     <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-4 rounded-full z-50 flex justify-between items-center bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500" id="navbar">
         <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-[#E0115F] animate-pulse"></div>
@@ -56,11 +48,9 @@
     </nav>
 
     <main>
-        <!-- Modern Hero Section -->
         <section class="relative h-screen w-full flex items-center justify-center overflow-hidden px-6">
             <div class="absolute inset-0 z-[-1] scale-105 transform hero-bg">
                 <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#050505] z-10 block"></div>
-                <!-- Restored original background image -->
                 <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweo6qIt4umbTsiVpcC9as1I1n4ZlbqscZ1wFFr2jSgr0A0G922EaLLR71tBt1GPZtO3FlvCC_BjzW6sq8_IK40vDh62IyS8qO_lPp6Fk-k5EhPu64gdLPjy15fIyTNTcM-JjfjeXlw=s1360-w1360-h1020-rw"
                     class="w-full h-full object-cover" alt="Aurous Lounge">
             </div>
@@ -86,7 +76,6 @@
             </div>
         </section>
 
-        <!-- The Vibe (About) Section -->
         <section id="vibe" class="py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div class="w-full md:w-1/2 space-y-6">
                 <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold">Modern Dining</h4>
@@ -111,7 +100,6 @@
             </div>
         </section>
 
-        <!-- Horizontal Scrolling Menu Section -->
         <section id="menu" class="py-24 bg-[#0a0a0a]">
             <div class="px-6 md:px-12 max-w-7xl mx-auto flex justify-between items-end mb-12">
                 <div>
@@ -120,10 +108,8 @@
                 </div>
             </div>
 
-            <!-- Scroll Snapping Container -->
             <div id="menu-scroll" class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 hide-scrollbar">
                 
-                <!-- Card 1 -->
                 <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Roasted Chicken Chilli">
@@ -135,7 +121,6 @@
                     </div>
                 </div>
 
-                <!-- Card 2 -->
                 <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Premium Sizzler">
@@ -147,7 +132,6 @@
                     </div>
                 </div>
 
-                <!-- Card 3 -->
                 <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=1374" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Fish Fingers">
@@ -159,7 +143,6 @@
                     </div>
                 </div>
 
-                 <!-- Card 4 -->
                  <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
                         <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Cocktails">
@@ -173,7 +156,6 @@
             </div>
         </section>
 
-        <!-- Modern Marquee Reviews Section -->
         <section id="echoes" class="py-32 overflow-hidden border-t border-white/5 relative">
             <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505] z-10 pointer-events-none w-full h-full"></div>
             
@@ -184,7 +166,6 @@
 
             <div class="marquee-wrapper flex gap-6 w-full relative">
                 <div class="marquee-content flex gap-6 min-w-max animate-marquee">
-                    <!-- Review 1 -->
                     <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                         <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                         <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Amazing ambiance and beautifully designed interiors. The live music adds so much to the vibrant vibe. Great place for hanging out with friends."</p>
@@ -197,7 +178,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Review 2 -->
                     <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                         <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
                         <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"The Roasted Chicken Chilli and Fish Fingers were top notch. Service is fast and the overall dining experience was very premium."</p>
@@ -210,7 +190,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Review 3 -->
                     <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                         <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                         <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Aurous Restro Lounge is easily one of the best evening spots in Bistupur. Best family dining place with luxury feel and great crowd."</p>
@@ -223,7 +202,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Review 4 -->
                     <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                         <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
                         <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Highly recommend the Sizzling Brownie! The music can be a lit bit loud on weekends, but the energy of the crowd makes up for it."</p>
@@ -237,7 +215,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Duplicate array for endless scroll -->
                 <div class="marquee-content flex gap-6 min-w-max animate-marquee" aria-hidden="true">
                     <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
                         <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
@@ -291,7 +268,6 @@
             </div>
         </section>
 
-        <!-- Big Type Footer -->
         <footer class="bg-[#0a0a0a] pt-32 pb-12 px-6 md:px-12 border-t border-white/5 text-center">
             <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">Aurous</h1>
             
@@ -316,7 +292,6 @@
         </footer>
     </main>
 
-    <!-- Modern Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-login-bg"></div>
         <div class="relative z-10 w-full max-w-md p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl" id="login-box">

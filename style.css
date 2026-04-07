@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
-/* Reset and Base */
 :root {
-    --primary: #E0115F; /* Neon Pink */
+    --primary: #E0115F; 
     --bg: #050505;
 }
 
@@ -12,7 +11,6 @@ body {
     cursor: none;
 }
 
-/* Custom Cursor */
 .custom-cursor {
     width: 30px;
     height: 30px;
@@ -50,7 +48,6 @@ body {
     100% { opacity: 0; transform: translate(-50%, -150%) scale(0.5) rotate(30deg); }
 }
 
-/* Hide Scrollbar for Horizontal Scroll but keep functionality */
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
@@ -59,7 +56,6 @@ body {
     scrollbar-width: none;
 }
 
-/* Preloader Transition */
 .preloader-transition {
     transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
 }
@@ -70,7 +66,6 @@ body {
     transform: translateY(-20px) scale(1.05);
 }
 
-/* Navbar Scrolled State */
 .nav-scrolled {
     background: rgba(10, 10, 10, 0.85) !important;
     backdrop-filter: blur(20px) !important;
@@ -80,7 +75,6 @@ body {
     padding-bottom: 0.75rem !important;
 }
 
-/* Marquee Animation for Reviews */
 .animate-marquee {
     animation: scroll 35s linear infinite;
 }
@@ -94,7 +88,6 @@ body {
     animation-play-state: paused;
 }
 
-/* Make inputs look good on autofill */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
@@ -104,7 +97,6 @@ input:-webkit-autofill:active{
     transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Funny Preloader Animations */
 @keyframes plate-bounce {
     0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
     50% { transform: translateY(-15px) scale(1.1) rotate(8deg); }
