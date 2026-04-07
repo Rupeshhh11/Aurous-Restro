@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+/* Reset and Base */
+:root {
+    --primary: #E0115F; /* Neon Pink */
+    --bg: #050505;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: none;
+}
+
+/* Custom Cursor */
+.custom-cursor {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, background-color 0.15s;
+}
+
+.custom-cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+}
+
+.food-trail {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    font-size: 24px;
+    animation: fadeTrail 1s forwards ease-out;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes fadeTrail {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translate(-50%, -150%) scale(0.5) rotate(30deg); }
+}
+
+/* Hide Scrollbar for Horizontal Scroll but keep functionality */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Preloader Transition */
+.preloader-transition {
+    transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.preloader-transition.fade-out {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px) scale(1.05);
+}
+
+/* Navbar Scrolled State */
+.nav-scrolled {
+    background: rgba(10, 10, 10, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    border-color: rgba(224, 17, 95, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+/* Marquee Animation for Reviews */
+.animate-marquee {
+    animation: scroll 35s linear infinite;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% - 1.5rem)); }
+}
+
+.marquee-wrapper:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+/* Make inputs look good on autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #111 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Funny Preloader Animations */
+@keyframes plate-bounce {
+    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+    50% { transform: translateY(-15px) scale(1.1) rotate(8deg); }
+}
+.plate-bounce {
+    animation: plate-bounce 0.5s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+}
+
+@keyframes steam-rise {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+}
+.animate-steam {
+    animation: steam-rise 1.5s ease-out infinite;
+}
