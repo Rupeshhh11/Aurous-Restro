@@ -113,3 +113,97 @@ input:-webkit-autofill:active{
 .animate-steam {
     animation: steam-rise 1.5s ease-out infinite;
 }
+
+/* Custom Social Icons */
+.social-icons {
+    display: flex;
+    gap: 13px;
+    position: relative;
+    height: 55px;
+}
+
+.social-icons .icon-sz {
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+.social-icons .insta {
+    left: 0;
+}
+
+.social-icons .linked {
+    left: 53px;
+}
+
+.social-icons .git {
+    left: 106px;
+}
+
+.social-icons .tele {
+    left: 159px;
+}
+
+.social-icons .gift {
+    left: 212px;
+}
+
+.social-icons:has(.icon-sz:hover) .icon-sz:not(:hover) {
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
+}
+
+.social-icons .icon-sz:hover {
+    transform: scale(1.15);
+    z-index: 10;
+}
+
+.social-icons a {
+    width: 40px;
+    height: 40px;
+    background: #000000;
+    border-radius: 35%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.icon-sz a {
+    color: #706666;
+}
+
+/* Hover Backgrounds */
+.insta a:hover {
+    background: linear-gradient(-120deg, #FC09CC, #FC09CC, #FE0C74, #FE0C74, #FD4716, #FD7B0B);
+    color: hsl(0, 83%, 95%);
+    transform: translateY(-5px);
+}
+
+.linked a:hover {
+    background: #0A66C2;
+    color: #f1ecec;
+    transform: translateY(-5px);
+}
+
+.git a:hover {
+    background: #fceded;
+    color: #000;
+    transform: translateY(-5px);
+}
+
+.tele a:hover {
+    background: #43E961;
+    color: #f8e3e3;
+    transform: translateY(-5px);
+}
+
+.gift a:hover {
+    background: #32B1B8;
+    color: #2c2a2a;
+    transform: translateY(-5px);
+}
