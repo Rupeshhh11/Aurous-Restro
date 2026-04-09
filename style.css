@@ -131,20 +131,12 @@ input:-webkit-autofill:active{
     left: 0;
 }
 
-.social-icons .linked {
+.social-icons .tele {
     left: 53px;
 }
 
-.social-icons .git {
-    left: 106px;
-}
-
-.social-icons .tele {
-    left: 159px;
-}
-
 .social-icons .gift {
-    left: 212px;
+    left: 106px;
 }
 
 .social-icons:has(.icon-sz:hover) .icon-sz:not(:hover) {
@@ -181,18 +173,6 @@ input:-webkit-autofill:active{
 .insta a:hover {
     background: linear-gradient(-120deg, #FC09CC, #FC09CC, #FE0C74, #FE0C74, #FD4716, #FD7B0B);
     color: hsl(0, 83%, 95%);
-    transform: translateY(-5px);
-}
-
-.linked a:hover {
-    background: #0A66C2;
-    color: #f1ecec;
-    transform: translateY(-5px);
-}
-
-.git a:hover {
-    background: #fceded;
-    color: #000;
     transform: translateY(-5px);
 }
 
