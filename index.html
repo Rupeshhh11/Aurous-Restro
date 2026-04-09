@@ -101,10 +101,14 @@
         </section>
 
         <section id="menu" class="py-24 bg-[#0a0a0a]">
-            <div class="px-6 md:px-12 max-w-7xl mx-auto flex justify-between items-end mb-12">
+            <div class="px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
                 <div>
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-3">Signatures</h4>
                     <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Taste the bold.</h2>
+                </div>
+                <div class="flex gap-4">
+                    <button id="scroll-left" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-[#E0115F] hover:border-[#E0115F] transition-all duration-300 hover:shadow-[0_0_15px_rgba(224,17,95,0.4)] group bg-white/5"><i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i></button>
+                    <button id="scroll-right" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-[#E0115F] hover:border-[#E0115F] transition-all duration-300 hover:shadow-[0_0_15px_rgba(224,17,95,0.4)] group bg-white/5"><i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></button>
                 </div>
             </div>
 
@@ -156,114 +160,74 @@
             </div>
         </section>
 
-        <section id="echoes" class="py-32 overflow-hidden border-t border-white/5 relative">
-            <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505] z-10 pointer-events-none w-full h-full"></div>
-            
-            <div class="text-center mb-16 relative z-20">
-                <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
-                <h2 class="text-4xl md:text-5xl font-bold">Loved by Jamshedpur</h2>
-            </div>
-
-            <div class="marquee-wrapper flex gap-6 w-full relative">
-                <div class="marquee-content flex gap-6 min-w-max animate-marquee">
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Amazing ambiance and beautifully designed interiors. The live music adds so much to the vibrant vibe. Great place for hanging out with friends."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Ritika" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Ritika Verma</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local Guide</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"The Roasted Chicken Chilli and Fish Fingers were top notch. Service is fast and the overall dining experience was very premium."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Aman" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Aman Singh</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food Enthusiast</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Aurous Restro Lounge is easily one of the best evening spots in Bistupur. Best family dining place with luxury feel and great crowd."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Neha" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Neha Sharma</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur Resident</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Highly recommend the Sizzling Brownie! The music can be a lit bit loud on weekends, but the energy of the crowd makes up for it."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Vikas" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Vikas Das</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Visitor</span>
-                            </div>
-                        </div>
-                    </div>
+        <section id="echoes" class="py-32 overflow-hidden relative">
+            <div class="px-6 md:px-12 max-w-7xl mx-auto">
+                <div class="text-center mb-20 relative z-20">
+                    <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span></h2>
                 </div>
-                <div class="marquee-content flex gap-6 min-w-max animate-marquee" aria-hidden="true">
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Amazing ambiance and beautifully designed interiors. The live music adds so much to the vibrant vibe. Great place for hanging out with friends."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Ritika" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Ritika Verma</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local Guide</span>
+        
+                <div class="space-y-32">
+                    <!-- Review 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
+                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full"></div>
+                            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="Beautiful dish">
+                        </div>
+                        <div class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"A Culinary Masterpiece"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"The Roasted Chicken Chilli is perfectly balanced with flavors that dance on your palate. The presentation here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Ritika" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Ritika Verma</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local Guide</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"The Roasted Chicken Chilli and Fish Fingers were top notch. Service is fast and the overall dining experience was very premium."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Aman" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Aman Singh</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food Enthusiast</span>
+        
+                    <!-- Review 2 -->
+                    <div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-0 relative group">
+                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full"></div>
+                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="Sizzler">
+                        </div>
+                        <div class="w-full md:w-[45%] md:absolute md:left-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"The Premium Sizzler Experience"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"Their Chef's Special Sizzler is an absolute showstopper. Smoked perfectly with a rich aroma that takes over the room. The luxury interiors combined with top-notch food is an unbeatable combo."</p>
+                            <div class="flex items-center gap-4">
+                                 <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Aman" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Aman Singh</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food Enthusiast</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Aurous Restro Lounge is easily one of the best evening spots in Bistupur. Best family dining place with luxury feel and great crowd."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Neha" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Neha Sharma</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur Resident</span>
+        
+                    <!-- Review 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
+                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full"></div>
+                            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="Cocktails">
+                        </div>
+                        <div class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"Vibrant Evenings & Mixology"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"One of the best evening spots in Jamshedpur! The signature cocktails are a must-try. The music, the crowd, the drinks—everything is curated for a truly premium experience."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Neha" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Neha Sharma</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur Resident</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-[350px] p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                        <div class="flex gap-1 text-[#E0115F] text-sm mb-4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
-                        <p class="text-white/70 text-sm leading-relaxed font-light mb-8">"Highly recommend the Sizzling Brownie! The music can be a lit bit loud on weekends, but the energy of the crowd makes up for it."</p>
-                        <hr class="border-white/10 mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Vikas" class="w-10 h-10 rounded-full object-cover border border-white/10">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-sm tracking-wide">Vikas Das</h4>
-                                <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Visitor</span>
-                            </div>
-                        </div>
-                    </div>
+        
                 </div>
             </div>
         </section>
@@ -272,10 +236,29 @@
             <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">Aurous</h1>
             
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-16 border-t border-white/10 pt-12">
-                <div class="flex gap-6 text-xl">
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                <div class="social-icons mx-auto md:mx-0 w-[146px]">
+                    <div class="icon-sz insta">
+                        <a href="#" target="_blank" aria-label="Instagram">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="icon-sz tele">
+                        <a href="#" target="_blank" aria-label="WhatsApp">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd" d="M12 4a8 8 0 0 0-6.895 12.06l.569.718-.697 2.359 2.32-.648.379.243A8 8 0 1 0 12 4ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.96 9.96 0 0 1-5.016-1.347l-4.948 1.382 1.426-4.829-.006-.007-.033-.055A9.958 9.958 0 0 1 2 12Z" clip-rule="evenodd" />
+                                <path fill="currentColor" d="M16.735 13.492c-.038-.018-1.497-.736-1.756-.83a1.008 1.008 0 0 0-.34-.075c-.196 0-.362.098-.49.291-.146.217-.587.732-.723.886-.018.02-.042.045-.057.045-.013 0-.239-.093-.307-.123-1.564-.68-2.751-2.313-2.914-2.589-.023-.04-.024-.057-.024-.057.005-.021.058-.074.085-.101.08-.079.166-.182.249-.283l.117-.14c.121-.14.175-.25.237-.375l.033-.066a.68.68 0 0 0-.02-.64c-.034-.069-.65-1.555-.715-1.711-.158-.377-.366-.552-.655-.552-.027 0 0 0-.112.005-.137.005-.883.104-1.213.311-.35.22-.94.924-.94 2.16 0 1.112.705 2.162 1.008 2.561l.041.06c1.161 1.695 2.608 2.951 4.074 3.537 1.412.564 2.081.63 2.461.63.16 0 .288-.013.4-.024l.072-.007c.488-.043 1.56-.599 1.804-1.276.192-.534.243-1.117.115-1.329-.088-.144-.239-.216-.43-.308Z" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="icon-sz gift">
+                        <a href="#" target="_blank" aria-label="Gift">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 7h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C10.4 2.842 8.949 2 7.5 2A3.5 3.5 0 0 0 4 5.5c.003.52.123 1.033.351 1.5H4a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2Zm-9.942 0H7.5a1.5 1.5 0 0 1 0-3c.9 0 2 .754 3.092 2.122-.219.337-.392.635-.534.878Zm6.1 0h-3.742c.933-1.368 2.371-3 3.739-3a1.5 1.5 0 0 1 0 3h.003ZM13 14h-2v8h2v-8Zm-4 0H4v6a2 2 0 0 0 2 2h3v-8Zm6 0v8h3a2 2 0 0 0 2-2v-6h-5Z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="text-center md:text-left">
