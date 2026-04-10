@@ -117,26 +117,14 @@ input:-webkit-autofill:active{
 /* Custom Social Icons */
 .social-icons {
     display: flex;
-    gap: 13px;
+    flex-direction: column;
+    gap: 15px;
     position: relative;
-    height: 55px;
+    /* remove explicit height */
 }
 
 .social-icons .icon-sz {
-    position: absolute;
     transition: all 0.3s ease;
-}
-
-.social-icons .insta {
-    left: 0;
-}
-
-.social-icons .tele {
-    left: 53px;
-}
-
-.social-icons .gift {
-    left: 106px;
 }
 
 .social-icons:has(.icon-sz:hover) .icon-sz:not(:hover) {
@@ -151,8 +139,8 @@ input:-webkit-autofill:active{
 }
 
 .social-icons a {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     background: #000000;
     border-radius: 35%;
     object-fit: cover;
@@ -169,21 +157,75 @@ input:-webkit-autofill:active{
     color: #706666;
 }
 
+.tooltip {
+    position: absolute;
+    left: 60px; /* Display tooltip to the right instead of top to prevent overlap in column */
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tooltip::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid transparent; /* Colored based on parent hover */
+}
+
+.social-icons a:hover .tooltip {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
 /* Hover Backgrounds */
 .insta a:hover {
     background: linear-gradient(-120deg, #FC09CC, #FC09CC, #FE0C74, #FE0C74, #FD4716, #FD7B0B);
     color: hsl(0, 83%, 95%);
     transform: translateY(-5px);
 }
+.insta a:hover .tooltip {
+    background: linear-gradient(-120deg, #FC09CC, #FE0C74, #FD4716);
+    color: #fff;
+}
+.insta a:hover .tooltip::before {
+    border-right-color: #FE0C74;
+}
+
 
 .tele a:hover {
     background: #43E961;
     color: #f8e3e3;
     transform: translateY(-5px);
 }
+.tele a:hover .tooltip {
+    background: #43E961;
+    color: #fff;
+}
+.tele a:hover .tooltip::before {
+    border-right-color: #43E961;
+}
 
 .gift a:hover {
     background: #32B1B8;
     color: #2c2a2a;
     transform: translateY(-5px);
+}
+.gift a:hover .tooltip {
+    background: #32B1B8;
+    color: #fff;
+}
+.gift a:hover .tooltip::before {
+    border-right-color: #32B1B8;
 }
