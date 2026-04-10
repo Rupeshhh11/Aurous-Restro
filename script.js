@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateLoader() {
 
-        let increment = (101 - count) * Math.random() * 0.15 + 0.5;
+        let increment = (101 - count) * Math.random() * 0.05 + 0.15;
         count += increment;
 
         if (count > 100) count = 100;
@@ -25,6 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
             progressLine.style.width = count + "%";
         }
 
+        // Reveal words sequentially
+        if (count > 10) document.getElementById('preloader-char-0')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 25) document.getElementById('preloader-char-1')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 40) document.getElementById('preloader-char-2')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 55) document.getElementById('preloader-char-3')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 70) document.getElementById('preloader-char-4')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 85) document.getElementById('preloader-char-5')?.classList.remove('opacity-0', 'translate-y-4');
+
         if (count < 100) {
             requestAnimationFrame(updateLoader);
         } else {
@@ -32,6 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 preloader.classList.add('fade-out');
+
+                const heroBg = document.getElementById('hero-bg-wrapper');
+                if (heroBg) {
+                    heroBg.classList.replace('scale-100', 'scale-110');
+                }
+
+                const nav = document.getElementById('navbar');
+                if (nav) {
+                    nav.classList.remove('opacity-0', '-translate-y-full');
+                }
 
                 document.body.style.overflow = '';
 
