@@ -8,20 +8,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 </head>
 
 <body
     class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
 
     <div id="preloader"
-        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-md preloader-transition">
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] overflow-hidden">
+        
+        <!-- Scaling Image -->
+        <div id="loader-img-container" class="absolute inset-0 z-0 flex items-center justify-center">
+            <img id="loader-img" src="C:\Users\Deepak\.gemini\antigravity\brain\a3f6071b-b82d-4ada-8fc6-b70aaa31bd2d\aurous_premium_intro_1775931341825.png" 
+                 class="w-32 h-32 md:w-48 md:h-48 object-cover rounded-3xl opacity-0 scale-50" alt="Aurous">
+        </div>
 
-        <div class="relative w-full mb-8 flex items-center justify-center">
+        <div class="relative z-10 w-full mb-8 flex items-center justify-center">
             <div class="flex gap-2 sm:gap-3 md:gap-5 justify-center items-center select-none text-[8px] sm:text-[10px] md:text-[14px] pointer-events-none font-mono"
                 aria-label="AUROUS" style="line-height: 0.85; letter-spacing: -0.05em;">
                 <!-- A -->
                 <div id="preloader-char-0"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0s">
                     <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍗🥕<span
                             class="opacity-0">🍔</span></div>
@@ -35,7 +45,7 @@
                 </div>
                 <!-- U -->
                 <div id="preloader-char-1"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0.1s">
                     <div class="flex justify-center h-[1em] items-center">🍯<span class="opacity-0">🍔</span><span
                             class="opacity-0">🍔</span>🍪</div>
@@ -50,7 +60,7 @@
                 </div>
                 <!-- R -->
                 <div id="preloader-char-2"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0.2s">
                     <div class="flex justify-center h-[1em] items-center">🌽🍩🍪<span class="opacity-0">🍔</span></div>
                     <div class="flex justify-center h-[1em] items-center">🍕<span class="opacity-0">🍔</span><span
@@ -63,7 +73,7 @@
                 </div>
                 <!-- O -->
                 <div id="preloader-char-3"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0.3s">
                     <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍔🍇<span
                             class="opacity-0">🍔</span></div>
@@ -78,7 +88,7 @@
                 </div>
                 <!-- U -->
                 <div id="preloader-char-4"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0.4s">
                     <div class="flex justify-center h-[1em] items-center">🍰<span class="opacity-0">🍔</span><span
                             class="opacity-0">🍔</span>🥞</div>
@@ -93,7 +103,7 @@
                 </div>
                 <!-- S -->
                 <div id="preloader-char-5"
-                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl"
                     style="animation-delay: 0.5s">
                     <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍎🍇🍫</div>
                     <div class="flex justify-center h-[1em] items-center">🌮<span class="opacity-0">🍔</span><span
@@ -107,11 +117,11 @@
             </div>
         </div>
 
-        <div class="text-[10px] uppercase tracking-[0.4em] text-white/50 font-bold flex items-center gap-2 mt-2">
+        <div class="relative z-10 text-[10px] uppercase tracking-[0.4em] text-white/50 font-bold flex items-center gap-2 mt-2">
             Cooking <span id="counter" class="text-white text-lg min-w-[3ch] ml-1">0%</span>
         </div>
 
-        <div class="w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
+        <div class="relative z-10 w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
             <div id="progress-line" class="h-full bg-[#E0115F] w-0 transition-all duration-300 ease-out"></div>
         </div>
     </div>
@@ -283,121 +293,109 @@
                             class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
                             ₹400</div>
                     </div>
-                    <div class="px-2 pb-2">
-                        <h3 class="text-2xl font-bold mb-2">Aurous Signature Mix</h3>
-                        <p class="text-white/50 text-sm font-light">Crafted by excellent mixologists to perfectly
-                            accompany your vibrant evening.</p>
-                    </div>
                 </div>
             </div>
         </section>
 
         <section id="echoes" class="py-32 overflow-hidden relative">
             <div class="px-6 md:px-12 max-w-7xl mx-auto">
-                <div class="text-center mb-20 relative z-20">
+                <div class="text-center mb-12 relative z-20">
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
                     <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span>
                     </h2>
                 </div>
 
-                <div class="space-y-32">
+                <!-- Review Filters -->
+                <div class="flex flex-wrap justify-center gap-4 mb-20 relative z-20">
+                    <button class="review-filter active px-6 py-2 rounded-full border border-white/10 text-xs uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="all">All Reviews</button>
+                    <button class="review-filter px-6 py-2 rounded-full border border-white/10 text-xs uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="top">Top Rated</button>
+                    <button class="review-filter px-6 py-2 rounded-full border border-white/10 text-xs uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="latest">Latest</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="reviews-container">
                     <!-- Review 1 -->
-                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
+                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="top">
+                        <div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                <button class="like-btn text-white/20 hover:text-[#E0115F] transition-colors"><i class="fa-solid fa-heart"></i></button>
                             </div>
-                            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Beautiful dish">
+                            <h3 class="text-xl font-bold mb-4">"A Culinary Masterpiece"</h3>
+                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"The Roasted Chicken Chilli is perfectly balanced with flavors that dance on your palate. Best Restro Lounge in Bistupur."</p>
                         </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"A Culinary Masterpiece"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"The Roasted Chicken
-                                Chilli is perfectly balanced with flavors that dance on your palate. The presentation
-                                here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt."</p>
-                            <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80"
-                                    alt="Ritika" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Ritika Verma</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local
-                                        Guide</span>
-                                </div>
-                            </div>
+                        <div class="flex flex-col pt-6 border-t border-white/5">
+                            <h4 class="font-bold text-xs tracking-wide uppercase">Ritika Verma</h4>
+                            <span class="text-[10px] text-white/30 uppercase tracking-widest mt-1">Local Guide</span>
                         </div>
                     </div>
 
                     <!-- Review 2 -->
-                    <div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
+                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="top">
+                        <div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                <button class="like-btn text-white/20 hover:text-[#E0115F] transition-colors"><i class="fa-solid fa-heart"></i></button>
                             </div>
-                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Sizzler">
+                            <h3 class="text-xl font-bold mb-4">"Premium Experience"</h3>
+                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"Their Chef's Special Sizzler is an absolute showstopper. The luxury interiors combined with top-notch food."</p>
                         </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:left-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"The Premium Sizzler Experience"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"Their Chef's Special
-                                Sizzler is an absolute showstopper. Smoked perfectly with a rich aroma that takes over
-                                the room. The luxury interiors combined with top-notch food is an unbeatable combo."</p>
-                            <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
-                                    alt="Aman" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Aman Singh</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food
-                                        Enthusiast</span>
-                                </div>
-                            </div>
+                        <div class="flex flex-col pt-6 border-t border-white/5">
+                            <h4 class="font-bold text-xs tracking-wide uppercase">Aman Singh</h4>
+                            <span class="text-[10px] text-white/30 uppercase tracking-widest mt-1">Food Enthusiast</span>
                         </div>
                     </div>
 
                     <!-- Review 3 -->
-                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
+                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="latest">
+                        <div>
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                <button class="like-btn text-white/20 hover:text-[#E0115F] transition-colors"><i class="fa-solid fa-heart"></i></button>
                             </div>
-                            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Cocktails">
+                            <h3 class="text-xl font-bold mb-4">"Vibrant Evenings"</h3>
+                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"One of the best evening spots! The signature cocktails are a must-try. Everything is curated for a truly premium experience."</p>
                         </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"Vibrant Evenings & Mixology"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"One of the best evening
-                                spots in Jamshedpur! The signature cocktails are a must-try. The music, the crowd, the
-                                drinks—everything is curated for a truly premium experience."</p>
-                            <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80"
-                                    alt="Neha" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Neha Sharma</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur
-                                        Resident</span>
-                                </div>
-                            </div>
+                        <div class="flex flex-col pt-6 border-t border-white/5">
+                            <h4 class="font-bold text-xs tracking-wide uppercase">Neha Sharma</h4>
+                            <span class="text-[10px] text-white/30 uppercase tracking-widest mt-1">Jamshedpur Resident</span>
                         </div>
                     </div>
+                </div>
 
+                <!-- Review Submission Form -->
+                <div class="mt-32 max-w-3xl mx-auto bg-white/5 p-10 md:p-16 rounded-[3rem] border border-white/10 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#E0115F]/10 blur-[100px] pointer-events-none"></div>
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-bold mb-4">Share Your Experience</h3>
+                        <p class="text-white/50 text-sm">Your feedback helps us perfect the Aurous experience.</p>
+                    </div>
+                    <form id="review-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Full Name</label>
+                                <input type="text" required id="rev-name" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Phone Number</label>
+                                <input type="tel" required id="rev-phone" class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white" placeholder="+91 00000 00000">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Your Story</label>
+                            <textarea id="rev-message" rows="4" class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white resize-none" placeholder="Tell us about your visit..."></textarea>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-4">
+                            <div class="flex gap-2 text-2xl" id="star-rating">
+                                <i class="fa-solid fa-star text-white/10 cursor-pointer hover:text-[#E0115F] transition-colors" data-value="1"></i>
+                                <i class="fa-solid fa-star text-white/10 cursor-pointer hover:text-[#E0115F] transition-colors" data-value="2"></i>
+                                <i class="fa-solid fa-star text-white/10 cursor-pointer hover:text-[#E0115F] transition-colors" data-value="3"></i>
+                                <i class="fa-solid fa-star text-white/10 cursor-pointer hover:text-[#E0115F] transition-colors" data-value="4"></i>
+                                <i class="fa-solid fa-star text-white/10 cursor-pointer hover:text-[#E0115F] transition-colors" data-value="5"></i>
+                            </div>
+                            <button type="submit" class="w-full md:w-auto bg-[#E0115F] text-white px-10 py-4 rounded-full text-xs uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_30px_rgba(224,17,95,0.4)] transition-all">Submit Review</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </section>
