@@ -1,81 +1,177 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // --- Modern Preloader Logic ---
+
+    // --- GSAP & ScrollTrigger Setup ---
+    gsap.registerPlugin(ScrollTrigger);
+
+    // --- Lenis Smooth Scrolling Init ---
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // --- Modern Preloader with Cycling Emojis & GSAP Fade ---
     const counter = document.getElementById('counter');
     const progressLine = document.getElementById('progress-line');
     const preloader = document.getElementById('preloader');
+    const preloaderEmoji = document.getElementById('preloader-emoji');
     const heroContent = document.querySelector('.hero-content');
 
+    const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
+    let lastEmojiUpdate = 0;
     let count = 0;
     
     // Disable scroll during load
-    document.body.style.overflow = 'hidden';
-    // Reset window to top
+    lenis.stop();
     window.scrollTo(0, 0);
     
     function updateLoader() {
-        // Fast at start, eases at end
-        let increment = (101 - count) * Math.random() * 0.15 + 0.5;
+        let increment = (101 - count) * Math.random() * 0.12 + 0.3;
         count += increment;
         
         if(count > 100) count = 100;
         
         counter.innerText = Math.floor(count) + "%";
-        if(progressLine) {
-            progressLine.style.width = count + "%";
+        if(progressLine) progressLine.style.width = count + "%";
+
+        // Cycle emoji
+        const now = Date.now();
+        if(now - lastEmojiUpdate > 200 && preloaderEmoji) {
+            preloaderEmoji.innerText = foods[Math.floor(Math.random() * foods.length)];
+            lastEmojiUpdate = now;
         }
 
         if(count < 100) {
             requestAnimationFrame(updateLoader);
         } else {
             counter.innerText = "100%";
-            // Finish loading
-            setTimeout(() => {
-                preloader.classList.add('fade-out');
-                
-                // Allow scroll
-                document.body.style.overflow = '';
-                
-                // Animate Hero in
-                setTimeout(() => {
-                    if(heroContent) {
-                        heroContent.classList.remove('opacity-0', 'translate-y-8');
-                    }
-                }, 400);
-
-            }, 500); // Hold at 100% briefly
+            
+            // GSAP Preloader Fade out
+            gsap.to(preloader, {
+                opacity: 0,
+                duration: 1,
+                delay: 0.5,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    preloader.style.display = 'none';
+                    lenis.start();
+                    // Animate Hero Content
+                    gsap.to(".hero-content", {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1.5,
+                        ease: "power4.out"
+                    });
+                }
+            });
         }
     }
     
-    // Start loader
     requestAnimationFrame(updateLoader);
 
-
-    // --- Navbar Scroll Logic ---
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        if(window.scrollY > 50) {
-            navbar.classList.add('nav-scrolled');
-        } else {
-            navbar.classList.remove('nav-scrolled');
-        }
+    // --- GSAP ScrollReveal Animations ---
+    gsap.from("#vibe h2, #vibe p", {
+        scrollTrigger: {
+            trigger: "#vibe",
+            start: "top 80%",
+        },
+        opacity: 0,
+        y: 50,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out"
     });
 
-    // --- Horizontal Scroll Logic ---
+    gsap.from(".review-card", {
+        scrollTrigger: {
+            trigger: "#echoes",
+            start: "top 70%",
+        },
+        opacity: 0,
+        y: 60,
+        duration: 1,
+        stagger: 0.15,
+        ease: "back.out(1.7)"
+    });
+
+    // --- Review Filtering Logic ---
+    const filterBtns = document.querySelectorAll('.review-filter');
+    const reviewCards = document.querySelectorAll('.review-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+
+            // Update active state
+            filterBtns.forEach(b => b.classList.remove('active', 'bg-[#E0115F]'));
+            btn.classList.add('active', 'bg-[#E0115F]');
+
+            // Filter cards with Animation
+            gsap.to(reviewCards, {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.3,
+                onComplete: () => {
+                    reviewCards.forEach(card => {
+                        const category = card.dataset.category;
+                        if(filter === 'all' || category === filter) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    gsap.to(reviewCards, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.4,
+                        stagger: 0.1,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        });
+    });
+
+    // --- Review Form Star Rating ---
+    const stars = document.querySelectorAll('#star-rating i');
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const val = star.dataset.value;
+            stars.forEach((s, idx) => {
+                if(idx < val) {
+                    s.classList.add('text-[#E0115F]');
+                    s.classList.remove('text-white/10');
+                } else {
+                    s.classList.remove('text-[#E0115F]');
+                    s.classList.add('text-white/10');
+                }
+            });
+        });
+    });
+
+    // --- Navbar & Scroll Logic (Persisted) ---
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if(window.scrollY > 50) navbar.classList.add('nav-scrolled');
+        else navbar.classList.remove('nav-scrolled');
+    });
+
     const menuScroll = document.getElementById('menu-scroll');
     const scrollLeftBtn = document.getElementById('scroll-left');
     const scrollRightBtn = document.getElementById('scroll-right');
-
     if(menuScroll && scrollLeftBtn && scrollRightBtn) {
-        scrollLeftBtn.addEventListener('click', () => {
-            menuScroll.scrollBy({ left: -400, behavior: 'smooth' });
-        });
-        scrollRightBtn.addEventListener('click', () => {
-            menuScroll.scrollBy({ left: 400, behavior: 'smooth' });
-        });
+        scrollLeftBtn.addEventListener('click', () => menuScroll.scrollBy({ left: -400, behavior: 'smooth' }));
+        scrollRightBtn.addEventListener('click', () => menuScroll.scrollBy({ left: 400, behavior: 'smooth' }));
     }
 
-    // --- Login Modal Logic ---
+    // --- Login Modal Logic (Persisted) ---
     const loginModal = document.getElementById('login-modal');
     const openLoginBtn = document.getElementById('open-login');
     const closeLoginBtn = document.getElementById('close-login');
@@ -87,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginModal.classList.remove('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-10');
         loginBox.classList.add('translate-y-0', 'scale-100');
-        document.body.style.overflow = 'hidden'; 
+        lenis.stop();
     }
 
     function closeLogin(e) {
@@ -95,64 +191,42 @@ document.addEventListener('DOMContentLoaded', () => {
         loginModal.classList.add('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-0', 'scale-100');
         loginBox.classList.add('translate-y-10');
-        document.body.style.overflow = '';
+        lenis.start();
     }
 
     if(openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
     if(closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if(closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
 
-    // --- Custom Cursor & Food Trail Logic ---
-    const cursorDot = document.createElement('div');
-    cursorDot.classList.add('custom-cursor-dot');
-    document.body.appendChild(cursorDot);
-
+    // --- Custom Cursor & Food Trail ---
+    const foodsList = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
     const cursorOutline = document.createElement('div');
     cursorOutline.classList.add('custom-cursor');
     document.body.appendChild(cursorOutline);
 
-    const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
-    
     let lastFoodTime = 0;
-
     window.addEventListener('mousemove', (e) => {
         const posX = e.clientX;
         const posY = e.clientY;
-        
-        cursorDot.style.left = `${posX}px`;
-        cursorDot.style.top = `${posY}px`;
-        
-        cursorOutline.animate({
-            left: `${posX}px`,
-            top: `${posY}px`
-        }, { duration: 150, fill: "forwards" });
+
+        gsap.to(cursorOutline, {
+            left: posX,
+            top: posY,
+            duration: 0.15,
+            ease: "power2.out"
+        });
 
         const now = Date.now();
         if(now - lastFoodTime > 100) {
             lastFoodTime = now;
             const food = document.createElement('div');
             food.classList.add('food-trail');
-            food.innerText = foods[Math.floor(Math.random() * foods.length)];
+            food.innerText = foodsList[Math.floor(Math.random() * foodsList.length)];
             food.style.left = `${posX}px`;
             food.style.top = `${posY}px`;
             document.body.appendChild(food);
-            
-            setTimeout(() => {
-                food.remove();
-            }, 1000);
+            setTimeout(() => food.remove(), 1000);
         }
-    });
-
-    const hoverElements = document.querySelectorAll('a, button, input');
-    hoverElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
-            cursorOutline.style.backgroundColor = 'rgba(224, 17, 95, 0.1)';
-        });
-        el.addEventListener('mouseleave', () => {
-            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursorOutline.style.backgroundColor = 'transparent';
-        });
     });
 
 });
