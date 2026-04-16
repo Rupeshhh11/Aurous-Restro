@@ -1,41 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
-/* Reset and Base */
+/* --- Reset and Base --- */
 :root {
-    --primary: #E0115F; /* Neon Pink */
+    --primary: #E0115F;
     --bg: #050505;
 }
 
+/* --- Lenis Smooth Scroll --- */
+html.lenis {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
 body {
+    background-color: var(--bg);
+    color: #FAFAFA;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: none;
 }
 
-/* Custom Cursor */
+/* --- Custom Cursor --- */
 .custom-cursor {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--primary);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.15s ease-out, background-color 0.15s;
-}
-
-.custom-cursor-dot {
-    width: 8px;
-    height: 8px;
+    width: 25px;
+    height: 25px;
     background-color: var(--primary);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
 }
 
+/* --- Food Trail --- */
 .food-trail {
     position: fixed;
     pointer-events: none;
@@ -50,61 +56,52 @@ body {
     100% { opacity: 0; transform: translate(-50%, -150%) scale(0.5) rotate(30deg); }
 }
 
-/* Hide Scrollbar for Horizontal Scroll but keep functionality */
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
+/* --- Hide Scrollbar --- */
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Preloader Transition */
-.preloader-transition {
-    transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
-}
-
-.preloader-transition.fade-out {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-20px) scale(1.05);
-}
-
-/* Navbar Scrolled State */
+/* --- Navbar --- */
 .nav-scrolled {
-    background: rgba(10, 10, 10, 0.85) !important;
+    background: rgba(5, 5, 5, 0.8) !important;
     backdrop-filter: blur(20px) !important;
-    border-color: rgba(224, 17, 95, 0.3) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* Marquee Animation for Reviews */
-.animate-marquee {
-    animation: scroll 35s linear infinite;
+/* --- Hero Section Reveals --- */
+.hero-content {
+    opacity: 0;
+    transform: translateY(30px);
 }
 
-@keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-100% - 1.5rem)); }
+/* --- Advanced Review Section --- */
+.review-filter.active {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 0 20px rgba(224, 17, 95, 0.3);
 }
 
-.marquee-wrapper:hover .animate-marquee {
-    animation-play-state: paused;
+.review-card {
+    display: flex;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Make inputs look good on autofill */
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
-    -webkit-box-shadow: 0 0 0 30px #111 inset !important;
-    -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
+#review-form input, #review-form textarea {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Funny Preloader Animations */
+#review-form input:focus, #review-form textarea:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
+    outline: none;
+}
+
+/* --- Preloader (Cycling) --- */
+#preloader {
+    transition: opacity 1s ease-in-out;
+}
+
 @keyframes plate-bounce {
     0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
     50% { transform: translateY(-15px) scale(1.1) rotate(8deg); }
@@ -120,4 +117,10 @@ input:-webkit-autofill:active{
 }
 .animate-steam {
     animation: steam-rise 1.5s ease-out infinite;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 768px) {
+    .custom-cursor { display: none; }
+    body { cursor: auto; }
 }
