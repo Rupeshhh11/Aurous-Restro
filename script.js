@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- GSAP & ScrollTrigger Setup ---
     gsap.registerPlugin(ScrollTrigger);
 
-    // --- Lenis Smooth Scrolling Init ---
     const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -16,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(raf);
 
-    // --- Modern Preloader with Cycling Emojis & GSAP Fade ---
     const counter = document.getElementById('counter');
     const progressLine = document.getElementById('progress-line');
     const preloader = document.getElementById('preloader');
@@ -27,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastEmojiUpdate = 0;
     let count = 0;
     
-    // Disable scroll during load
     lenis.stop();
     window.scrollTo(0, 0);
     
@@ -40,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         counter.innerText = Math.floor(count) + "%";
         if(progressLine) progressLine.style.width = count + "%";
 
-        // Cycle emoji
         const now = Date.now();
         if(now - lastEmojiUpdate > 200 && preloaderEmoji) {
             preloaderEmoji.innerText = foods[Math.floor(Math.random() * foods.length)];
@@ -52,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             counter.innerText = "100%";
             
-            // GSAP Preloader Fade out
             gsap.to(preloader, {
                 opacity: 0,
                 duration: 1,
@@ -61,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 onComplete: () => {
                     preloader.style.display = 'none';
                     lenis.start();
-                    // Animate Hero Content
                     gsap.to(".hero-content", {
                         opacity: 1,
                         y: 0,
@@ -75,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     requestAnimationFrame(updateLoader);
 
-    // --- GSAP ScrollReveal Animations ---
     gsap.from("#vibe h2, #vibe p", {
         scrollTrigger: {
             trigger: "#vibe",
@@ -100,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ease: "back.out(1.7)"
     });
 
-    // --- Review Filtering Logic ---
     const filterBtns = document.querySelectorAll('.review-filter');
     const reviewCards = document.querySelectorAll('.review-card');
 
@@ -108,11 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
 
-            // Update active state
             filterBtns.forEach(b => b.classList.remove('active', 'bg-[#E0115F]'));
             btn.classList.add('active', 'bg-[#E0115F]');
 
-            // Filter cards with Animation
             gsap.to(reviewCards, {
                 opacity: 0,
                 scale: 0.9,
@@ -139,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Review Form Star Rating ---
     const stars = document.querySelectorAll('#star-rating i');
     stars.forEach(star => {
         star.addEventListener('click', () => {
@@ -156,7 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Navbar & Scroll Logic (Persisted) ---
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
         if(window.scrollY > 50) navbar.classList.add('nav-scrolled');
@@ -171,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollRightBtn.addEventListener('click', () => menuScroll.scrollBy({ left: 400, behavior: 'smooth' }));
     }
 
-    // --- Login Modal Logic (Persisted) ---
     const loginModal = document.getElementById('login-modal');
     const openLoginBtn = document.getElementById('open-login');
     const closeLoginBtn = document.getElementById('close-login');
@@ -198,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if(closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
 
-    // --- Custom Cursor & Food Trail ---
     const foodsList = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
     const cursorOutline = document.createElement('div');
     cursorOutline.classList.add('custom-cursor');
