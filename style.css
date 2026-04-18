@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
-/* --- Reset and Base --- */
+
 :root {
     --primary: #E0115F;
     --bg: #050505;
 }
 
-/* --- Lenis Smooth Scroll --- */
+
 html.lenis {
     height: auto;
 }
@@ -28,7 +28,7 @@ body {
     cursor: none;
 }
 
-/* --- Custom Cursor --- */
+
 .custom-cursor {
     width: 25px;
     height: 25px;
@@ -41,7 +41,7 @@ body {
     mix-blend-mode: difference;
 }
 
-/* --- Food Trail --- */
+
 .food-trail {
     position: fixed;
     pointer-events: none;
@@ -56,24 +56,24 @@ body {
     100% { opacity: 0; transform: translate(-50%, -150%) scale(0.5) rotate(30deg); }
 }
 
-/* --- Hide Scrollbar --- */
+
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* --- Navbar --- */
+
 .nav-scrolled {
     background: rgba(5, 5, 5, 0.8) !important;
     backdrop-filter: blur(20px) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* --- Hero Section Reveals --- */
+
 .hero-content {
     opacity: 0;
     transform: translateY(30px);
 }
 
-/* --- Advanced Review Section --- */
+
 .review-filter.active {
     background-color: var(--primary);
     border-color: var(--primary);
@@ -97,7 +97,7 @@ body {
     outline: none;
 }
 
-/* --- Preloader (Cycling) --- */
+
 #preloader {
     transition: opacity 1s ease-in-out;
 }
@@ -119,7 +119,7 @@ body {
     animation: steam-rise 1.5s ease-out infinite;
 }
 
-/* --- Media Queries --- */
+
 @media (max-width: 768px) {
     .custom-cursor { display: none; }
     body { cursor: auto; }
