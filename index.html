@@ -8,35 +8,116 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 </head>
 
-<body class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
+<body
+    class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
 
-    <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] preloader-transition">
-        
-        <div class="relative w-32 h-32 mb-4 flex items-center justify-center">
-            <div class="w-24 h-24 bg-white/5 rounded-full border-4 border-dashed border-[#E0115F]/50 absolute animate-[spin_4s_linear_infinite]"></div>
-            
-            <div id="preloader-emoji" class="text-6xl absolute plate-bounce">🍲</div>
-            
-            <div class="absolute -top-8 text-2xl opacity-0 animate-steam">♨️</div>
-            <div class="absolute -top-10 left-8 text-xl opacity-0 animate-steam delay-300">♨️</div>
+    <div id="preloader"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-md preloader-transition">
+
+        <div class="relative w-full mb-8 flex items-center justify-center">
+            <div class="flex gap-2 sm:gap-3 md:gap-5 justify-center items-center select-none text-[8px] sm:text-[10px] md:text-[14px] pointer-events-none font-mono"
+                aria-label="AUROUS" style="line-height: 0.85; letter-spacing: -0.05em;">
+                <!-- A -->
+                <div id="preloader-char-0"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0s">
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍗🥕<span
+                            class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center">🍪<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍇</div>
+                    <div class="flex justify-center h-[1em] items-center">🍇🍔🌮🍎</div>
+                    <div class="flex justify-center h-[1em] items-center">🍕<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍕</div>
+                    <div class="flex justify-center h-[1em] items-center">🍰<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍇</div>
+                </div>
+                <!-- U -->
+                <div id="preloader-char-1"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0.1s">
+                    <div class="flex justify-center h-[1em] items-center">🍯<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍪</div>
+                    <div class="flex justify-center h-[1em] items-center">🥝<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🌽</div>
+                    <div class="flex justify-center h-[1em] items-center">🌽<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍿</div>
+                    <div class="flex justify-center h-[1em] items-center">🌮<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🥕</div>
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍇🍰<span
+                            class="opacity-0">🍔</span></div>
+                </div>
+                <!-- R -->
+                <div id="preloader-char-2"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0.2s">
+                    <div class="flex justify-center h-[1em] items-center">🌽🍩🍪<span class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center">🍕<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🥝</div>
+                    <div class="flex justify-center h-[1em] items-center">🍪🍣🍩<span class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center">🍪<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍰</div>
+                    <div class="flex justify-center h-[1em] items-center">🍯<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span><span class="opacity-0">🍔</span></div>
+                </div>
+                <!-- O -->
+                <div id="preloader-char-3"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0.3s">
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍔🍇<span
+                            class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center">🍯<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🥑</div>
+                    <div class="flex justify-center h-[1em] items-center">🥞<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍯</div>
+                    <div class="flex justify-center h-[1em] items-center">🥞<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍪</div>
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🥕🍣<span
+                            class="opacity-0">🍔</span></div>
+                </div>
+                <!-- U -->
+                <div id="preloader-char-4"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0.4s">
+                    <div class="flex justify-center h-[1em] items-center">🍰<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🥞</div>
+                    <div class="flex justify-center h-[1em] items-center">🍿<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🥐</div>
+                    <div class="flex justify-center h-[1em] items-center">🍯<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🍿</div>
+                    <div class="flex justify-center h-[1em] items-center">🍇<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span>🌽</div>
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🥕🍰<span
+                            class="opacity-0">🍔</span></div>
+                </div>
+                <!-- S -->
+                <div id="preloader-char-5"
+                    class="opacity-0 translate-y-4 transition-all duration-500 ease-out flex flex-col drop-shadow-2xl animate-bounce"
+                    style="animation-delay: 0.5s">
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍎🍇🍫</div>
+                    <div class="flex justify-center h-[1em] items-center">🌮<span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span><span class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span>🍅🌮<span
+                            class="opacity-0">🍔</span></div>
+                    <div class="flex justify-center h-[1em] items-center"><span class="opacity-0">🍔</span><span
+                            class="opacity-0">🍔</span><span class="opacity-0">🍔</span>🍿</div>
+                    <div class="flex justify-center h-[1em] items-center">🍩🍇🍩<span class="opacity-0">🍔</span></div>
+                </div>
+            </div>
         </div>
 
         <div class="text-[10px] uppercase tracking-[0.4em] text-white/50 font-bold flex items-center gap-2 mt-2">
             Cooking <span id="counter" class="text-white text-lg min-w-[3ch] ml-1">0%</span>
         </div>
-        
+
         <div class="w-48 h-1 bg-white/10 rounded-full mt-4 overflow-hidden relative">
             <div id="progress-line" class="h-full bg-[#E0115F] w-0 transition-all duration-300 ease-out"></div>
         </div>
     </div>
 
-    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-4 rounded-full z-50 flex justify-between items-center bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-500" id="navbar">
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-4 rounded-full z-50 flex justify-between items-center bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-2xl transition-all duration-[1000ms] opacity-0 -translate-y-full"
+        id="navbar">
         <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-[#E0115F] animate-pulse"></div>
             <h2 class="text-xl font-bold tracking-tighter uppercase">Aurous<span class="text-[#E0115F]">.</span></h2>
@@ -46,34 +127,43 @@
             <a href="#menu" class="hover:text-white transition-colors">Menu</a>
             <a href="#echoes" class="hover:text-white transition-colors">Reviews</a>
         </div>
-        <button id="open-login" class="bg-white/10 hover:bg-[#E0115F] text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all duration-300 font-semibold border border-white/5 hover:border-[#E0115F]">
+        <button id="open-login"
+            class="bg-white/10 hover:bg-[#E0115F] text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all duration-300 font-semibold border border-white/5 hover:border-[#E0115F]">
             Member Login
         </button>
     </nav>
 
     <main>
         <section class="relative h-screen w-full flex items-center justify-center overflow-hidden px-6">
-            <div class="absolute inset-0 z-[-1] scale-105 transform hero-bg">
+            <div id="hero-bg-wrapper"
+                class="absolute inset-0 z-[-1] scale-100 transform hero-bg transition-transform duration-[3000ms] ease-out">
                 <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#050505] z-10 block"></div>
                 <img src="https://lh3.googleusercontent.com/gps-cs-s/AHVAweo6qIt4umbTsiVpcC9as1I1n4ZlbqscZ1wFFr2jSgr0A0G922EaLLR71tBt1GPZtO3FlvCC_BjzW6sq8_IK40vDh62IyS8qO_lPp6Fk-k5EhPu64gdLPjy15fIyTNTcM-JjfjeXlw=s1360-w1360-h1020-rw"
                     class="w-full h-full object-cover" alt="Aurous Lounge">
             </div>
-            
-            <div class="text-center z-10 hero-content opacity-0 translate-y-8 transition-all duration-1000 ease-out flex flex-col items-center">
-                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6 text-xs uppercase tracking-widest text-[#E0115F] font-semibold">
+
+            <div
+                class="text-center z-10 hero-content opacity-0 translate-y-8 transition-all duration-1000 ease-out flex flex-col items-center">
+                <div
+                    class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-6 text-xs uppercase tracking-widest text-[#E0115F] font-semibold">
                     <i class="fa-solid fa-location-dot"></i> Bistupur, Jamshedpur
                 </div>
-                <h1 class="text-6xl md:text-8xl lg:text-[10rem] font-extrabold tracking-tighter leading-[0.85] uppercase mb-6">
-                    Taste The<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E0115F] to-white">Rhythm.</span>
+                <h1
+                    class="text-6xl md:text-8xl lg:text-[10rem] font-extrabold tracking-tighter leading-[0.85] uppercase mb-6">
+                    Taste The<br><span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#E0115F] to-white">Rhythm.</span>
                 </h1>
                 <p class="text-white/60 text-sm md:text-base max-w-lg mx-auto font-light leading-relaxed">
-                    Elevate your evenings at Jamshedpur's premier Restro Lounge. Where exquisite global flavors meet electrifying live music and unmatched modern ambiance.
+                    Elevate your evenings at Jamshedpur's premier Restro Lounge. Where exquisite global flavors meet
+                    electrifying live music and unmatched modern ambiance.
                 </p>
                 <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                    <button class="bg-[#E0115F] text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                    <button
+                        class="bg-[#E0115F] text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
                         Reserve Table
                     </button>
-                    <button class="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold">
+                    <button
+                        class="bg-transparent border border-white/20 text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold">
                         Explore Menu
                     </button>
                 </div>
@@ -83,9 +173,13 @@
         <section id="vibe" class="py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
             <div class="w-full md:w-1/2 space-y-6">
                 <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold">Modern Dining</h4>
-                <h2 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">More than a meal.<br>It's an <span class="italic font-light text-gray-400">experience.</span></h2>
+                <h2 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">More than a meal.<br>It's an
+                    <span class="italic font-light text-gray-400">experience.</span>
+                </h2>
                 <p class="text-white/60 leading-relaxed font-light">
-                    Located in the heart of Bistupur, Aurous brings a fresh perspective to Jamshedpur's culinary scene. With our meticulously crafted interiors, pulsating live bands, and a staff dedicated to making you feel like royalty—every night here is a celebration.
+                    Located in the heart of Bistupur, Aurous brings a fresh perspective to Jamshedpur's culinary scene.
+                    With our meticulously crafted interiors, pulsating live bands, and a staff dedicated to making you
+                    feel like royalty—every night here is a celebration.
                 </p>
                 <div class="grid grid-cols-2 gap-8 pt-8 border-t border-white/10">
                     <div>
@@ -99,233 +193,314 @@
                 </div>
             </div>
             <div class="w-full md:w-1/2 relative h-[500px]">
-                <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470" class="absolute top-0 right-0 w-3/4 h-[350px] object-cover rounded-2xl shadow-2xl z-20" alt="Vibe 1">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470" class="absolute bottom-0 left-0 w-2/3 h-[300px] object-cover rounded-2xl shadow-xl z-10" alt="Vibe 2">
+                <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470"
+                    class="absolute top-0 right-0 w-3/4 h-[350px] object-cover rounded-2xl shadow-2xl z-20"
+                    alt="Vibe 1">
+                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"
+                    class="absolute bottom-0 left-0 w-2/3 h-[300px] object-cover rounded-2xl shadow-xl z-10"
+                    alt="Vibe 2">
             </div>
         </section>
 
         <section id="menu" class="py-24 bg-[#0a0a0a]">
-            <div class="px-6 md:px-12 max-w-7xl mx-auto flex justify-between items-end mb-12">
+            <div
+                class="px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
                 <div>
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-3">Signatures</h4>
                     <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Taste the bold.</h2>
                 </div>
+                <div class="flex gap-4">
+                    <button id="scroll-left"
+                        class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-[#E0115F] hover:border-[#E0115F] transition-all duration-300 hover:shadow-[0_0_15px_rgba(224,17,95,0.4)] group bg-white/5"><i
+                            class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i></button>
+                    <button id="scroll-right"
+                        class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-[#E0115F] hover:border-[#E0115F] transition-all duration-300 hover:shadow-[0_0_15px_rgba(224,17,95,0.4)] group bg-white/5"><i
+                            class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></button>
+                </div>
             </div>
 
-            <div id="menu-scroll" class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 hide-scrollbar">
-                
+            <div id="menu-scroll"
+                class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 hide-scrollbar">
 
-                <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Roasted Chicken Chilli">
-                        <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">₹450</div>
+                        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Roasted Chicken Chilli">
+                        <div
+                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
+                            ₹450</div>
                     </div>
                     <div class="px-2 pb-2">
                         <h3 class="text-2xl font-bold mb-2">Roasted Chicken Chilli</h3>
-                        <p class="text-white/50 text-sm font-light">Spicy, perfectly roasted chicken tossed in signature Asian sauces. A crowd favorite.</p>
+                        <p class="text-white/50 text-sm font-light">Spicy, perfectly roasted chicken tossed in signature
+                            Asian sauces. A crowd favorite.</p>
                     </div>
                 </div>
 
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Premium Sizzler">
-                        <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">₹650</div>
+                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Premium Sizzler">
+                        <div
+                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
+                            ₹650</div>
                     </div>
                     <div class="px-2 pb-2">
                         <h3 class="text-2xl font-bold mb-2">Chef's Special Sizzler</h3>
-                        <p class="text-white/50 text-sm font-light">Smoked directly at your table. Rich, flavorful, and incredibly satisfying.</p>
+                        <p class="text-white/50 text-sm font-light">Smoked directly at your table. Rich, flavorful, and
+                            incredibly satisfying.</p>
                     </div>
                 </div>
 
-
-                <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=1374" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Fish Fingers">
-                        <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">₹380</div>
+                        <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=1374"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Fish Fingers">
+                        <div
+                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
+                            ₹380</div>
                     </div>
                     <div class="px-2 pb-2">
                         <h3 class="text-2xl font-bold mb-2">Golden Fish Fingers</h3>
-                        <p class="text-white/50 text-sm font-light">Crispy on the outside, tender on the inside. Served with our house tartar sauce.</p>
+                        <p class="text-white/50 text-sm font-light">Crispy on the outside, tender on the inside. Served
+                            with our house tartar sauce.</p>
                     </div>
                 </div>
 
-
-                 <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
+                <div
+                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
                     <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Cocktails">
-                        <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">₹400</div>
+                        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Cocktails">
+                        <div
+                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
+                            ₹400</div>
                     </div>
                     <div class="px-2 pb-2">
                         <h3 class="text-2xl font-bold mb-2">Aurous Signature Mix</h3>
-                        <p class="text-white/50 text-sm font-light">Crafted by excellent mixologists to perfectly accompany your vibrant evening.</p>
+                        <p class="text-white/50 text-sm font-light">Crafted by excellent mixologists to perfectly
+                            accompany your vibrant evening.</p>
                     </div>
                 </div>
             </div>
-
-            <div class="flex justify-center gap-6 mt-4">
-                <button id="scroll-left" class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black hover:scale-110 transition-all shadow-lg text-lg"><i class="fa-solid fa-arrow-left"></i></button>
-                <button id="scroll-right" class="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black hover:scale-110 transition-all shadow-lg text-lg"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
         </section>
 
-        <section id="echoes" class="py-32 overflow-hidden border-t border-white/5 relative">
+        <section id="echoes" class="py-32 overflow-hidden relative">
             <div class="px-6 md:px-12 max-w-7xl mx-auto">
-                <div class="text-center mb-16 relative z-20">
+                <div class="text-center mb-20 relative z-20">
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
-                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span></h2>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span>
+                    </h2>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-4 mb-20 relative z-20">
-                    <button class="review-filter active px-8 py-2.5 rounded-full border border-white/10 text-[10px] uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="all">All Reviews</button>
-                    <button class="review-filter px-8 py-2.5 rounded-full border border-white/10 text-[10px] uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="top">Top Rated</button>
-                    <button class="review-filter px-8 py-2.5 rounded-full border border-white/10 text-[10px] uppercase tracking-widest bg-white/5 hover:bg-[#E0115F] transition-all" data-filter="recent">Recent</button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="reviews-container">
-
-                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="top">
-                        <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                                <i class="fa-solid fa-quote-right text-white/10 text-3xl"></i>
+                <div class="space-y-32">
+                    <!-- Review 1 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
+                        <div
+                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div
+                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
                             </div>
-                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"Amazing ambiance and beautifully designed interiors. The live music adds so much to the vibrant vibe. Great place for hanging out."</p>
+                            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1000"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                                alt="Beautiful dish">
                         </div>
-                        <div class="flex items-center gap-3 pt-6 border-t border-white/5">
-                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80" alt="Ritika" class="w-10 h-10 rounded-full object-cover border border-[#E0115F]/50">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-xs tracking-wide uppercase">Ritika Verma</h4>
-                                <span class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5">Local Guide</span>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="top">
-                        <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                                <i class="fa-solid fa-quote-right text-white/10 text-3xl"></i>
-                            </div>
-                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"The Roasted Chicken Chilli and Fish Fingers were top notch. Service is fast and the overall dining experience was very premium."</p>
-                        </div>
-                        <div class="flex items-center gap-3 pt-6 border-t border-white/5">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Aman" class="w-10 h-10 rounded-full object-cover border border-[#E0115F]/50">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-xs tracking-wide uppercase">Aman Singh</h4>
-                                <span class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5">Food Enthusiast</span>
+                        <div
+                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"A Culinary Masterpiece"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"The Roasted Chicken
+                                Chilli is perfectly balanced with flavors that dance on your palate. The presentation
+                                here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80"
+                                    alt="Ritika" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Ritika Verma</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local
+                                        Guide</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-
-                    <div class="review-card bg-white/5 p-8 rounded-[2rem] border border-white/10 flex flex-col justify-between hover:border-[#E0115F]/30 transition-all duration-500 group" data-category="recent">
-                        <div>
-                            <div class="flex justify-between items-start mb-6">
-                                <div class="flex gap-1 text-[#E0115F] text-sm"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                                <i class="fa-solid fa-quote-right text-white/10 text-3xl"></i>
+                    <!-- Review 2 -->
+                    <div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-0 relative group">
+                        <div
+                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div
+                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
                             </div>
-                            <p class="text-white/50 text-sm leading-relaxed font-light mb-8">"Aurous Restro Lounge is easily one of the best evening spots in Bistupur. Best family dining place with luxury feel."</p>
+                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                                alt="Sizzler">
                         </div>
-                        <div class="flex items-center gap-3 pt-6 border-t border-white/5">
-                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Neha" class="w-10 h-10 rounded-full object-cover border border-[#E0115F]/50">
-                            <div class="flex flex-col">
-                                <h4 class="font-bold text-xs tracking-wide uppercase">Neha Sharma</h4>
-                                <span class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5">Jamshedpur Resident</span>
+                        <div
+                            class="w-full md:w-[45%] md:absolute md:left-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"The Premium Sizzler Experience"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"Their Chef's Special
+                                Sizzler is an absolute showstopper. Smoked perfectly with a rich aroma that takes over
+                                the room. The luxury interiors combined with top-notch food is an unbeatable combo."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
+                                    alt="Aman" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Aman Singh</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food
+                                        Enthusiast</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="mt-32 max-w-3xl mx-auto bg-white/5 p-10 md:p-16 rounded-[3rem] border border-white/10 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 w-64 h-64 bg-[#E0115F]/10 blur-[100px] pointer-events-none"></div>
-                    <div class="text-center mb-12">
-                        <h3 class="text-3xl font-bold mb-4 tracking-tight">Share Your Experience</h3>
-                        <p class="text-white/50 text-sm font-light">Your feedback helps us perfect the Aurous experience.</p>
+                    <!-- Review 3 -->
+                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
+                        <div
+                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
+                            <div
+                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                                alt="Cocktails">
+                        </div>
+                        <div
+                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"Vibrant Evenings & Mixology"</h3>
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"One of the best evening
+                                spots in Jamshedpur! The signature cocktails are a must-try. The music, the crowd, the
+                                drinks—everything is curated for a truly premium experience."</p>
+                            <div class="flex items-center gap-4">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80"
+                                    alt="Neha" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div class="flex flex-col">
+                                    <h4 class="font-bold text-sm tracking-wide uppercase">Neha Sharma</h4>
+                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur
+                                        Resident</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <form id="review-form" class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Full Name</label>
-                                <input type="text" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white placeholder-white/20" placeholder="e.g. Rahul Kumar">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Phone Number</label>
-                                <input type="tel" required class="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white placeholder-white/20" placeholder="+91 00000 00000">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase tracking-widest text-white/40 mb-2 font-bold ml-2">Your Story</label>
-                            <textarea rows="4" class="w-full bg-white/5 border border-white/10 rounded-[2rem] px-6 py-4 text-sm focus:outline-none focus:border-[#E0115F] transition-all text-white placeholder-white/20 resize-none" placeholder="How was your night at Aurous?"></textarea>
-                        </div>
-                        <div class="flex flex-col md:flex-row items-center justify-between gap-6 pt-4">
-                            <div class="flex gap-2 text-2xl text-white/10" id="star-rating">
-                                <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="1"></i>
-                                <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="2"></i>
-                                <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="3"></i>
-                                <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="4"></i>
-                                <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="5"></i>
-                            </div>
-                            <button type="submit" class="w-full md:w-auto bg-[#E0115F] text-white px-10 py-4 rounded-full text-xs uppercase tracking-[0.2em] font-bold hover:shadow-[0_0_30px_rgba(224,17,95,0.4)] transition-all">Submit Review</button>
-                        </div>
-                    </form>
+
                 </div>
             </div>
         </section>
 
-        <footer class="bg-[#0a0a0a] pt-32 pb-12 px-6 md:px-12 border-t border-white/5 text-center">
-            <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">Aurous</h1>
-            
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-16 border-t border-white/10 pt-12">
-                <div class="flex gap-6 text-xl">
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#" class="text-white/50 hover:text-[#E0115F] transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+        <footer class="bg-[#0a0a0a] pt-20 pb-8 px-6 md:px-12 border-t border-white/5 text-center">
+            <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">
+                Aurous</h1>
+
+            <div
+                class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-10 border-t border-white/10 pt-10">
+                <div class="social-icons mx-auto md:mx-0">
+                    <div class="icon-sz insta">
+                        <a href="#" target="_blank" aria-label="Instagram">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="38" height="38"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd"
+                                    d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="tooltip">Instagram</span>
+                        </a>
+                    </div>
+                    <div class="icon-sz tele">
+                        <a href="#" target="_blank" aria-label="WhatsApp">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd"
+                                    d="M12 4a8 8 0 0 0-6.895 12.06l.569.718-.697 2.359 2.32-.648.379.243A8 8 0 1 0 12 4ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.96 9.96 0 0 1-5.016-1.347l-4.948 1.382 1.426-4.829-.006-.007-.033-.055A9.958 9.958 0 0 1 2 12Z"
+                                    clip-rule="evenodd" />
+                                <path fill="currentColor"
+                                    d="M16.735 13.492c-.038-.018-1.497-.736-1.756-.83a1.008 1.008 0 0 0-.34-.075c-.196 0-.362.098-.49.291-.146.217-.587.732-.723.886-.018.02-.042.045-.057.045-.013 0-.239-.093-.307-.123-1.564-.68-2.751-2.313-2.914-2.589-.023-.04-.024-.057-.024-.057.005-.021.058-.074.085-.101.08-.079.166-.182.249-.283l.117-.14c.121-.14.175-.25.237-.375l.033-.066a.68.68 0 0 0-.02-.64c-.034-.069-.65-1.555-.715-1.711-.158-.377-.366-.552-.655-.552-.027 0 0 0-.112.005-.137.005-.883.104-1.213.311-.35.22-.94.924-.94 2.16 0 1.112.705 2.162 1.008 2.561l.041.06c1.161 1.695 2.608 2.951 4.074 3.537 1.412.564 2.081.63 2.461.63.16 0 .288-.013.4-.024l.072-.007c.488-.043 1.56-.599 1.804-1.276.192-.534.243-1.117.115-1.329-.088-.144-.239-.216-.43-.308Z" />
+                            </svg>
+                            <span class="tooltip">WhatsApp</span>
+                        </a>
+                    </div>
+                    <div class="icon-sz gift">
+                        <a href="#" target="_blank" aria-label="Gift">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M20 7h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C10.4 2.842 8.949 2 7.5 2A3.5 3.5 0 0 0 4 5.5c.003.52.123 1.033.351 1.5H4a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2Zm-9.942 0H7.5a1.5 1.5 0 0 1 0-3c.9 0 2 .754 3.092 2.122-.219.337-.392.635-.534.878Zm6.1 0h-3.742c.933-1.368 2.371-3 3.739-3a1.5 1.5 0 0 1 0 3h.003ZM13 14h-2v8h2v-8Zm-4 0H4v6a2 2 0 0 0 2 2h3v-8Zm6 0v8h3a2 2 0 0 0 2-2v-6h-5Z" />
+                            </svg>
+                            <span class="tooltip">Gift</span>
+                        </a>
+                    </div>
                 </div>
-                
+
                 <div class="text-center md:text-left">
-                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Near Bharat Cycle Store, Diagonal Rd</p>
+                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Near
+                        Bharat Cycle Store, Diagonal Rd</p>
                     <p class="text-white/50 text-sm">Bistupur, Jamshedpur 831001</p>
                 </div>
-                
+
                 <div class="text-center md:text-right">
-                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-clock text-[#E0115F] mr-2"></i> Open Daily</p>
+                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-clock text-[#E0115F] mr-2"></i> Open
+                        Daily</p>
                     <p class="text-white/50 text-sm">12:00 PM to 10:00 PM</p>
                 </div>
             </div>
-            <p class="text-center text-white/30 text-xs mt-16">© 2026 Aurous Restro Lounge. All Rights Reserved.</p>
+            <p class="text-center text-white/30 text-xs mt-10">© 2026 Aurous Restro Lounge. All Rights Reserved.</p>
         </footer>
     </main>
 
-    <div id="login-modal" class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="login-modal"
+        class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-login-bg"></div>
-        <div class="relative z-10 w-full max-w-md p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl" id="login-box">
-            <button id="close-login" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
+        <div class="relative z-10 w-full max-w-md p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl"
+            id="login-box">
+            <button id="close-login"
+                class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            
+
             <div class="text-center mb-10 mt-4">
                 <h2 class="text-3xl font-bold tracking-tight">Join The Club.</h2>
                 <p class="text-xs uppercase tracking-[0.2em] text-[#E0115F] mt-2 font-bold">Exclusive Access</p>
             </div>
-            
+
             <form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
                 <div>
-                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Email Address</label>
-                    <input type="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="you@example.com">
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Email
+                        Address</label>
+                    <input type="email" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                        placeholder="you@example.com">
                 </div>
                 <div>
-                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Password</label>
-                    <input type="password" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="••••••••">
+                    <label
+                        class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Password</label>
+                    <input type="password" required
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                        placeholder="••••••••">
                 </div>
-                <button type="submit" class="mt-4 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                <button type="submit"
+                    class="mt-4 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
                     Sign In to Realm
                 </button>
             </form>
-            
+
             <div class="mt-8 text-center pb-2">
-                <a href="#" class="text-xs text-white/50 hover:text-[#E0115F] transition-colors underline underline-offset-4">Forgot Password?</a>
+                <a href="#"
+                    class="text-xs text-white/50 hover:text-[#E0115F] transition-colors underline underline-offset-4">Forgot
+                    Password?</a>
             </div>
         </div>
     </div>
