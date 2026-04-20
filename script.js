@@ -23,30 +23,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
     let lastEmojiUpdate = 0;
     let count = 0;
-    
+
     lenis.stop();
     window.scrollTo(0, 0);
-    
+
     function updateLoader() {
         let increment = (101 - count) * Math.random() * 0.12 + 0.3;
         count += increment;
-        
-        if(count > 100) count = 100;
-        
+
+        if (count > 100) count = 100;
+
         counter.innerText = Math.floor(count) + "%";
-        if(progressLine) progressLine.style.width = count + "%";
+        if (progressLine) progressLine.style.width = count + "%";
 
         const now = Date.now();
-        if(now - lastEmojiUpdate > 200 && preloaderEmoji) {
+        if (now - lastEmojiUpdate > 200 && preloaderEmoji) {
             preloaderEmoji.innerText = foods[Math.floor(Math.random() * foods.length)];
             lastEmojiUpdate = now;
         }
 
-        if(count < 100) {
+        if (count < 100) {
             requestAnimationFrame(updateLoader);
         } else {
             counter.innerText = "100%";
-            
+
             gsap.to(preloader, {
                 opacity: 0,
                 duration: 1,
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-    
+
     requestAnimationFrame(updateLoader);
 
     gsap.from("#vibe h2, #vibe p", {
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 onComplete: () => {
                     reviewCards.forEach(card => {
                         const category = card.dataset.category;
-                        if(filter === 'all' || category === filter) {
+                        if (filter === 'all' || category === filter) {
                             card.style.display = 'flex';
                         } else {
                             card.style.display = 'none';
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         star.addEventListener('click', () => {
             const val = star.dataset.value;
             stars.forEach((s, idx) => {
-                if(idx < val) {
+                if (idx < val) {
                     s.classList.add('text-[#E0115F]');
                     s.classList.remove('text-white/10');
                 } else {
@@ -146,14 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-        if(window.scrollY > 50) navbar.classList.add('nav-scrolled');
+        if (window.scrollY > 50) navbar.classList.add('nav-scrolled');
         else navbar.classList.remove('nav-scrolled');
     });
 
     const menuScroll = document.getElementById('menu-scroll');
     const scrollLeftBtn = document.getElementById('scroll-left');
     const scrollRightBtn = document.getElementById('scroll-right');
-    if(menuScroll && scrollLeftBtn && scrollRightBtn) {
+    if (menuScroll && scrollLeftBtn && scrollRightBtn) {
         scrollLeftBtn.addEventListener('click', () => menuScroll.scrollBy({ left: -400, behavior: 'smooth' }));
         scrollRightBtn.addEventListener('click', () => menuScroll.scrollBy({ left: 400, behavior: 'smooth' }));
     }
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBox = document.getElementById('login-box');
 
     function openLogin(e) {
-        if(e) e.preventDefault();
+        if (e) e.preventDefault();
         loginModal.classList.remove('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-10');
         loginBox.classList.add('translate-y-0', 'scale-100');
@@ -173,16 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function closeLogin(e) {
-        if(e) e.preventDefault();
+        if (e) e.preventDefault();
         loginModal.classList.add('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-0', 'scale-100');
         loginBox.classList.add('translate-y-10');
         lenis.start();
     }
 
-    if(openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
-    if(closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
-    if(closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
+    if (openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
+    if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
+    if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
 
     const foodsList = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
     const cursorOutline = document.createElement('div');
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const now = Date.now();
-        if(now - lastFoodTime > 100) {
+        if (now - lastFoodTime > 100) {
             lastFoodTime = now;
             const food = document.createElement('div');
             food.classList.add('food-trail');
