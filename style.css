@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 :root {
-    --primary: #E0115F; 
+    --primary: #E0115F;
     --bg: #050505;
 }
 
@@ -44,33 +44,44 @@ body {
 }
 
 @keyframes fadeTrail {
-    0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    100% { opacity: 0; transform: translate(-50%, -150%) scale(0.5) rotate(30deg); }
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -150%) scale(0.5) rotate(30deg);
+    }
 }
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
 .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-.preloader-transition {
-    transition: opacity 0.8s ease, transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+.preloader-slide-transition {
+    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
-.preloader-transition.fade-out {
-    opacity: 0;
+.preloader-slide-transition.slide-up {
+    transform: translateY(-100%);
     pointer-events: none;
-    transform: translateY(-20px) scale(1.05);
+}
+
+.hero-stagger-transition {
+    transition: all 1.2s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
 .nav-scrolled {
     background: rgba(10, 10, 10, 0.85) !important;
     backdrop-filter: blur(20px) !important;
     border-color: rgba(224, 17, 95, 0.3) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
     padding-top: 0.75rem !important;
     padding-bottom: 0.75rem !important;
 }
@@ -80,8 +91,13 @@ body {
 }
 
 @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-100% - 1.5rem)); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(calc(-100% - 1.5rem));
+    }
 }
 
 .marquee-wrapper:hover .animate-marquee {
@@ -89,27 +105,46 @@ body {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #111 inset !important;
     -webkit-text-fill-color: white !important;
     transition: background-color 5000s ease-in-out 0s;
 }
 
 @keyframes plate-bounce {
-    0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-    50% { transform: translateY(-15px) scale(1.1) rotate(8deg); }
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-15px) scale(1.1) rotate(8deg);
+    }
 }
+
 .plate-bounce {
     animation: plate-bounce 0.5s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
 }
 
 @keyframes steam-rise {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    50% { opacity: 0.6; }
-    100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.6;
+    }
+
+    100% {
+        transform: translateY(-40px) scale(1.5);
+        opacity: 0;
+    }
 }
+
 .animate-steam {
     animation: steam-rise 1.5s ease-out infinite;
 }
@@ -159,7 +194,8 @@ input:-webkit-autofill:active{
 
 .tooltip {
     position: absolute;
-    left: 60px; /* Display tooltip to the right instead of top to prevent overlap in column */
+    left: 60px;
+    /* Display tooltip to the right instead of top to prevent overlap in column */
     top: 50%;
     transform: translateY(-50%) scale(0);
     padding: 6px 12px;
@@ -181,7 +217,8 @@ input:-webkit-autofill:active{
     transform: translateY(-50%);
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
-    border-right: 5px solid transparent; /* Colored based on parent hover */
+    border-right: 5px solid transparent;
+    /* Colored based on parent hover */
 }
 
 .social-icons a:hover .tooltip {
@@ -195,10 +232,12 @@ input:-webkit-autofill:active{
     color: hsl(0, 83%, 95%);
     transform: translateY(-5px);
 }
+
 .insta a:hover .tooltip {
     background: linear-gradient(-120deg, #FC09CC, #FE0C74, #FD4716);
     color: #fff;
 }
+
 .insta a:hover .tooltip::before {
     border-right-color: #FE0C74;
 }
@@ -209,10 +248,12 @@ input:-webkit-autofill:active{
     color: #f8e3e3;
     transform: translateY(-5px);
 }
+
 .tele a:hover .tooltip {
     background: #43E961;
     color: #fff;
 }
+
 .tele a:hover .tooltip::before {
     border-right-color: #43E961;
 }
@@ -222,10 +263,12 @@ input:-webkit-autofill:active{
     color: #2c2a2a;
     transform: translateY(-5px);
 }
+
 .gift a:hover .tooltip {
     background: #32B1B8;
     color: #fff;
 }
+
 .gift a:hover .tooltip::before {
     border-right-color: #32B1B8;
 }
