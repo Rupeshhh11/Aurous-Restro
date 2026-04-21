@@ -1,161 +1,91 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true
-    });
-
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
 
     const counter = document.getElementById('counter');
     const progressLine = document.getElementById('progress-line');
     const preloader = document.getElementById('preloader');
-    const preloaderEmoji = document.getElementById('preloader-emoji');
     const heroContent = document.querySelector('.hero-content');
 
-    const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
-    let lastEmojiUpdate = 0;
     let count = 0;
 
-    lenis.stop();
+
+    document.body.style.overflow = 'hidden';
+
     window.scrollTo(0, 0);
 
     function updateLoader() {
-        let increment = (101 - count) * Math.random() * 0.12 + 0.3;
+
+        let increment = (101 - count) * Math.random() * 0.05 + 0.15;
         count += increment;
 
         if (count > 100) count = 100;
 
         counter.innerText = Math.floor(count) + "%";
-        if (progressLine) progressLine.style.width = count + "%";
-
-        const now = Date.now();
-        if (now - lastEmojiUpdate > 200 && preloaderEmoji) {
-            preloaderEmoji.innerText = foods[Math.floor(Math.random() * foods.length)];
-            lastEmojiUpdate = now;
+        if (progressLine) {
+            progressLine.style.width = count + "%";
         }
+
+        // Reveal words sequentially
+        if (count > 10) document.getElementById('preloader-char-0')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 25) document.getElementById('preloader-char-1')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 40) document.getElementById('preloader-char-2')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 55) document.getElementById('preloader-char-3')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 70) document.getElementById('preloader-char-4')?.classList.remove('opacity-0', 'translate-y-4');
+        if (count > 85) document.getElementById('preloader-char-5')?.classList.remove('opacity-0', 'translate-y-4');
 
         if (count < 100) {
             requestAnimationFrame(updateLoader);
         } else {
             counter.innerText = "100%";
 
-            gsap.to(preloader, {
-                opacity: 0,
-                duration: 1,
-                delay: 0.5,
-                ease: "power2.inOut",
-                onComplete: () => {
-                    preloader.style.display = 'none';
-                    lenis.start();
-                    gsap.to(".hero-content", {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1.5,
-                        ease: "power4.out"
-                    });
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+
+                const heroBg = document.getElementById('hero-bg-wrapper');
+                if (heroBg) {
+                    heroBg.classList.replace('scale-100', 'scale-110');
                 }
-            });
+
+                const nav = document.getElementById('navbar');
+                if (nav) {
+                    nav.classList.remove('opacity-0', '-translate-y-full');
+                }
+
+                document.body.style.overflow = '';
+
+                setTimeout(() => {
+                    if (heroContent) {
+                        heroContent.classList.remove('opacity-0', 'translate-y-8');
+                    }
+                }, 400);
+
+            }, 500);
         }
     }
 
     requestAnimationFrame(updateLoader);
 
-    gsap.from("#vibe h2, #vibe p", {
-        scrollTrigger: {
-            trigger: "#vibe",
-            start: "top 80%",
-        },
-        opacity: 0,
-        y: 50,
-        duration: 1,
-        stagger: 0.2,
-        ease: "power3.out"
-    });
-
-    gsap.from(".review-card", {
-        scrollTrigger: {
-            trigger: "#echoes",
-            start: "top 70%",
-        },
-        opacity: 0,
-        y: 60,
-        duration: 1,
-        stagger: 0.15,
-        ease: "back.out(1.7)"
-    });
-
-    const filterBtns = document.querySelectorAll('.review-filter');
-    const reviewCards = document.querySelectorAll('.review-card');
-
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.dataset.filter;
-
-            filterBtns.forEach(b => b.classList.remove('active', 'bg-[#E0115F]'));
-            btn.classList.add('active', 'bg-[#E0115F]');
-
-            gsap.to(reviewCards, {
-                opacity: 0,
-                scale: 0.9,
-                duration: 0.3,
-                onComplete: () => {
-                    reviewCards.forEach(card => {
-                        const category = card.dataset.category;
-                        if (filter === 'all' || category === filter) {
-                            card.style.display = 'flex';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-
-                    gsap.to(reviewCards, {
-                        opacity: 1,
-                        scale: 1,
-                        duration: 0.4,
-                        stagger: 0.1,
-                        ease: "power2.out"
-                    });
-                }
-            });
-        });
-    });
-
-    const stars = document.querySelectorAll('#star-rating i');
-    stars.forEach(star => {
-        star.addEventListener('click', () => {
-            const val = star.dataset.value;
-            stars.forEach((s, idx) => {
-                if (idx < val) {
-                    s.classList.add('text-[#E0115F]');
-                    s.classList.remove('text-white/10');
-                } else {
-                    s.classList.remove('text-[#E0115F]');
-                    s.classList.add('text-white/10');
-                }
-            });
-        });
-    });
 
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) navbar.classList.add('nav-scrolled');
-        else navbar.classList.remove('nav-scrolled');
+        if (window.scrollY > 50) {
+            navbar.classList.add('nav-scrolled');
+        } else {
+            navbar.classList.remove('nav-scrolled');
+        }
     });
 
     const menuScroll = document.getElementById('menu-scroll');
     const scrollLeftBtn = document.getElementById('scroll-left');
     const scrollRightBtn = document.getElementById('scroll-right');
+
     if (menuScroll && scrollLeftBtn && scrollRightBtn) {
-        scrollLeftBtn.addEventListener('click', () => menuScroll.scrollBy({ left: -400, behavior: 'smooth' }));
-        scrollRightBtn.addEventListener('click', () => menuScroll.scrollBy({ left: 400, behavior: 'smooth' }));
+        scrollLeftBtn.addEventListener('click', () => {
+            menuScroll.scrollBy({ left: -400, behavior: 'smooth' });
+        });
+        scrollRightBtn.addEventListener('click', () => {
+            menuScroll.scrollBy({ left: 400, behavior: 'smooth' });
+        });
     }
 
     const loginModal = document.getElementById('login-modal');
@@ -169,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginModal.classList.remove('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-10');
         loginBox.classList.add('translate-y-0', 'scale-100');
-        lenis.stop();
+        document.body.style.overflow = 'hidden';
     }
 
     function closeLogin(e) {
@@ -177,41 +107,63 @@ document.addEventListener('DOMContentLoaded', () => {
         loginModal.classList.add('opacity-0', 'pointer-events-none');
         loginBox.classList.remove('translate-y-0', 'scale-100');
         loginBox.classList.add('translate-y-10');
-        lenis.start();
+        document.body.style.overflow = '';
     }
 
     if (openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
 
-    const foodsList = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
+    const cursorDot = document.createElement('div');
+    cursorDot.classList.add('custom-cursor-dot');
+    document.body.appendChild(cursorDot);
+
     const cursorOutline = document.createElement('div');
     cursorOutline.classList.add('custom-cursor');
     document.body.appendChild(cursorOutline);
 
+    const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
+
     let lastFoodTime = 0;
+
     window.addEventListener('mousemove', (e) => {
         const posX = e.clientX;
         const posY = e.clientY;
 
-        gsap.to(cursorOutline, {
-            left: posX,
-            top: posY,
-            duration: 0.15,
-            ease: "power2.out"
-        });
+        cursorDot.style.left = `${posX}px`;
+        cursorDot.style.top = `${posY}px`;
+
+        cursorOutline.animate({
+            left: `${posX}px`,
+            top: `${posY}px`
+        }, { duration: 150, fill: "forwards" });
 
         const now = Date.now();
         if (now - lastFoodTime > 100) {
             lastFoodTime = now;
             const food = document.createElement('div');
             food.classList.add('food-trail');
-            food.innerText = foodsList[Math.floor(Math.random() * foodsList.length)];
+            food.innerText = foods[Math.floor(Math.random() * foods.length)];
             food.style.left = `${posX}px`;
             food.style.top = `${posY}px`;
             document.body.appendChild(food);
-            setTimeout(() => food.remove(), 1000);
+
+            setTimeout(() => {
+                food.remove();
+            }, 1000);
         }
+    });
+
+    const hoverElements = document.querySelectorAll('a, button, input');
+    hoverElements.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.5)';
+            cursorOutline.style.backgroundColor = 'rgba(224, 17, 95, 0.1)';
+        });
+        el.addEventListener('mouseleave', () => {
+            cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+            cursorOutline.style.backgroundColor = 'transparent';
+        });
     });
 
 });
