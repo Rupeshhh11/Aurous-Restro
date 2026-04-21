@@ -5,33 +5,37 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressLine = document.getElementById('progress-line');
     const preloader = document.getElementById('preloader');
     const heroContent = document.querySelector('.hero-content');
+    const chars = document.querySelectorAll('.preloader-char');
 
     let count = 0;
 
-
     document.body.style.overflow = 'hidden';
-
     window.scrollTo(0, 0);
 
-    function updateLoader() {
+    // Initial stagger for letters
+    chars.forEach((char, index) => {
+        setTimeout(() => {
+            char.classList.remove('translate-y-full');
+        }, index * 100 + 100);
+    });
 
-        let increment = (101 - count) * Math.random() * 0.05 + 0.15;
-        count += increment;
+    let startTime = null;
 
-        if (count > 100) count = 100;
+    function updateLoader(timestamp) {
+        if (!startTime) startTime = timestamp;
+
+        // Simulating load time (approx 2s)
+        const progress = Math.min((timestamp - startTime) / 2000, 1);
+
+        // Smooth easing out
+        const easeOutProgress = Math.min(progress * (2 - progress), 1);
+
+        count = easeOutProgress * 100;
 
         counter.innerText = Math.floor(count) + "%";
         if (progressLine) {
             progressLine.style.width = count + "%";
         }
-
-        // Reveal words sequentially
-        if (count > 10) document.getElementById('preloader-char-0')?.classList.remove('opacity-0', 'translate-y-4');
-        if (count > 25) document.getElementById('preloader-char-1')?.classList.remove('opacity-0', 'translate-y-4');
-        if (count > 40) document.getElementById('preloader-char-2')?.classList.remove('opacity-0', 'translate-y-4');
-        if (count > 55) document.getElementById('preloader-char-3')?.classList.remove('opacity-0', 'translate-y-4');
-        if (count > 70) document.getElementById('preloader-char-4')?.classList.remove('opacity-0', 'translate-y-4');
-        if (count > 85) document.getElementById('preloader-char-5')?.classList.remove('opacity-0', 'translate-y-4');
 
         if (count < 100) {
             requestAnimationFrame(updateLoader);
@@ -39,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
             counter.innerText = "100%";
 
             setTimeout(() => {
-                preloader.classList.add('fade-out');
+                // The Merge / Transition
+                preloader.classList.add('slide-up');
 
                 const heroBg = document.getElementById('hero-bg-wrapper');
                 if (heroBg) {
@@ -48,18 +53,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const nav = document.getElementById('navbar');
                 if (nav) {
-                    nav.classList.remove('opacity-0', '-translate-y-full');
+                    setTimeout(() => {
+                        nav.classList.remove('opacity-0', '-translate-y-full');
+                    }, 400);
                 }
 
-                document.body.style.overflow = '';
+                // Smoothly fade and slide up the hero h1/button simultaneously
+                if (heroContent) {
+                    heroContent.classList.remove('opacity-0', 'translate-y-16');
+                }
 
                 setTimeout(() => {
-                    if (heroContent) {
-                        heroContent.classList.remove('opacity-0', 'translate-y-8');
-                    }
-                }, 400);
+                    document.body.style.overflow = '';
+                }, 1200);
 
-            }, 500);
+            }, 300); // slight pause at 100%
         }
     }
 
