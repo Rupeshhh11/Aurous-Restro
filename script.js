@@ -174,4 +174,69 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // ── Music Toggle ──
+    const bgMusic = document.getElementById('bg-music');
+    const musicToggle = document.getElementById('music-toggle');
+    const musicIconOff = document.getElementById('music-icon-off');
+    const musicVisualizer = document.getElementById('music-visualizer');
+    const musicTooltip = document.getElementById('music-tooltip');
+    let isMusicPlaying = false;
+    let fadeInterval = null;
+
+    if (bgMusic && musicToggle) {
+        bgMusic.volume = 0;
+
+        function fadeAudioIn(duration) {
+            clearInterval(fadeInterval);
+            const step = 0.05;
+            const interval = duration / (1 / step);
+            fadeInterval = setInterval(() => {
+                if (bgMusic.volume < 0.6) {
+                    bgMusic.volume = Math.min(bgMusic.volume + step, 0.6);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, interval);
+        }
+
+        function fadeAudioOut(duration, callback) {
+            clearInterval(fadeInterval);
+            const step = 0.05;
+            const interval = duration / (bgMusic.volume / step);
+            fadeInterval = setInterval(() => {
+                if (bgMusic.volume > step) {
+                    bgMusic.volume = Math.max(bgMusic.volume - step, 0);
+                } else {
+                    bgMusic.volume = 0;
+                    clearInterval(fadeInterval);
+                    if (callback) callback();
+                }
+            }, interval);
+        }
+
+        musicToggle.addEventListener('click', () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    fadeAudioIn(800);
+                    isMusicPlaying = true;
+                    musicToggle.classList.add('playing');
+                    musicIconOff.classList.add('hidden');
+                    musicVisualizer.classList.remove('hidden');
+                    musicVisualizer.classList.add('flex');
+                    if (musicTooltip) musicTooltip.textContent = 'Vibe: On';
+                }).catch(() => {});
+            } else {
+                fadeAudioOut(600, () => {
+                    bgMusic.pause();
+                });
+                isMusicPlaying = false;
+                musicToggle.classList.remove('playing');
+                musicIconOff.classList.remove('hidden');
+                musicVisualizer.classList.add('hidden');
+                musicVisualizer.classList.remove('flex');
+                if (musicTooltip) musicTooltip.textContent = 'Royal Melodies';
+            }
+        });
+    }
+
 });
