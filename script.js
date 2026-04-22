@@ -12,7 +12,57 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
 
-    // Initial stagger for letters
+    const canvas = document.getElementById('snow-canvas');
+    let ctx, snowParticles = [], snowActive = false;
+    if (canvas) {
+        ctx = canvas.getContext('2d');
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        resizeCanvas();
+        snowActive = true;
+
+        for (let i = 0; i < 150; i++) {
+            snowParticles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 0.5,
+                speedY: Math.random() * 1 + 0.5,
+                speedX: Math.random() * 0.5 - 0.25,
+                opacity: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function drawSnow() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            snowParticles.forEach(p => {
+                ctx.globalAlpha = p.opacity;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (snowActive) {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    if (p.y > canvas.height) p.y = 0;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.x < 0) p.x = canvas.width;
+                }
+            });
+            if (snowActive) {
+                requestAnimationFrame(drawSnow);
+            }
+        }
+        drawSnow();
+
+        window.addEventListener('resize', () => {
+            if (snowActive) resizeCanvas();
+        });
+    }
+
     chars.forEach((char, index) => {
         setTimeout(() => {
             char.classList.remove('translate-y-full');
@@ -24,10 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateLoader(timestamp) {
         if (!startTime) startTime = timestamp;
 
-        // Simulating load time (approx 2s)
         const progress = Math.min((timestamp - startTime) / 2000, 1);
 
-        // Smooth easing out
         const easeOutProgress = Math.min(progress * (2 - progress), 1);
 
         count = easeOutProgress * 100;
@@ -40,11 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (count < 100) {
             requestAnimationFrame(updateLoader);
         } else {
-            counter.innerText = "100%";
+            if (counter) counter.innerText = "100%";
 
             setTimeout(() => {
-                // The Merge / Transition
                 preloader.classList.add('slide-up');
+                
+                if (canvas) {
+                    canvas.classList.replace('opacity-100', 'opacity-0');
+                    setTimeout(() => snowActive = false, 1000);
+                }
+                const treeLeft = document.getElementById('tree-left');
+                const treeRight = document.getElementById('tree-right');
+                if (treeLeft) treeLeft.style.transform = 'translateX(-100%) scale(0.8)';
+                if (treeLeft) treeLeft.classList.replace('opacity-100', 'opacity-0');
+                if (treeRight) treeRight.style.transform = 'translateX(100%) scale(0.8)';
+                if (treeRight) treeRight.classList.replace('opacity-100', 'opacity-0');
 
                 const heroBg = document.getElementById('hero-bg-wrapper');
                 if (heroBg) {
@@ -58,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 400);
                 }
 
-                // Smoothly fade and slide up the hero h1/button simultaneously
                 if (heroContent) {
                     heroContent.classList.remove('opacity-0', 'translate-y-16');
                 }
@@ -67,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.style.overflow = '';
                 }, 1200);
 
-            }, 300); // slight pause at 100%
+            }, 300); 
         }
     }
 
@@ -174,16 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // ── Music Toggle ──
     const bgMusic = document.getElementById('bg-music');
-    const musicToggle = document.getElementById('music-toggle');
-    const musicIconOff = document.getElementById('music-icon-off');
-    const musicVisualizer = document.getElementById('music-visualizer');
-    const musicTooltip = document.getElementById('music-tooltip');
+    const playStatus = document.getElementById('playStatus');
+    const playerSpinDisc = document.getElementById('player-spin-disc');
     let isMusicPlaying = false;
     let fadeInterval = null;
 
-    if (bgMusic && musicToggle) {
+    if (bgMusic && playStatus) {
         bgMusic.volume = 0;
 
         function fadeAudioIn(duration) {
@@ -214,27 +268,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }, interval);
         }
 
-        musicToggle.addEventListener('click', () => {
-            if (!isMusicPlaying) {
+        playStatus.addEventListener('change', (e) => {
+            if (e.target.checked) {
                 bgMusic.play().then(() => {
                     fadeAudioIn(800);
                     isMusicPlaying = true;
-                    musicToggle.classList.add('playing');
-                    musicIconOff.classList.add('hidden');
-                    musicVisualizer.classList.remove('hidden');
-                    musicVisualizer.classList.add('flex');
-                    if (musicTooltip) musicTooltip.textContent = 'Vibe: On';
-                }).catch(() => {});
+                    if(playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
+                }).catch(() => {
+                    playStatus.checked = false;
+                });
             } else {
                 fadeAudioOut(600, () => {
                     bgMusic.pause();
                 });
                 isMusicPlaying = false;
-                musicToggle.classList.remove('playing');
-                musicIconOff.classList.remove('hidden');
-                musicVisualizer.classList.add('hidden');
-                musicVisualizer.classList.remove('flex');
-                if (musicTooltip) musicTooltip.textContent = 'Royal Melodies';
+                if(playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
             }
         });
     }
