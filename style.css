@@ -12,9 +12,9 @@ body {
 }
 
 .custom-cursor {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--primary);
+    width: 35px;
+    height: 35px;
+    border: 1.85px solid var(--primary);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
@@ -24,8 +24,8 @@ body {
 }
 
 .custom-cursor-dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background-color: var(--primary);
     border-radius: 50%;
     position: fixed;
@@ -38,7 +38,7 @@ body {
     position: fixed;
     pointer-events: none;
     z-index: 9998;
-    font-size: 24px;
+    font-size: 30px;
     animation: fadeTrail 1s forwards ease-out;
     transform: translate(-50%, -50%);
 }
@@ -155,7 +155,7 @@ input:-webkit-autofill:active {
     flex-direction: column;
     gap: 15px;
     position: relative;
-    /* remove explicit height */
+
 }
 
 .social-icons .icon-sz {
@@ -273,7 +273,7 @@ input:-webkit-autofill:active {
     border-right-color: #32B1B8;
 }
 
-/* ── Vinyl Music Toggle ── */
+/* Music Toggle */
 .vinyl-toggle {
     background: transparent;
 }
@@ -334,16 +334,28 @@ input:-webkit-autofill:active {
     animation: twinkle 2s infinite alternate ease-in-out;
 }
 
-.delay-0 { animation-delay: 0s; }
-.delay-1 { animation-delay: 0.5s; }
-.delay-2 { animation-delay: 1.0s; }
-.delay-3 { animation-delay: 1.5s; }
+.delay-0 {
+    animation-delay: 0s;
+}
+
+.delay-1 {
+    animation-delay: 0.5s;
+}
+
+.delay-2 {
+    animation-delay: 1.0s;
+}
+
+.delay-3 {
+    animation-delay: 1.5s;
+}
 
 @keyframes twinkle {
     0% {
         opacity: 0.2;
         transform: scale(0.8);
     }
+
     100% {
         opacity: 1;
         transform: scale(1.3);

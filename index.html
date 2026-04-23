@@ -13,13 +13,17 @@
 <body
     class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
 
-    <div id="preloader" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] transition-opacity duration-[1500ms] overflow-hidden preloader-slide-transition">
-        
-        <canvas id="snow-canvas" class="absolute inset-0 z-0 opacity-100 transition-opacity duration-1000 pointer-events-none"></canvas>
+    <div id="preloader"
+        class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050505] transition-opacity duration-[1500ms] overflow-hidden preloader-slide-transition">
 
-        <div id="tree-left" class="absolute bottom-0 left-4 md:left-12 z-0 opacity-100 transition-transform duration-[1500ms] ease-out origin-bottom transform translate-y-0 w-32 md:w-48 h-auto pointer-events-none">
+        <canvas id="snow-canvas"
+            class="absolute inset-0 z-0 opacity-100 transition-opacity duration-1000 pointer-events-none"></canvas>
+
+        <div id="tree-left"
+            class="absolute bottom-0 left-4 md:left-12 z-0 opacity-100 transition-transform duration-[1500ms] ease-out origin-bottom transform translate-y-0 w-32 md:w-48 h-auto pointer-events-none">
             <svg viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 10 L20 180 M50 10 L80 180 M50 50 L30 180 M50 50 L70 180 M50 90 L40 180 M50 90 L60 180" stroke="rgba(255,255,255,0.03)" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 10 L20 180 M50 10 L80 180 M50 50 L30 180 M50 50 L70 180 M50 90 L40 180 M50 90 L60 180"
+                    stroke="rgba(255,255,255,0.03)" stroke-width="2" stroke-linecap="round" />
                 <circle cx="50" cy="10" r="1.5" class="fairy-light delay-0" />
                 <circle cx="45" cy="40" r="1.5" class="fairy-light delay-1" />
                 <circle cx="55" cy="50" r="1.5" class="fairy-light delay-2" />
@@ -35,9 +39,11 @@
             </svg>
         </div>
 
-        <div id="tree-right" class="absolute bottom-0 right-4 md:right-12 z-0 opacity-100 transition-transform duration-[1500ms] ease-out origin-bottom transform translate-y-0 w-32 md:w-48 h-auto pointer-events-none">
+        <div id="tree-right"
+            class="absolute bottom-0 right-4 md:right-12 z-0 opacity-100 transition-transform duration-[1500ms] ease-out origin-bottom transform translate-y-0 w-32 md:w-48 h-auto pointer-events-none">
             <svg viewBox="0 0 100 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 10 L20 180 M50 10 L80 180 M50 50 L30 180 M50 50 L70 180 M50 90 L40 180 M50 90 L60 180" stroke="rgba(255,255,255,0.03)" stroke-width="2" stroke-linecap="round"/>
+                <path d="M50 10 L20 180 M50 10 L80 180 M50 50 L30 180 M50 50 L70 180 M50 90 L40 180 M50 90 L60 180"
+                    stroke="rgba(255,255,255,0.03)" stroke-width="2" stroke-linecap="round" />
                 <circle cx="50" cy="10" r="1.5" class="fairy-light delay-2" />
                 <circle cx="55" cy="35" r="1.5" class="fairy-light delay-1" />
                 <circle cx="40" cy="55" r="1.5" class="fairy-light delay-0" />
@@ -288,12 +294,11 @@
                                 Chilli is perfectly balanced with flavors that dance on your palate. The presentation
                                 here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt."</p>
                             <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80"
-                                    alt="Ritika" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
+                                <div alt="Ritika" class="w-12 h-12 rounded-full border-2 border-[#E0115F]"></div>
                                 <div class="flex flex-col">
                                     <h4 class="font-bold text-sm tracking-wide uppercase">Ritika Verma</h4>
                                     <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local
-                                        Guide</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -471,7 +476,8 @@
     <audio id="bg-music" src="Ytmp3.gg_YouTube_The-Weeknd-Save-Your-Tears-Official-Musi_Media_XXYlFuWEuKI_009_128k.mp3"
         loop preload="auto"></audio>
 
-    <div class="fixed bottom-8 right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.55] md:scale-[0.6]">
+    <div
+        class="fixed bottom-8 right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.55] md:scale-[0.6]">
         <div class="relative z-0 h-16 -mb-2 transition-all duration-200 group-hover/he:h-0 mr-12">
             <svg width="128" height="128" viewBox="0 0 128 128"
                 class="duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5 animate-[spin_3s_linear_infinite] transition-all">
@@ -498,8 +504,8 @@
         <div
             class="z-30 flex flex-col w-40 h-20 transition-all duration-300 bg-[#0a0a0a] border border-white/10 shadow-xl group-hover/he:h-40 group-hover/he:w-72 rounded-2xl shadow-black/50 text-white">
             <div class="flex flex-row w-full h-0 group-hover/he:h-20">
-                <div
-                    class="relative w-24 h-24 group-hover/he:-top-6 group-hover/he:-left-4 opacity-0 group-hover/he:opacity-100 transition-all duration-100 flex-shrink-0" id="player-spin-disc">
+                <div class="relative w-24 h-24 group-hover/he:-top-6 group-hover/he:-left-4 opacity-0 group-hover/he:opacity-100 transition-all duration-100 flex-shrink-0"
+                    id="player-spin-disc">
                     <svg width="96" height="96" viewBox="0 0 128 128"
                         class="duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5">
                         <svg>
@@ -512,13 +518,16 @@
                             <circle cx="120" cy="50" r="2" fill="white"></circle>
                             <circle cx="90" cy="30" r="10" fill="white" fill-opacity="0.5"></circle>
                             <circle cx="90" cy="30" r="8" fill="white"></circle>
-                            <path d="M0 128 Q32 64 64 128 T128 128" fill="purple" stroke="black" stroke-width="1"></path>
+                            <path d="M0 128 Q32 64 64 128 T128 128" fill="purple" stroke="black" stroke-width="1">
+                            </path>
                             <path d="M0 128 Q32 48 64 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1">
                             </path>
-                            <path d="M0 128 Q32 32 64 128 T128 128" fill="rebeccapurple" stroke="black" stroke-width="1">
+                            <path d="M0 128 Q32 32 64 128 T128 128" fill="rebeccapurple" stroke="black"
+                                stroke-width="1">
                             </path>
                             <path d="M0 128 Q16 64 32 128 T64 128" fill="purple" stroke="black" stroke-width="1"></path>
-                            <path d="M64 128 Q80 64 96 128 T128 128" fill="mediumpurple" stroke="black" stroke-width="1">
+                            <path d="M64 128 Q80 64 96 128 T128 128" fill="mediumpurple" stroke="black"
+                                stroke-width="1">
                             </path>
                         </svg>
                     </svg>
@@ -526,19 +535,22 @@
                         class="absolute z-10 w-6 h-6 bg-white border-4 rounded-full shadow-sm border-zinc-400 top-9 left-9">
                     </div>
                 </div>
-                <div class="flex flex-col justify-center w-full pl-3 -ml-24 overflow-hidden group-hover/he:-ml-3 text-nowrap">
+                <div
+                    class="flex flex-col justify-center w-full pl-3 -ml-24 overflow-hidden group-hover/he:-ml-3 text-nowrap">
                     <p class="text-xl font-bold">Save Your Tears</p>
                     <p class="text-white/50">The Weeknd</p>
                 </div>
             </div>
-            <div class="flex flex-row mx-3 mt-3 bg-white/5 border border-white/5 rounded-md min-h-4 group-hover/he:mt-0 items-center">
+            <div
+                class="flex flex-row mx-3 mt-3 bg-white/5 border border-white/5 rounded-md min-h-4 group-hover/he:mt-0 items-center">
                 <span class="hidden pl-3 text-xs text-white/50 group-hover/he:inline-block">0:00</span>
                 <input type="range" min="0" max="100" value="0"
                     class="w-24 group-hover/he:w-full flex-grow h-1 mx-2 my-auto bg-white/20 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#E0115F] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md" />
                 <span class="hidden pr-3 text-xs text-white/50 group-hover/he:inline-block">3:45</span>
             </div>
             <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5">
-                <label for="playMode" class="flex items-center justify-center w-0 h-full cursor-pointer group-hover/he:w-12 hover:text-[#E0115F] transition-colors">
+                <label for="playMode"
+                    class="flex items-center justify-center w-0 h-full cursor-pointer group-hover/he:w-12 hover:text-[#E0115F] transition-colors">
                     <input type="checkbox" id="playMode" class="hidden peer/playMode" />
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -558,7 +570,8 @@
                         <line x1="4" y1="4" x2="9" y2="9"></line>
                     </svg>
                 </label>
-                <div class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
+                <div
+                    class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-skip-back">
@@ -566,7 +579,8 @@
                         <line x1="5" y1="19" x2="5" y2="5"></line>
                     </svg>
                 </div>
-                <label for="playStatus" class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
+                <label for="playStatus"
+                    class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
                     <input type="checkbox" name="playStatus" id="playStatus" class="hidden peer/playStatus" />
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -580,7 +594,8 @@
                         <rect x="14" y="4" width="4" height="16"></rect>
                     </svg>
                 </label>
-                <div class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
+                <div
+                    class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="feather feather-skip-forward">
@@ -588,7 +603,8 @@
                         <line x1="19" y1="5" x2="19" y2="19"></line>
                     </svg>
                 </div>
-                <div class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
+                <div
+                    class="flex items-center justify-center w-12 h-full cursor-pointer hover:text-[#E0115F] transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                         class="w-0 feather feather-list group-hover/he:w-12">
