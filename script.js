@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             setTimeout(() => {
                 preloader.classList.add('slide-up');
-                
+
                 if (canvas) {
                     canvas.classList.replace('opacity-100', 'opacity-0');
                     setTimeout(() => snowActive = false, 1000);
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.style.overflow = '';
                 }, 1200);
 
-            }, 300); 
+            }, 300);
         }
     }
 
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cursorOutline.animate({
             left: `${posX}px`,
             top: `${posY}px`
-        }, { duration: 150, fill: "forwards" });
+        }, { duration: 500, fill: "forwards" });
 
         const now = Date.now();
         if (now - lastFoodTime > 100) {
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 bgMusic.play().then(() => {
                     fadeAudioIn(800);
                     isMusicPlaying = true;
-                    if(playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
+                    if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
                 }).catch(() => {
                     playStatus.checked = false;
                 });
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     bgMusic.pause();
                 });
                 isMusicPlaying = false;
-                if(playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
+                if (playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
             }
         });
     }
