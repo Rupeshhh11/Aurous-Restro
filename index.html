@@ -142,8 +142,8 @@
             </div>
         </section>
 
-        <section id="vibe" class="py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-            <div class="w-full md:w-1/2 space-y-6">
+        <section id="vibe" class="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row gap-16 items-center">
+            <div class="w-[90%] mx-auto -mt-[220px] relative z-40 bg-black/70 backdrop-blur-[15px] p-8 border border-white/10 rounded-3xl shadow-2xl md:w-1/2 md:p-0 md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:mt-0 space-y-6 text-right md:text-left">
                 <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold">Modern Dining</h4>
                 <h2 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">More than a meal.<br>It's an
                     <span class="italic font-light text-gray-400">experience.</span>
@@ -264,108 +264,25 @@
             </div>
         </section>
 
-        <section id="echoes" class="py-32 overflow-hidden relative">
+        <section id="echoes" class="py-16 md:py-32 overflow-hidden relative">
             <div class="px-6 md:px-12 max-w-7xl mx-auto">
-                <div class="text-center mb-20 relative z-20">
+                <div class="text-center mb-12 md:mb-20 relative z-20">
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
                     <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span>
                     </h2>
+                    <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
+                        <button id="open-review-modal" class="bg-[#E0115F] text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                            Add Your Experience
+                        </button>
+                        <a href="reviews.html" class="bg-white/5 border border-white/10 text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold inline-block">
+                            See More
+                        </a>
+                    </div>
                 </div>
 
-                <div class="space-y-32">
-                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Beautiful dish">
-                        </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"A Culinary Masterpiece"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"The Roasted Chicken
-                                Chilli is perfectly balanced with flavors that dance on your palate. The presentation
-                                here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt."</p>
-                            <div class="flex items-center gap-4">
-                                <div alt="Ritika" class="w-12 h-12 rounded-full border-2 border-[#E0115F]"></div>
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Ritika Verma</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Local
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Sizzler">
-                        </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:left-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"The Premium Sizzler Experience"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"Their Chef's Special
-                                Sizzler is an absolute showstopper. Smoked perfectly with a rich aroma that takes over
-                                the room. The luxury interiors combined with top-notch food is an unbeatable combo."</p>
-                            <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"
-                                    alt="Aman" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Aman Singh</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Food
-                                        Enthusiast</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col md:flex-row items-center gap-10 md:gap-0 relative group">
-                        <div
-                            class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div
-                                class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full">
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                                alt="Cocktails">
-                        </div>
-                        <div
-                            class="w-full md:w-[45%] md:absolute md:right-0 bg-white/5 md:bg-[#050505]/60 md:backdrop-blur-2xl p-10 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-20 md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
-                            <div class="flex gap-1 text-[#E0115F] text-lg mb-6"><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                    class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"Vibrant Evenings & Mixology"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"One of the best evening
-                                spots in Jamshedpur! The signature cocktails are a must-try. The music, the crowd, the
-                                drinks—everything is curated for a truly premium experience."</p>
-                            <div class="flex items-center gap-4">
-                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80"
-                                    alt="Neha" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">
-                                <div class="flex flex-col">
-                                    <h4 class="font-bold text-sm tracking-wide uppercase">Neha Sharma</h4>
-                                    <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Jamshedpur
-                                        Resident</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                <div id="reviews-container" class="space-y-16 md:space-y-32">
+                    <!-- Dynamic reviews will be injected here -->
                 </div>
             </div>
         </section>
@@ -473,11 +390,68 @@
         </div>
     </div>
 
+    <div id="review-modal" class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 px-4">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-review-bg"></div>
+        <div class="relative z-10 w-full max-w-md p-8 md:p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl" id="review-box">
+            <button id="close-review" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-8 mt-2">
+                <h2 class="text-3xl font-bold tracking-tight">Your Echo.</h2>
+                <p class="text-xs uppercase tracking-[0.2em] text-[#E0115F] mt-2 font-bold">Share Your Experience</p>
+            </div>
+
+            <form id="review-form" class="flex flex-col gap-5">
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Name</label>
+                        <input type="text" id="review-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="John Doe">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Location</label>
+                        <input type="text" id="review-location" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="City">
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Rating</label>
+                        <div class="flex gap-2 text-2xl text-white/20 mt-1" id="star-rating-input">
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="1"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="2"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="3"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="4"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="review-rating" value="5" required>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Photo (Optional)</label>
+                        <div class="relative w-full">
+                            <input type="file" id="review-image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+                            <div class="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-2.5 text-xs flex flex-col items-center justify-center text-white/50 transition-colors h-full" id="review-image-label">
+                                <i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i>
+                                <span>Upload</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Your Review</label>
+                    <textarea id="review-text" required rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar" placeholder="Tell us about your experience..."></textarea>
+                </div>
+                <button type="submit" class="mt-2 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+    </div>
+
     <audio id="bg-music" src="Ytmp3.gg_YouTube_The-Weeknd-Save-Your-Tears-Official-Musi_Media_XXYlFuWEuKI_009_128k.mp3"
         loop preload="auto"></audio>
 
     <div
-        class="fixed bottom-8 right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.55] md:scale-[0.6]">
+        class="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.45] md:scale-[0.6]">
         <div class="relative z-0 h-16 -mb-2 transition-all duration-200 group-hover/he:h-0 mr-12">
             <svg width="128" height="128" viewBox="0 0 128 128"
                 class="duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5 animate-[spin_3s_linear_infinite] transition-all">
@@ -543,10 +517,10 @@
             </div>
             <div
                 class="flex flex-row mx-3 mt-3 bg-white/5 border border-white/5 rounded-md min-h-4 group-hover/he:mt-0 items-center">
-                <span class="hidden pl-3 text-xs text-white/50 group-hover/he:inline-block">0:00</span>
-                <input type="range" min="0" max="100" value="0"
+                <span id="music-current-time" class="hidden pl-3 text-xs text-white/50 group-hover/he:inline-block w-12">0:00</span>
+                <input type="range" min="0" max="100" value="0" id="music-progress"
                     class="w-24 group-hover/he:w-full flex-grow h-1 mx-2 my-auto bg-white/20 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#E0115F] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md" />
-                <span class="hidden pr-3 text-xs text-white/50 group-hover/he:inline-block">3:45</span>
+                <span id="music-duration" class="hidden pr-3 text-xs text-white/50 group-hover/he:inline-block w-12 text-right">0:00</span>
             </div>
             <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5">
                 <label for="playMode"
@@ -619,6 +593,25 @@
             </div>
         </div>
     </div>
+
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] bg-[#050505]/80 backdrop-blur-xl border-t border-white/10 pb-safe pb-4 pt-3 px-6 flex justify-between items-center transition-transform duration-500 translate-y-full" id="mobile-nav">
+        <a href="#" class="flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            <i class="fa-solid fa-house text-lg"></i>
+            <span class="text-[10px] uppercase tracking-wider font-semibold">Home</span>
+        </a>
+        <a href="#vibe" class="flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            <i class="fa-solid fa-martini-glass text-lg"></i>
+            <span class="text-[10px] uppercase tracking-wider font-semibold">Vibe</span>
+        </a>
+        <a href="#menu" class="flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            <i class="fa-solid fa-utensils text-lg"></i>
+            <span class="text-[10px] uppercase tracking-wider font-semibold">Menu</span>
+        </a>
+        <a href="#echoes" class="flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            <i class="fa-solid fa-star text-lg"></i>
+            <span class="text-[10px] uppercase tracking-wider font-semibold">Reviews</span>
+        </a>
+    </nav>
 
     <script src="script.js"></script>
 </body>
