@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews Archive | Aurous Restro Lounge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body
+    class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
+
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-4 rounded-full z-50 flex justify-between items-center bg-[#0a0a0a]/85 backdrop-blur-xl border border-[#E0115F]/30 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-[1000ms]"
+        id="navbar">
+        <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-[#E0115F] animate-pulse"></div>
+            <a href="index.html" class="text-xl font-bold tracking-tighter uppercase">Aurous<span class="text-[#E0115F]">.</span></a>
+        </div>
+        <div class="hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium text-white/60">
+            <a href="index.html#vibe" class="hover:text-white transition-colors">The Vibe</a>
+            <a href="index.html#menu" class="hover:text-white transition-colors">Menu</a>
+            <a href="index.html#echoes" class="hover:text-white transition-colors">Reviews</a>
+        </div>
+        <a href="index.html"
+            class="bg-white/10 hover:bg-[#E0115F] text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest transition-all duration-300 font-semibold border border-white/5 hover:border-[#E0115F]">
+            Back to Home
+        </a>
+    </nav>
+
+    <main class="pt-32 min-h-screen flex flex-col">
+        <section class="py-16 px-6 md:px-12 max-w-7xl mx-auto w-full flex-grow">
+            <div class="text-center mb-16 relative z-20">
+                <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">The Archives</h4>
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6">All <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Echoes.</span>
+                </h1>
+                <div class="mb-10 flex justify-center">
+                    <button id="open-review-modal" class="bg-[#E0115F] text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                        Add Your Experience
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3" id="review-filters">
+                    <button
+                        class="filter-btn active bg-[#E0115F] text-white px-6 py-3 rounded-full text-xs uppercase tracking-widest hover:shadow-[0_0_15px_rgba(224,17,95,0.4)] transition-all font-bold"
+                        data-filter="0">All</button>
+                    <button
+                        class="filter-btn bg-white/5 border border-white/10 text-white px-6 py-3 rounded-full text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold"
+                        data-filter="5">5 Stars</button>
+                    <button
+                        class="filter-btn bg-white/5 border border-white/10 text-white px-6 py-3 rounded-full text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold"
+                        data-filter="4">4 Stars</button>
+                    <button
+                        class="filter-btn bg-white/5 border border-white/10 text-white px-6 py-3 rounded-full text-xs uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold"
+                        data-filter="3">3 Stars</button>
+                </div>
+            </div>
+
+            <div id="all-reviews-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <!-- Grid items injected by JS -->
+            </div>
+        </section>
+
+        <footer class="bg-[#0a0a0a] pt-20 pb-8 px-6 md:px-12 border-t border-white/5 text-center mt-auto">
+            <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">
+                Aurous</h1>
+
+            <div
+                class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-10 border-t border-white/10 pt-10">
+                <div class="social-icons mx-auto md:mx-0">
+                    <div class="icon-sz insta">
+                        <a href="#" target="_blank" aria-label="Instagram">
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="38" height="38"
+                                fill="currentColor" viewBox="0 0 24 24">
+                                <path fill="currentColor" fill-rule="evenodd"
+                                    d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="tooltip">Instagram</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="text-center md:text-left">
+                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Near
+                        Bharat Cycle Store, Diagonal Rd</p>
+                    <p class="text-white/50 text-sm">Bistupur, Jamshedpur 831001</p>
+                </div>
+
+                <div class="text-center md:text-right">
+                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-clock text-[#E0115F] mr-2"></i> Open
+                        Daily</p>
+                    <p class="text-white/50 text-sm">12:00 PM to 10:00 PM</p>
+                </div>
+            </div>
+            <p class="text-center text-white/30 text-xs mt-10">© 2026 Aurous Restro Lounge. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <div id="review-modal" class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 px-4">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-review-bg"></div>
+        <div class="relative z-10 w-full max-w-md p-8 md:p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl" id="review-box">
+            <button id="close-review" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-8 mt-2">
+                <h2 class="text-3xl font-bold tracking-tight">Your Echo.</h2>
+                <p class="text-xs uppercase tracking-[0.2em] text-[#E0115F] mt-2 font-bold">Share Your Experience</p>
+            </div>
+
+            <form id="review-form" class="flex flex-col gap-5">
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Name</label>
+                        <input type="text" id="review-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="John Doe">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Location</label>
+                        <input type="text" id="review-location" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="City">
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Rating</label>
+                        <div class="flex gap-2 text-2xl text-white/20 mt-1" id="star-rating-input">
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="1"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="2"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="3"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="4"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="review-rating" value="5" required>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Photo (Optional)</label>
+                        <div class="relative w-full">
+                            <input type="file" id="review-image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+                            <div class="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-2.5 text-xs flex flex-col items-center justify-center text-white/50 transition-colors h-full" id="review-image-label">
+                                <i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i>
+                                <span>Upload</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Your Review</label>
+                    <textarea id="review-text" required rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar" placeholder="Tell us about your experience..."></textarea>
+                </div>
+                <button type="submit" class="mt-2 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            window.currentReviewFilter = 0;
+            
+            // Allow script.js to initialize first, then render
+            setTimeout(() => {
+                if (window.renderReviews) {
+                    window.renderReviews('all-reviews-container', null, 0);
+                }
+            }, 100);
+
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-[#E0115F]', 'text-white', 'active');
+                        b.classList.add('bg-white/5', 'border-white/10', 'text-white', 'hover:bg-white', 'hover:text-black');
+                    });
+                    
+                    btn.classList.add('bg-[#E0115F]', 'text-white', 'active');
+                    btn.classList.remove('bg-white/5', 'border-white/10', 'hover:bg-white', 'hover:text-black');
+                    
+                    const filterValue = parseInt(btn.getAttribute('data-filter'));
+                    window.currentReviewFilter = filterValue;
+                    if (window.renderReviews) {
+                        window.renderReviews('all-reviews-container', null, filterValue);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
