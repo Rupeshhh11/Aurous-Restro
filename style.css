@@ -362,3 +362,15 @@ input:-webkit-autofill:active {
         filter: drop-shadow(0 0 4px #D4AF37);
     }
 }
+
+/* Touch Devices: Disable custom cursor */
+@media (pointer: coarse) {
+    body {
+        cursor: auto !important;
+    }
+    .custom-cursor,
+    .custom-cursor-dot,
+    .food-trail {
+        display: none !important;
+    }
+}
