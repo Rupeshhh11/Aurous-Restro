@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aurous Restro Lounge | Bistupur, Jamshedpur</title>
+    <title>Aurous Restro | Bistupur, Jamshedpur</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -142,8 +142,10 @@
             </div>
         </section>
 
-        <section id="vibe" class="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row gap-16 items-center">
-            <div class="w-[90%] mx-auto -mt-[220px] relative z-40 bg-black/70 backdrop-blur-[15px] p-8 border border-white/10 rounded-3xl shadow-2xl md:w-1/2 md:p-0 md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:mt-0 space-y-6 text-right md:text-left">
+        <section id="vibe"
+            class="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row gap-16 items-center">
+            <div
+                class="w-[90%] mx-auto -mt-[220px] relative z-40 bg-black/70 backdrop-blur-[15px] p-8 border border-white/10 rounded-3xl shadow-2xl md:w-1/2 md:p-0 md:bg-transparent md:backdrop-blur-none md:border-none md:shadow-none md:mt-0 space-y-6 text-right md:text-left">
                 <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold">Modern Dining</h4>
                 <h2 class="text-4xl md:text-6xl font-bold tracking-tight leading-tight">More than a meal.<br>It's an
                     <span class="italic font-light text-gray-400">experience.</span>
@@ -272,10 +274,12 @@
                             class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span>
                     </h2>
                     <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                        <button id="open-review-modal" class="bg-[#E0115F] text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                        <button id="open-review-modal"
+                            class="bg-[#E0115F] text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
                             Add Your Experience
                         </button>
-                        <a href="reviews.html" class="bg-white/5 border border-white/10 text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold inline-block">
+                        <a href="reviews.html"
+                            class="bg-white/5 border border-white/10 text-white px-8 py-3 rounded-full text-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all font-bold inline-block">
                             See More
                         </a>
                     </div>
@@ -288,7 +292,8 @@
         </section>
 
         <footer class="bg-[#0a0a0a] pt-20 pb-8 px-6 md:px-12 border-t border-white/5 text-center">
-            <h1 class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">
+            <h1 id="footer-brand"
+                class="text-[18vw] font-extrabold leading-none tracking-tighter text-white overflow-hidden uppercase">
                 Aurous</h1>
 
             <div
@@ -390,10 +395,13 @@
         </div>
     </div>
 
-    <div id="review-modal" class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 px-4">
+    <div id="review-modal"
+        class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 px-4">
         <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-review-bg"></div>
-        <div class="relative z-10 w-full max-w-md p-8 md:p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl" id="review-box">
-            <button id="close-review" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
+        <div class="relative z-10 w-full max-w-md p-8 md:p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl"
+            id="review-box">
+            <button id="close-review"
+                class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
@@ -405,31 +413,46 @@
             <form id="review-form" class="flex flex-col gap-5">
                 <div class="flex gap-4">
                     <div class="flex-1">
-                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Name</label>
-                        <input type="text" id="review-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="John Doe">
+                        <label
+                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Name</label>
+                        <input type="text" id="review-name" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            placeholder="John Doe">
                     </div>
                     <div class="flex-1">
-                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Location</label>
-                        <input type="text" id="review-location" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30" placeholder="City">
+                        <label
+                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Location</label>
+                        <input type="text" id="review-location" required
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            placeholder="City">
                     </div>
                 </div>
                 <div class="flex gap-4">
                     <div class="flex-1">
-                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Rating</label>
+                        <label
+                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Rating</label>
                         <div class="flex gap-2 text-2xl text-white/20 mt-1" id="star-rating-input">
-                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="1"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="2"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="3"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="4"></i>
-                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors" data-value="5"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
+                                data-value="1"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
+                                data-value="2"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
+                                data-value="3"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
+                                data-value="4"></i>
+                            <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
+                                data-value="5"></i>
                         </div>
                         <input type="hidden" id="review-rating" value="5" required>
                     </div>
                     <div class="flex-1">
-                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Photo (Optional)</label>
+                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Photo
+                            (Optional)</label>
                         <div class="relative w-full">
-                            <input type="file" id="review-image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
-                            <div class="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-2.5 text-xs flex flex-col items-center justify-center text-white/50 transition-colors h-full" id="review-image-label">
+                            <input type="file" id="review-image"
+                                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+                            <div class="w-full bg-white/5 border border-white/10 border-dashed rounded-xl px-4 py-2.5 text-xs flex flex-col items-center justify-center text-white/50 transition-colors h-full"
+                                id="review-image-label">
                                 <i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i>
                                 <span>Upload</span>
                             </div>
@@ -437,10 +460,14 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Your Review</label>
-                    <textarea id="review-text" required rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar" placeholder="Tell us about your experience..."></textarea>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Your
+                        Review</label>
+                    <textarea id="review-text" required rows="3"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar"
+                        placeholder="Tell us about your experience..."></textarea>
                 </div>
-                <button type="submit" class="mt-2 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
+                <button type="submit"
+                    class="mt-2 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
                     Submit Review
                 </button>
             </form>
@@ -517,10 +544,12 @@
             </div>
             <div
                 class="flex flex-row mx-3 mt-3 bg-white/5 border border-white/5 rounded-md min-h-4 group-hover/he:mt-0 items-center">
-                <span id="music-current-time" class="hidden pl-3 text-xs text-white/50 group-hover/he:inline-block w-12">0:00</span>
+                <span id="music-current-time"
+                    class="hidden pl-3 text-xs text-white/50 group-hover/he:inline-block w-12">0:00</span>
                 <input type="range" min="0" max="100" value="0" id="music-progress"
                     class="w-24 group-hover/he:w-full flex-grow h-1 mx-2 my-auto bg-white/20 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-[#E0115F] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md" />
-                <span id="music-duration" class="hidden pr-3 text-xs text-white/50 group-hover/he:inline-block w-12 text-right">0:00</span>
+                <span id="music-duration"
+                    class="hidden pr-3 text-xs text-white/50 group-hover/he:inline-block w-12 text-right">0:00</span>
             </div>
             <div class="flex flex-row items-center justify-center flex-grow mx-3 space-x-5">
                 <label for="playMode"
@@ -594,7 +623,8 @@
         </div>
     </div>
 
-    <nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] bg-[#050505]/80 backdrop-blur-xl border-t border-white/10 pb-safe pb-4 pt-3 px-6 flex justify-between items-center transition-transform duration-500 translate-y-full" id="mobile-nav">
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] bg-[#050505]/80 backdrop-blur-xl border-t border-white/10 pb-safe pb-4 pt-3 px-6 flex justify-between items-center transition-transform duration-500 translate-y-full"
+        id="mobile-nav">
         <a href="#" class="flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] uppercase tracking-wider font-semibold">Home</span>
