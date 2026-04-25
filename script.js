@@ -637,4 +637,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── Footer Brand: Character-level Hover ──
+    const footerBrand = document.getElementById('footer-brand');
+    if (footerBrand) {
+        const text = footerBrand.textContent.trim();
+        footerBrand.innerHTML = text
+            .split('')
+            .map(char => `<span class="brand-char">${char}</span>`)
+            .join('');
+
+        const chars = footerBrand.querySelectorAll('.brand-char');
+
+        chars.forEach(span => {
+            span.addEventListener('mouseenter', () => {
+                span.classList.add('hovered');
+
+                // Sync with existing custom cursor — scale up on interactive element
+                const cursorOutline = document.querySelector('.custom-cursor');
+                if (cursorOutline) {
+                    cursorOutline.style.transform = 'translate(-50%, -50%) scale(1.8)';
+                    cursorOutline.style.backgroundColor = 'rgba(224, 17, 95, 0.1)';
+                    cursorOutline.style.borderColor = '#E0115F';
+                }
+            });
+
+            span.addEventListener('mouseleave', () => {
+                span.classList.remove('hovered');
+
+                // Reset cursor
+                const cursorOutline = document.querySelector('.custom-cursor');
+                if (cursorOutline) {
+                    cursorOutline.style.transform = 'translate(-50%, -50%) scale(1)';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                    cursorOutline.style.borderColor = 'var(--primary)';
+                }
+            });
+        });
+    }
+
 });
