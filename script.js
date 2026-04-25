@@ -498,6 +498,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `<img src="${review.avatar}" alt="${review.name}" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">`
                 : `<div class="w-12 h-12 rounded-full bg-[#E0115F] flex items-center justify-center text-white font-bold text-lg border-2 border-[#E0115F] flex-shrink-0">${review.name.charAt(0)}</div>`;
 
+            const deleteBtn = review.id.startsWith('r_') ? `
+                <button onclick="deleteReview('${review.id}')" class="text-white/40 hover:text-[#E0115F] transition-colors" title="Delete Review"><i class="fa-solid fa-trash-can"></i></button>
+            ` : '';
+
             let html = '';
 
             if (isGrid) {
@@ -510,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="flex gap-1 text-[#E0115F] text-sm">${getStarsHtml(review.rating)}</div>
                             <div class="flex items-center gap-3">
                                 <span class="text-[10px] text-white/40 tracking-widest uppercase">${getRelativeTime(review.timestamp)}</span>
-                                <button onclick="deleteReview('${review.id}')" class="text-white/40 hover:text-[#E0115F] transition-colors" title="Delete Review"><i class="fa-solid fa-trash-can"></i></button>
+                                ${deleteBtn}
                             </div>
                         </div>
                         <h3 class="text-xl font-bold mb-3 tracking-tight">"${review.title}"</h3>
@@ -537,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="flex gap-1 text-[#E0115F] text-lg">${getStarsHtml(review.rating)}</div>
                                 <div class="flex items-center gap-4">
                                     <span class="text-xs text-white/40 tracking-widest uppercase">${getRelativeTime(review.timestamp)}</span>
-                                    <button onclick="deleteReview('${review.id}')" class="text-white/40 hover:text-[#E0115F] transition-colors" title="Delete Review"><i class="fa-solid fa-trash-can"></i></button>
+                                    ${deleteBtn}
                                 </div>
                             </div>
                             <h3 class="text-2xl font-bold mb-4 tracking-tight">"${review.title}"</h3>
