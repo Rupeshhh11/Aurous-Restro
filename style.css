@@ -374,3 +374,24 @@ input:-webkit-autofill:active {
         display: none !important;
     }
 }
+
+/* Footer Brand — Character-level Hover */
+#footer-brand {
+    cursor: default;
+    user-select: none;
+}
+
+#footer-brand .brand-char {
+    display: inline-block;
+    color: white;
+    transition: color 0.35s ease-out,
+                text-shadow 0.35s ease-out,
+                transform 0.35s ease-out;
+    will-change: color, transform;
+}
+
+#footer-brand .brand-char.hovered {
+    color: #E0115F;
+    text-shadow: 0 0 60px rgba(224, 17, 95, 0.5), 0 0 120px rgba(224, 17, 95, 0.2);
+    transform: translateY(-4px) scale(1.05);
+}
