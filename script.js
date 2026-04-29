@@ -250,13 +250,35 @@ document.addEventListener('DOMContentLoaded', () => {
         bgMusic.volume = 0.6;
 
         const playToggleLabel = playStatus.closest('label');
+        const musicPlayerWidget = document.querySelector('.group\\/he');
         
+        if (musicPlayerWidget) {
+            musicPlayerWidget.addEventListener('mouseenter', () => {
+                if (!isMusicPlaying) {
+                    playStatus.checked = true;
+                    bgMusic.volume = 0.6;
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
+                    }).catch((err) => {
+                        console.warn("Autoplay prevented:", err);
+                        playStatus.checked = false;
+                    });
+                } else {
+                    bgMusic.pause();
+                    isMusicPlaying = false;
+                    playStatus.checked = false;
+                    if (playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
+                }
+            });
+        }
+
         playToggleLabel.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent double-firing from the checkbox
-            playStatus.checked = !playStatus.checked; // Manually toggle state
+            e.preventDefault();
+            playStatus.checked = !playStatus.checked;
 
             if (playStatus.checked) {
-                bgMusic.volume = 0.6; // Ensure instant full volume
+                bgMusic.volume = 0.6;
                 bgMusic.play().then(() => {
                     isMusicPlaying = true;
                     if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
