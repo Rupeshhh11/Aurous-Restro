@@ -697,4 +697,162 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── Reservation Modal Logic ──
+    const reservationModal = document.getElementById('reservation-modal');
+    const openReservationBtn = document.getElementById('open-reservation-modal');
+    const closeReservationBtn = document.getElementById('close-reservation');
+    const closeReservationBg = document.getElementById('close-reservation-bg');
+    const reservationBox = document.getElementById('reservation-box');
+
+    function openReservation(e) {
+        if (e) e.preventDefault();
+        if(reservationModal && reservationBox && typeof gsap !== 'undefined') {
+            reservationModal.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+            
+            // GSAP Animation: liquid-slide from bottom, blur to clear
+            gsap.fromTo(reservationBox, 
+                { y: '100%', filter: 'blur(20px)', opacity: 0 },
+                { y: '0%', filter: 'blur(0px)', opacity: 1, duration: 1, ease: 'elastic.out(1, 0.8)' }
+            );
+        }
+    }
+
+    function closeReservation(e) {
+        if (e) e.preventDefault();
+        if(reservationModal && reservationBox && typeof gsap !== 'undefined') {
+            // Reverse Animation
+            gsap.to(reservationBox, {
+                y: '100%', filter: 'blur(10px)', opacity: 0, duration: 0.6, ease: 'power3.in',
+                onComplete: () => {
+                    reservationModal.classList.add('opacity-0', 'pointer-events-none');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+    }
+
+    if (openReservationBtn) openReservationBtn.addEventListener('click', openReservation);
+    if (closeReservationBtn) closeReservationBtn.addEventListener('click', closeReservation);
+    if (closeReservationBg) closeReservationBg.addEventListener('click', closeReservation);
+
+    // Guest Count Toggle Logic
+    const guestMinus = document.getElementById('guest-minus');
+    const guestPlus = document.getElementById('guest-plus');
+    const guestCountDisplay = document.getElementById('guest-count');
+    const guestInput = document.getElementById('guest-input');
+
+    if (guestMinus && guestPlus && guestCountDisplay && guestInput) {
+        guestMinus.addEventListener('click', () => {
+            let current = parseInt(guestInput.value);
+            if (current > 1) {
+                current--;
+                guestInput.value = current;
+                guestCountDisplay.innerText = current;
+            }
+        });
+
+        guestPlus.addEventListener('click', () => {
+            let current = parseInt(guestInput.value);
+            if (current < 20) {
+                current++;
+                guestInput.value = current;
+                guestCountDisplay.innerText = current;
+            }
+        });
+    }
+
+    const reservationForm = document.getElementById('reservation-form');
+    
+    // Custom Date and Time Generation
+    const dateStrip = document.getElementById('date-strip');
+    const selectedDateInput = document.getElementById('selected-date');
+    const timeSelectionSection = document.getElementById('time-selection-section');
+    const timeGrid = document.getElementById('time-grid');
+    const selectedTimeInput = document.getElementById('selected-time');
+
+    if (dateStrip && timeGrid) {
+        // Generate Dates
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const today = new Date();
+        
+        for (let i = 0; i < 14; i++) {
+            const d = new Date(today);
+            d.setDate(today.getDate() + i);
+            const dateStr = d.toISOString().split('T')[0];
+            const dayName = days[d.getDay()];
+            const dateNum = d.getDate();
+
+            const label = document.createElement('label');
+            label.className = 'snap-center shrink-0 cursor-pointer group';
+            
+            label.innerHTML = `
+                <input type="radio" name="date_slot" value="${dateStr}" class="peer hidden" required>
+                <div class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl border border-white/10 bg-white/5 text-white/50 peer-checked:bg-[#E0115F]/20 peer-checked:text-[#E0115F] peer-checked:border-[#E0115F] peer-checked:shadow-[0_0_15px_rgba(224,17,95,0.4)] hover:border-white/30 transition-all duration-300">
+                    <span class="text-xs uppercase tracking-widest font-semibold mb-1">${dayName}</span>
+                    <span class="text-xl font-bold">${dateNum}</span>
+                </div>
+            `;
+            
+            label.querySelector('input').addEventListener('change', (e) => {
+                selectedDateInput.value = e.target.value;
+                if (timeSelectionSection.classList.contains('opacity-30')) {
+                    timeSelectionSection.classList.remove('opacity-30', 'pointer-events-none');
+                    gsap.fromTo(timeSelectionSection, 
+                        { y: 20, opacity: 0 }, 
+                        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+                    );
+                }
+            });
+            dateStrip.appendChild(label);
+        }
+
+        // Generate Times
+        const times = ['19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00'];
+        function formatTime(time24) {
+            const [h, m] = time24.split(':');
+            const hour = parseInt(h);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${m} ${ampm}`;
+        }
+
+        times.forEach(t => {
+            const label = document.createElement('label');
+            label.className = 'cursor-pointer group relative';
+            label.innerHTML = `
+                <input type="radio" name="time_slot" value="${t}" class="peer hidden" required>
+                <div class="px-3 py-3 text-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-[20px] text-xs md:text-sm font-medium text-white/70 hover:border-white/30 transition-all duration-300 peer-checked:bg-[#E0115F]/20 peer-checked:text-white peer-checked:border-[#E0115F] peer-checked:shadow-[0_0_15px_rgba(224,17,95,0.4)]">
+                    ${formatTime(t)}
+                </div>
+            `;
+            label.querySelector('input').addEventListener('change', (e) => {
+                selectedTimeInput.value = e.target.value;
+                // Animate glowing border on selection
+                if(typeof gsap !== 'undefined') {
+                    gsap.fromTo(label.querySelector('div'),
+                        { boxShadow: '0 0 0px rgba(224,17,95,0)' },
+                        { boxShadow: '0 0 20px rgba(224,17,95,0.6)', duration: 0.4, yoyo: true, repeat: 1 }
+                    );
+                }
+            });
+            timeGrid.appendChild(label);
+        });
+    }
+
+    if (reservationForm) {
+        reservationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Just simulate success for the demo
+            closeReservation();
+            setTimeout(() => {
+                alert("Your exclusive experience has been reserved!");
+                reservationForm.reset();
+                guestInput.value = 2;
+                guestCountDisplay.innerText = 2;
+                if(timeSelectionSection) timeSelectionSection.classList.add('opacity-30', 'pointer-events-none');
+            }, 600);
+        });
+    }
+
 });
