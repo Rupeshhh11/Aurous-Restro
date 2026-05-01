@@ -130,7 +130,7 @@
                     electrifying live music and unmatched modern ambiance.
                 </p>
                 <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
+                    <button id="open-reservation-modal"
                         class="bg-[#E0115F] text-white px-8 py-4 rounded-full text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold">
                         Reserve Table
                     </button>
@@ -474,6 +474,55 @@
         </div>
     </div>
 
+    <div id="reservation-modal" class="fixed inset-0 z-[120] flex items-center justify-center opacity-0 pointer-events-none px-4">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer" id="close-reservation-bg"></div>
+        <div class="liquid-glass-card relative z-10 w-full max-w-lg p-8 md:p-10 rounded-3xl flex flex-col" id="reservation-box" style="transform: scale(0.8); filter: blur(10px);">
+            <button id="close-reservation" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors z-20">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-8 relative z-10 mt-2">
+                <h2 class="text-3xl font-bold tracking-tight text-white">Reserve Your Vibe.</h2>
+                <p class="text-xs uppercase tracking-[0.2em] text-[#E0115F] mt-2 font-bold">Secure Your Exclusive Experience</p>
+            </div>
+
+            <form id="reservation-form" class="flex flex-col gap-6 relative z-10 w-full">
+                <!-- Date Picker Strip -->
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Date</label>
+                    <div id="date-strip" class="flex gap-3 overflow-x-auto hide-scrollbar pb-2 w-full snap-x snap-mandatory">
+                        <!-- Dates generated via JS -->
+                    </div>
+                    <input type="hidden" id="selected-date" name="date" required>
+                </div>
+
+                <!-- Time Slot Grid -->
+                <div id="time-selection-section" class="flex flex-col gap-2 opacity-30 pointer-events-none transition-all duration-500">
+                    <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Time</label>
+                    <div id="time-grid" class="grid grid-cols-3 gap-3">
+                        <!-- Times generated via JS -->
+                    </div>
+                    <input type="hidden" id="selected-time" name="time" required>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Guests</label>
+                    <div class="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-4 py-2">
+                        <button type="button" id="guest-minus" class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors"><i class="fa-solid fa-minus text-xs"></i></button>
+                        <span id="guest-count" class="text-lg font-bold text-white">2</span>
+                        <input type="hidden" id="guest-input" name="guest_count" value="2">
+                        <button type="button" id="guest-plus" class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors"><i class="fa-solid fa-plus text-xs"></i></button>
+                    </div>
+                </div>
+
+                <button type="submit" class="mt-4 bg-[#E0115F] text-white py-4 rounded-xl text-xs uppercase tracking-[0.2em] hover:shadow-[0_0_20px_rgba(224,17,95,0.4)] transition-all font-bold w-full relative overflow-hidden group">
+                    <span class="relative z-10">Confirm Reservation</span>
+                    <div class="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <audio id="bg-music" src="Ytmp3.gg_YouTube_The-Weeknd-Save-Your-Tears-Official-Musi_Media_XXYlFuWEuKI_009_128k.mp3"
         loop preload="auto"></audio>
 
@@ -643,6 +692,7 @@
         </a>
     </nav>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="script.js"></script>
 </body>
 
