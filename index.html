@@ -487,23 +487,32 @@
             </div>
 
             <form id="reservation-form" class="flex flex-col gap-6 relative z-10 w-full">
-                <!-- Date Picker Strip -->
+                <!-- iOS 3D Wheel Picker -->
                 <div class="flex flex-col gap-2">
-                    <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Date</label>
-                    <div id="date-strip" class="flex gap-3 overflow-x-auto hide-scrollbar pb-2 w-full snap-x snap-mandatory">
-                        <!-- Dates generated via JS -->
+                    <div class="flex justify-between items-center gap-2 relative h-48 w-full rounded-[1.5rem] overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl px-2 shadow-inner">
+                        <!-- Glass highlight for center item -->
+                        <div class="absolute top-1/2 left-0 w-full h-12 -translate-y-1/2 bg-white/10 border-y border-[#E0115F]/50 pointer-events-none z-0 shadow-[0_0_30px_rgba(224,17,95,0.15)]"></div>
+                        
+                        <!-- Date Column -->
+                        <div id="wheel-date" class="h-full w-[50%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[72px] text-center">
+                            <!-- Dates generated via JS -->
+                        </div>
+                        
+                        <!-- Hour Column -->
+                        <div id="wheel-hour" class="h-full w-[25%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[72px] text-center border-l border-white/5">
+                            <!-- Hours generated via JS -->
+                        </div>
+
+                        <!-- Minute Column -->
+                        <div id="wheel-minute" class="h-full w-[25%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[72px] text-center border-l border-white/5">
+                            <!-- Minutes generated via JS -->
+                        </div>
                     </div>
-                    <input type="hidden" id="selected-date" name="date" required>
                 </div>
 
-                <!-- Time Slot Grid -->
-                <div id="time-selection-section" class="flex flex-col gap-2 opacity-30 pointer-events-none transition-all duration-500">
-                    <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Time</label>
-                    <div id="time-grid" class="grid grid-cols-3 gap-3">
-                        <!-- Times generated via JS -->
-                    </div>
-                    <input type="hidden" id="selected-time" name="time" required>
-                </div>
+                <input type="hidden" id="selected-date" name="date" required>
+                <input type="hidden" id="selected-hour" name="hour" required>
+                <input type="hidden" id="selected-minute" name="minute" required>
 
                 <div class="flex flex-col gap-2">
                     <label class="text-xs uppercase tracking-widest text-white/50 font-semibold">Guests</label>
