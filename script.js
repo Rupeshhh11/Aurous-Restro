@@ -764,80 +764,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const reservationForm = document.getElementById('reservation-form');
     
-    // Custom Date and Time Generation
-    const dateStrip = document.getElementById('date-strip');
+    // ── iOS Style 3D Wheel Picker Logic ──
+    const wheelDate = document.getElementById('wheel-date');
+    const wheelHour = document.getElementById('wheel-hour');
+    const wheelMinute = document.getElementById('wheel-minute');
     const selectedDateInput = document.getElementById('selected-date');
-    const timeSelectionSection = document.getElementById('time-selection-section');
-    const timeGrid = document.getElementById('time-grid');
-    const selectedTimeInput = document.getElementById('selected-time');
+    const selectedHourInput = document.getElementById('selected-hour');
+    const selectedMinuteInput = document.getElementById('selected-minute');
 
-    if (dateStrip && timeGrid) {
+    if (wheelDate && wheelHour && wheelMinute) {
         // Generate Dates
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const today = new Date();
         
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
             const dateStr = d.toISOString().split('T')[0];
             const dayName = days[d.getDay()];
+            const monthName = months[d.getMonth()];
             const dateNum = d.getDate();
 
-            const label = document.createElement('label');
-            label.className = 'snap-center shrink-0 cursor-pointer group';
-            
-            label.innerHTML = `
-                <input type="radio" name="date_slot" value="${dateStr}" class="peer hidden" required>
-                <div class="flex flex-col items-center justify-center w-16 h-20 rounded-2xl border border-white/10 bg-white/5 text-white/50 peer-checked:bg-[#E0115F]/20 peer-checked:text-[#E0115F] peer-checked:border-[#E0115F] peer-checked:shadow-[0_0_15px_rgba(224,17,95,0.4)] hover:border-white/30 transition-all duration-300">
-                    <span class="text-xs uppercase tracking-widest font-semibold mb-1">${dayName}</span>
-                    <span class="text-xl font-bold">${dateNum}</span>
-                </div>
-            `;
-            
-            label.querySelector('input').addEventListener('change', (e) => {
-                selectedDateInput.value = e.target.value;
-                if (timeSelectionSection.classList.contains('opacity-30')) {
-                    timeSelectionSection.classList.remove('opacity-30', 'pointer-events-none');
-                    gsap.fromTo(timeSelectionSection, 
-                        { y: 20, opacity: 0 }, 
-                        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
-                    );
-                }
-            });
-            dateStrip.appendChild(label);
+            const div = document.createElement('div');
+            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-base md:text-lg font-bold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.dataset.value = dateStr;
+            div.innerHTML = `${dayName}, ${monthName} ${dateNum}`;
+            wheelDate.appendChild(div);
         }
 
-        // Generate Times
-        const times = ['19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00'];
-        function formatTime(time24) {
-            const [h, m] = time24.split(':');
-            const hour = parseInt(h);
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const hour12 = hour % 12 || 12;
-            return `${hour12}:${m} ${ampm}`;
+        // Generate Hours
+        for (let i = 12; i <= 23; i++) { // 12 PM to 11 PM
+            let h = i > 12 ? i - 12 : i;
+            let ampm = i >= 12 ? 'PM' : 'AM';
+            const div = document.createElement('div');
+            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-xl md:text-2xl font-extrabold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.dataset.value = i.toString();
+            div.innerHTML = `${h} ${ampm}`;
+            wheelHour.appendChild(div);
         }
 
-        times.forEach(t => {
-            const label = document.createElement('label');
-            label.className = 'cursor-pointer group relative';
-            label.innerHTML = `
-                <input type="radio" name="time_slot" value="${t}" class="peer hidden" required>
-                <div class="px-3 py-3 text-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-[20px] text-xs md:text-sm font-medium text-white/70 hover:border-white/30 transition-all duration-300 peer-checked:bg-[#E0115F]/20 peer-checked:text-white peer-checked:border-[#E0115F] peer-checked:shadow-[0_0_15px_rgba(224,17,95,0.4)]">
-                    ${formatTime(t)}
-                </div>
-            `;
-            label.querySelector('input').addEventListener('change', (e) => {
-                selectedTimeInput.value = e.target.value;
-                // Animate glowing border on selection
-                if(typeof gsap !== 'undefined') {
-                    gsap.fromTo(label.querySelector('div'),
-                        { boxShadow: '0 0 0px rgba(224,17,95,0)' },
-                        { boxShadow: '0 0 20px rgba(224,17,95,0.6)', duration: 0.4, yoyo: true, repeat: 1 }
-                    );
-                }
-            });
-            timeGrid.appendChild(label);
+        // Generate Minutes
+        const minutes = ['00', '15', '30', '45'];
+        minutes.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-xl md:text-2xl font-extrabold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.dataset.value = m;
+            div.innerHTML = m;
+            wheelMinute.appendChild(div);
         });
+
+        // Add Scroll Event for 3D logic
+        function setupWheelScroll(wheelContainer, inputElement) {
+            const items = wheelContainer.querySelectorAll('.wheel-item');
+            
+            function onScroll() {
+                // The container is 192px tall (h-48). The center is at 96px relative to its viewport.
+                // ScrollTop + 96 gives the absolute center coordinate of the scrolling content.
+                const containerCenter = wheelContainer.scrollTop + 96;
+                
+                items.forEach(item => {
+                    // item.offsetTop is relative to the scrolling container
+                    // item center = item.offsetTop + (item.clientHeight / 2) -> which is 24px (h-12 / 2)
+                    const itemCenter = item.offsetTop + 24;
+                    const dist = Math.abs(containerCenter - itemCenter);
+                    
+                    if (dist < 24) {
+                        // Center item
+                        gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.2 });
+                        if(inputElement) inputElement.value = item.dataset.value;
+                    } else {
+                        // Far item
+                        gsap.to(item, { scale: 0.85, opacity: 0.4, color: 'rgba(255,255,255,0.5)', textShadow: 'none', duration: 0.2 });
+                    }
+                });
+            }
+            
+            wheelContainer.addEventListener('scroll', onScroll);
+            
+            // Trigger scroll once to initialize layout
+            onScroll();
+            
+            // Add click to snap functionality
+            items.forEach(item => {
+                item.addEventListener('click', () => {
+                    const scrollPos = item.offsetTop - 72; // Center the item: offsetTop - padding
+                    wheelContainer.scrollTo({ top: scrollPos, behavior: 'smooth' });
+                });
+            });
+        }
+
+        setTimeout(() => {
+            setupWheelScroll(wheelDate, selectedDateInput);
+            setupWheelScroll(wheelHour, selectedHourInput);
+            setupWheelScroll(wheelMinute, selectedMinuteInput);
+        }, 100);
     }
 
     if (reservationForm) {
