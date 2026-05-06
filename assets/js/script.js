@@ -188,6 +188,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
 
+    // Admin Login Logic for Main Page
+    const adminLoginForm = document.getElementById('admin-login-form');
+    if (adminLoginForm) {
+        adminLoginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+            const loader = document.getElementById('login-loader');
+            const error = document.getElementById('login-error');
+
+            btn.disabled = true;
+            loader.classList.remove('hidden');
+            error.classList.add('hidden');
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', username);
+                formData.append('password', password);
+
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('aurous_token', data.access_token);
+                    window.location.href = '/dashboard';
+                } else {
+                    error.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                error.textContent = 'Connection error';
+                error.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                loader.classList.add('hidden');
+            }
+        });
+    }
+
     const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
 
     let lastFoodTime = 0;
@@ -496,6 +540,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button onclick="deleteReview('${review.id}')" class="text-white/40 hover:text-[#E0115F] transition-colors" title="Delete Review"><i class="fa-solid fa-trash-can"></i></button>
             ` : '';
 
+            const replyHtml = review.reply_text ? `
+                <div class="mt-6 p-4 bg-[#E0115F]/5 border-l-2 border-[#E0115F] rounded-r-xl">
+                    <p class="text-[10px] uppercase tracking-widest text-[#E0115F] font-bold mb-1">Owner's Response</p>
+                    <p class="text-white/70 text-xs italic">"${review.reply_text}"</p>
+                </div>
+            ` : '';
+
             let html = '';
 
             if (isGrid) {
@@ -512,8 +563,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         <h3 class="text-xl font-bold mb-3 tracking-tight">"${review.title}"</h3>
-                        <p class="text-white/60 text-sm leading-relaxed font-light mb-8 flex-grow">"${review.text}"</p>
-                        <div class="flex items-center gap-4 mt-auto">
+                        <p class="text-white/60 text-sm leading-relaxed font-light mb-4 flex-grow">"${review.text}"</p>
+                        ${replyHtml}
+                        <div class="flex items-center gap-4 mt-6">
                             ${avatarHtml}
                             <div class="flex flex-col">
                                 <h4 class="font-bold text-sm tracking-wide uppercase">${review.name}</h4>
@@ -539,8 +591,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             </div>
                             <h3 class="text-2xl font-bold mb-4 tracking-tight">"${review.title}"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-8">"${review.text}"</p>
-                            <div class="flex items-center gap-4">
+                            <p class="text-white/60 text-base leading-relaxed font-light mb-4">"${review.text}"</p>
+                            ${replyHtml}
+                            <div class="flex items-center gap-4 mt-8">
                                 ${avatarHtml}
                                 <div class="flex flex-col">
                                     <h4 class="font-bold text-sm tracking-wide uppercase">${review.name}</h4>
@@ -570,7 +623,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: r.review_text,
                     image: r.image_url || 'https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470',
                     avatar: '',
-                    timestamp: r.created_at
+                    timestamp: r.created_at,
+                    reply_text: r.reply_text
                 }));
             }
         } catch (err) {
@@ -856,6 +910,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ampm: document.getElementById('selected-ampm').value,
                 guest_count: parseInt(document.getElementById('guest-input').value)
             };
+
+            console.log("Submitting reservation:", formData);
 
             try {
                 const response = await fetch('/api/reservations', {
