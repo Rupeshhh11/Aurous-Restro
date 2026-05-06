@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurous Admin | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #E0115F;
+            --primary-light: #ff2e7e;
+            --bg: #0a0a0a;
+            --card-bg: #141414;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: var(--glass);
+        }
+
+        .nav-link.active {
+            background: rgba(224, 17, 95, 0.1);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            color: #ff4444;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover { background: rgba(255, 68, 68, 0.1); }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            padding: 3rem;
+            max-width: 1200px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        /* Tables & Lists */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .data-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: var(--text-dim);
+            font-weight: 400;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .guest-chip {
+            background: rgba(224, 17, 95, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+        }
+
+        /* Review Items */
+        .review-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .review-info h4 { font-size: 1.1rem; }
+        .review-info p { color: var(--text-dim); font-size: 0.9rem; }
+
+        .rating { color: #FFD700; }
+
+        .review-text { margin-bottom: 1.5rem; line-height: 1.6; }
+
+        .reply-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .reply-box textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .reply-box textarea:focus { outline: none; }
+
+        .btn-reply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-reply:hover { background: var(--primary-light); }
+
+        .existing-reply {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(224, 17, 95, 0.05);
+            border-left: 2px solid var(--primary);
+            border-radius: 4px;
+        }
+
+        .existing-reply h5 { color: var(--primary); margin-bottom: 0.5rem; font-size: 0.8rem; text-transform: uppercase; }
+
+        /* Loader */
+        .page-loader {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(224, 17, 95, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; padding: 1rem; }
+            .sidebar .logo, .sidebar span, .nav-link span { display: none; }
+            .main-content { margin-left: 80px; padding: 1.5rem; }
+            .nav-link i { margin-right: 0; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="pageLoader" class="page-loader">
+        <div class="spinner"></div>
+    </div>
+
+    <aside class="sidebar">
+        <h1 class="logo">AUROUS <span>ADMIN</span></h1>
+        <ul class="nav-links">
+            <li class="nav-item">
+                <a class="nav-link active" onclick="showSection('reservations')">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Reservations</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('reviews')">
+                    <i class="fas fa-star"></i>
+                    <span>Reviews</span>
+                </a>
+            </li>
+        </ul>
+        <div class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="header">
+            <h2 id="sectionTitle">Reservations</h2>
+            <div id="adminName" style="color: var(--text-dim)">Welcome, Admin</div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Total Reservations</h3>
+                <div class="value" id="totalRes">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Reviews</h3>
+                <div class="value" id="totalRev">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Average Rating</h3>
+                <div class="value" id="avgRating">0.0</div>
+            </div>
+        </div>
+
+        <!-- Reservations Section -->
+        <section id="reservationsSection" class="content-section active">
+            <div class="data-card">
+                <table id="resTable">
+                    <thead>
+                        <tr>
+                            <th>Guest</th>
+                            <th>Date & Time</th>
+                            <th>Occasion</th>
+                            <th>Guests</th>
+                            <th>Phone</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resBody">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviewsSection" class="content-section">
+            <div id="reviewsContainer">
+                <!-- Filled by JS -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const token = localStorage.getItem('aurous_token');
+        if (!token) window.location.href = '/login';
+
+        async function apiFetch(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            if (body) options.body = JSON.stringify(body);
+            
+            const response = await fetch(endpoint, options);
+            if (response.status === 401) {
+                logout();
+                return null;
+            }
+            return response.json();
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(section + 'Section').classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('sectionTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
+        }
+
+        async function loadData() {
+            try {
+                const [reservations, reviews] = await Promise.all([
+                    apiFetch('/api/admin/reservations'),
+                    apiFetch('/api/admin/reviews')
+                ]);
+
+                if (!reservations || !reviews) return;
+
+                // Update Stats
+                document.getElementById('totalRes').textContent = reservations.length;
+                document.getElementById('totalRev').textContent = reviews.length;
+                const avg = reviews.length ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
+                document.getElementById('avgRating').textContent = avg;
+
+                // Render Reservations
+                const resBody = document.getElementById('resBody');
+                resBody.innerHTML = reservations.map(res => `
+                    <tr>
+                        <td style="font-weight: 500">${res.name}</td>
+                        <td>${res.date} at ${res.hour}:${res.minute} ${res.ampm}</td>
+                        <td style="color: var(--text-dim)">${res.occasion}</td>
+                        <td><span class="guest-chip">${res.guest_count} Guests</span></td>
+                        <td>${res.phone}</td>
+                    </tr>
+                `).join('');
+
+                // Render Reviews
+                const revContainer = document.getElementById('reviewsContainer');
+                revContainer.innerHTML = reviews.map(rev => `
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-info">
+                                <h4>${rev.name}</h4>
+                                <p>${rev.location} • ${new Date(rev.created_at).toLocaleDateString()}</p>
+                            </div>
+                            <div class="rating">
+                                ${Array(rev.rating).fill('<i class="fas fa-star"></i>').join('')}
+                                ${Array(5 - rev.rating).fill('<i class="far fa-star"></i>').join('')}
+                            </div>
+                        </div>
+                        <div class="review-text">${rev.review_text}</div>
+                        ${rev.image_url ? `<img src="${rev.image_url}" style="max-width: 200px; border-radius: 8px; margin-bottom: 1rem; display: block;">` : ''}
+                        
+                        ${rev.reply_text ? `
+                            <div class="existing-reply">
+                                <h5>Your Reply</h5>
+                                <p>${rev.reply_text}</p>
+                            </div>
+                        ` : `
+                            <div class="reply-box">
+                                <textarea id="reply-${rev.id}" placeholder="Write a reply..."></textarea>
+                                <button class="btn-reply" onclick="submitReply(${rev.id})">Post Reply</button>
+                            </div>
+                        `}
+                    </div>
+                `).join('');
+
+            } catch (err) {
+                console.error('Error loading data:', err);
+            } finally {
+                document.getElementById('pageLoader').style.display = 'none';
+            }
+        }
+
+        async function submitReply(reviewId) {
+            const text = document.getElementById(`reply-${reviewId}`).value;
+            if (!text.trim()) return;
+
+            const res = await apiFetch('/api/admin/reviews/reply', 'POST', {
+                review_id: reviewId,
+                reply_text: text
+            });
+
+            if (res) {
+                loadData(); // Refresh
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('aurous_token');
+            window.location.href = '/login';
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
