@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurous Admin | Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -53,7 +56,9 @@
             letter-spacing: 1px;
         }
 
-        .logo span { color: var(--primary); }
+        .logo span {
+            color: var(--primary);
+        }
 
         .nav-links {
             list-style: none;
@@ -81,7 +86,8 @@
             text-align: center;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             color: white;
             background: var(--glass);
         }
@@ -103,7 +109,9 @@
             transition: 0.3s;
         }
 
-        .logout-btn:hover { background: rgba(255, 68, 68, 0.1); }
+        .logout-btn:hover {
+            background: rgba(255, 68, 68, 0.1);
+        }
 
         /* Main Content */
         .main-content {
@@ -162,8 +170,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .data-card {
@@ -215,12 +230,23 @@
             margin-bottom: 1rem;
         }
 
-        .review-info h4 { font-size: 1.1rem; }
-        .review-info p { color: var(--text-dim); font-size: 0.9rem; }
+        .review-info h4 {
+            font-size: 1.1rem;
+        }
 
-        .rating { color: #FFD700; }
+        .review-info p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
 
-        .review-text { margin-bottom: 1.5rem; line-height: 1.6; }
+        .rating {
+            color: #FFD700;
+        }
+
+        .review-text {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
 
         .reply-box {
             background: rgba(0, 0, 0, 0.3);
@@ -240,7 +266,9 @@
             margin-bottom: 1rem;
         }
 
-        .reply-box textarea:focus { outline: none; }
+        .reply-box textarea:focus {
+            outline: none;
+        }
 
         .btn-reply {
             background: var(--primary);
@@ -252,7 +280,9 @@
             transition: 0.3s;
         }
 
-        .btn-reply:hover { background: var(--primary-light); }
+        .btn-reply:hover {
+            background: var(--primary-light);
+        }
 
         .existing-reply {
             margin-top: 1rem;
@@ -262,12 +292,20 @@
             border-radius: 4px;
         }
 
-        .existing-reply h5 { color: var(--primary); margin-bottom: 0.5rem; font-size: 0.8rem; text-transform: uppercase; }
+        .existing-reply h5 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
 
         /* Loader */
         .page-loader {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: var(--bg);
             z-index: 1000;
             display: flex;
@@ -284,16 +322,335 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.5rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .filter-group:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(224, 17, 95, 0.1);
+        }
+
+        .filter-group label {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Outfit';
+            outline: none;
+            font-size: 0.85rem;
+            min-width: 120px;
+        }
+
+        .filter-group input[type="date"] {
+            padding: 0.35rem 0.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .filter-group input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) brightness(0.7) sepia(1) hue-rotate(300deg) saturate(5);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .filter-group input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            opacity: 1;
+        }
+
+        .filter-group input[type="date"]::-webkit-datetime-edit {
+            color: rgba(255, 255, 255, 0.8);
+            font-family: 'Outfit';
+            font-size: 0.85rem;
+        }
+
+        .filter-group input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            padding: 0;
+        }
+
+        .filter-group input[type="date"]::-webkit-datetime-edit-day-field,
+        .filter-group input[type="date"]::-webkit-datetime-edit-month-field,
+        .filter-group input[type="date"]::-webkit-datetime-edit-year-field {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 2px;
+        }
+
+        .filter-group input[type="date"]::-webkit-datetime-edit-day-field:focus,
+        .filter-group input[type="date"]::-webkit-datetime-edit-month-field:focus,
+        .filter-group input[type="date"]::-webkit-datetime-edit-year-field:focus {
+            background: rgba(224, 17, 95, 0.2);
+            color: white;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .filter-group select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .filter-btn-apply {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 0.55rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .filter-btn-apply:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(224, 17, 95, 0.3);
+        }
+
+        .filter-btn-clear {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Outfit';
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+
+        .filter-btn-clear:hover {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .date-picker-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-family: 'Outfit';
+            font-size: 0.85rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            min-width: 140px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .date-picker-btn.has-date {
+            color: white;
+            border-color: var(--primary);
+            background: rgba(224, 17, 95, 0.05);
+        }
+
+        .date-picker-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Wheel Modal Overlay */
+        .wheel-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .wheel-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .wheel-modal-box {
+            background: #111111;
+            border: 1px solid var(--border);
+            border-radius: 32px;
+            padding: 2rem;
+            width: 360px;
+            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8);
+            transform: translateY(40px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .wheel-modal-overlay.active .wheel-modal-box {
+            transform: translateY(0) scale(1);
+        }
+
+        .wheel-modal-box h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .wheel-container {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+            margin-bottom: 1.5rem;
+        }
+
+        .wheel-highlight {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            transform: translateY(-50%);
+            background: rgba(224, 17, 95, 0.1);
+            border-top: 1px solid rgba(224, 17, 95, 0.3);
+            border-bottom: 1px solid rgba(224, 17, 95, 0.3);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .wheel-scroll {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            padding: 96px 0;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .wheel-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .wheel-item {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit';
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            scroll-snap-align: center;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .wheel-modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .wheel-modal-actions button {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 14px;
+            font-family: 'Outfit';
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .wheel-btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid var(--border) !important;
+        }
+
+        .wheel-btn-confirm {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: 0 4px 15px rgba(224, 17, 95, 0.2);
+        }
+
+        .wheel-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(224, 17, 95, 0.4);
+        }
 
         @media (max-width: 992px) {
-            .sidebar { width: 80px; padding: 1rem; }
-            .sidebar .logo, .sidebar span, .nav-link span { display: none; }
-            .main-content { margin-left: 80px; padding: 1.5rem; }
-            .nav-link i { margin-right: 0; font-size: 1.2rem; }
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar .logo,
+            .sidebar span,
+            .nav-link span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+                padding: 1.5rem;
+            }
+
+            .nav-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            .filter-bar {
+                padding: 0.75rem;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="pageLoader" class="page-loader">
         <div class="spinner"></div>
@@ -316,8 +673,8 @@
             </li>
         </ul>
         <div class="logout-btn" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
+            <i class="fas fa-right-from-bracket"></i>
+            <span>Back to Home</span>
         </div>
     </aside>
 
@@ -344,12 +701,47 @@
 
         <!-- Reservations Section -->
         <section id="reservationsSection" class="content-section active">
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
+                    <label>From</label>
+                    <button class="date-picker-btn" id="resFilterFromBtn" onclick="openWheelPicker('resFilterFrom')">
+                        <span>Select Date</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </button>
+                    <input type="hidden" id="resFilterFrom">
+                </div>
+                <div class="filter-group">
+                    <label>To</label>
+                    <button class="date-picker-btn" id="resFilterToBtn" onclick="openWheelPicker('resFilterTo')">
+                        <span>Select Date</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </button>
+                    <input type="hidden" id="resFilterTo">
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-glass-cheers" style="color: var(--primary); font-size: 0.85rem;"></i>
+                    <label>Occasion</label>
+                    <select id="resFilterOccasion">
+                        <option value="">All</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Anniversary">Anniversary</option>
+                        <option value="Date Night">Date Night</option>
+                        <option value="Business">Business</option>
+                        <option value="Casual Dining">Casual</option>
+                    </select>
+                </div>
+                <button class="filter-btn-apply" onclick="applyResFilters()">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="filter-btn-clear" onclick="clearResFilters()">Clear</button>
+            </div>
             <div class="data-card">
                 <table id="resTable">
                     <thead>
                         <tr>
                             <th>Guest</th>
-                            <th>Date & Time</th>
+                            <th>Date &amp; Time</th>
                             <th>Occasion</th>
                             <th>Guests</th>
                             <th>Phone</th>
@@ -364,15 +756,70 @@
 
         <!-- Reviews Section -->
         <section id="reviewsSection" class="content-section">
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
+                    <label>From</label>
+                    <button class="date-picker-btn" id="filterDateFromBtn" onclick="openWheelPicker('filterDateFrom')">
+                        <span>Select Date</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </button>
+                    <input type="hidden" id="filterDateFrom">
+                </div>
+                <div class="filter-group">
+                    <label>To</label>
+                    <button class="date-picker-btn" id="filterDateToBtn" onclick="openWheelPicker('filterDateTo')">
+                        <span>Select Date</span>
+                        <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                    </button>
+                    <input type="hidden" id="filterDateTo">
+                </div>
+                <div class="filter-group">
+                    <i class="fas fa-star" style="color: var(--primary); font-size: 0.85rem;"></i>
+                    <label>Rating</label>
+                    <select id="filterRating">
+                        <option value="0">All</option>
+                        <option value="5">★★★★★ Only</option>
+                        <option value="4">★★★★ Only</option>
+                        <option value="3">★★★ Only</option>
+                        <option value="2">★★ Only</option>
+                        <option value="1">★ Only</option>
+                    </select>
+                </div>
+                <button class="filter-btn-apply" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="filter-btn-clear" onclick="clearFilters()">Clear</button>
+            </div>
             <div id="reviewsContainer">
                 <!-- Filled by JS -->
             </div>
         </section>
     </main>
 
+    <!-- Wheel Picker Modal -->
+    <div id="wheelModalOverlay" class="wheel-modal-overlay">
+        <div class="wheel-modal-box">
+            <h4>Select Date</h4>
+            <div class="wheel-container">
+                <div class="wheel-highlight"></div>
+                <div id="wheelScroll" class="wheel-scroll">
+                    <!-- Dates filled by JS -->
+                </div>
+            </div>
+            <div class="wheel-modal-actions">
+                <button class="wheel-btn-cancel" onclick="closeWheelPicker()">Cancel</button>
+                <button class="wheel-btn-confirm" onclick="confirmWheelDate()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const token = localStorage.getItem('aurous_token');
         if (!token) window.location.href = '/login';
+
+        let allReviewsData = [];
+        let allReservationsData = [];
 
         async function apiFetch(endpoint, method = 'GET', body = null) {
             const options = {
@@ -383,7 +830,7 @@
                 }
             };
             if (body) options.body = JSON.stringify(body);
-            
+
             const response = await fetch(endpoint, options);
             if (response.status === 401) {
                 logout();
@@ -395,7 +842,7 @@
         function showSection(section) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            
+
             document.getElementById(section + 'Section').classList.add('active');
             event.currentTarget.classList.add('active');
             document.getElementById('sectionTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
@@ -410,40 +857,60 @@
 
                 if (!reservations || !reviews) return;
 
-                // Update Stats
                 document.getElementById('totalRes').textContent = reservations.length;
                 document.getElementById('totalRev').textContent = reviews.length;
                 const avg = reviews.length ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : '0.0';
                 document.getElementById('avgRating').textContent = avg;
 
-                // Render Reservations
-                const resBody = document.getElementById('resBody');
-                resBody.innerHTML = reservations.map(res => `
-                    <tr>
-                        <td style="font-weight: 500">${res.name}</td>
-                        <td>${res.date} at ${res.hour}:${res.minute} ${res.ampm}</td>
-                        <td style="color: var(--text-dim)">${res.occasion}</td>
-                        <td><span class="guest-chip">${res.guest_count} Guests</span></td>
-                        <td>${res.phone}</td>
-                    </tr>
-                `).join('');
+                allReservationsData = reservations;
+                renderReservations(reservations);
 
-                // Render Reviews
-                const revContainer = document.getElementById('reviewsContainer');
-                revContainer.innerHTML = reviews.map(rev => `
+                allReviewsData = reviews;
+                renderReviews(reviews);
+
+            } catch (err) {
+                console.error('Error loading data:', err);
+            } finally {
+                document.getElementById('pageLoader').style.display = 'none';
+            }
+        }
+
+        function renderReviews(reviews) {
+            const revContainer = document.getElementById('reviewsContainer');
+            if (reviews.length === 0) {
+                revContainer.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 3rem;">No reviews match your filters.</p>';
+                return;
+            }
+            revContainer.innerHTML = reviews.map(rev => {
+                const quickReplies = [
+                    `${rev.name}, thank you for visiting Aurous! We're delighted you enjoyed your experience. See you again soon! 🥂`,
+                    `Dear ${rev.name}, we truly appreciate your kind words! It was a pleasure serving you. Come again! ✨`,
+                    `Thank you ${rev.name}! Your feedback means the world to us. We look forward to welcoming you back! 🌟`
+                ];
+
+                return `
                     <div class="review-item">
                         <div class="review-header">
                             <div class="review-info">
                                 <h4>${rev.name}</h4>
-                                <p>${rev.location} • ${new Date(rev.created_at).toLocaleDateString()}</p>
+                                <p>${rev.location} • ${new Date(rev.created_at).toLocaleDateString()} ${new Date(rev.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                             </div>
-                            <div class="rating">
-                                ${Array(rev.rating).fill('<i class="fas fa-star"></i>').join('')}
-                                ${Array(5 - rev.rating).fill('<i class="far fa-star"></i>').join('')}
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="rating">
+                                    ${Array(rev.rating).fill('<i class="fas fa-star"></i>').join('')}
+                                    ${Array(5 - rev.rating).fill('<i class="far fa-star"></i>').join('')}
+                                </div>
+                                <button onclick="adminDeleteReview(${rev.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: 1px solid rgba(255,68,68,0.2); padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-family: 'Outfit'; transition: 0.3s;" onmouseover="this.style.background='rgba(255,68,68,0.25)'" onmouseout="this.style.background='rgba(255,68,68,0.1)'">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
                             </div>
                         </div>
                         <div class="review-text">${rev.review_text}</div>
-                        ${rev.image_url ? `<img src="${rev.image_url}" style="max-width: 200px; border-radius: 8px; margin-bottom: 1rem; display: block;">` : ''}
+                        ${rev.image_url ? `
+                            <div style="display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap;">
+                                ${rev.image_url.split(',').map(url => `<img src="${url.trim()}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="window.open('${url.trim()}','_blank')">`).join('')}
+                            </div>
+                        ` : ''}
                         
                         ${rev.reply_text ? `
                             <div class="existing-reply">
@@ -452,17 +919,202 @@
                             </div>
                         ` : `
                             <div class="reply-box">
-                                <textarea id="reply-${rev.id}" placeholder="Write a reply..."></textarea>
+                                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                                    ${quickReplies.map((qr, i) => `
+                                        <button onclick="document.getElementById('reply-${rev.id}').value = this.dataset.msg" data-msg="${qr.replace(/"/g, '&quot;')}" style="background: rgba(224,17,95,0.08); color: var(--primary); border: 1px solid rgba(224,17,95,0.2); padding: 0.3rem 0.7rem; border-radius: 20px; cursor: pointer; font-size: 0.7rem; font-family: 'Outfit'; transition: 0.3s; white-space: nowrap;" onmouseover="this.style.background='rgba(224,17,95,0.2)'" onmouseout="this.style.background='rgba(224,17,95,0.08)'">
+                                            <i class="fas fa-bolt"></i> Quick ${i + 1}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <textarea id="reply-${rev.id}" placeholder="Write a reply to ${rev.name}..."></textarea>
                                 <button class="btn-reply" onclick="submitReply(${rev.id})">Post Reply</button>
                             </div>
                         `}
                     </div>
-                `).join('');
+                `;
+            }).join('');
+        }
 
+        function applyFilters() {
+            const fromDate = document.getElementById('filterDateFrom').value;
+            const toDate = document.getElementById('filterDateTo').value;
+            const rating = parseInt(document.getElementById('filterRating').value);
+
+            let filtered = [...allReviewsData];
+
+            if (fromDate) {
+                filtered = filtered.filter(r => new Date(r.created_at) >= new Date(fromDate));
+            }
+            if (toDate) {
+                const to = new Date(toDate);
+                to.setHours(23, 59, 59);
+                filtered = filtered.filter(r => new Date(r.created_at) <= to);
+            }
+            if (rating > 0) {
+                filtered = filtered.filter(r => r.rating === rating);
+            }
+
+            renderReviews(filtered);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateTo').value = '';
+            document.getElementById('filterRating').value = '0';
+            
+            document.getElementById('filterDateFromBtn').querySelector('span').textContent = 'Select Date';
+            document.getElementById('filterDateFromBtn').classList.remove('has-date');
+            document.getElementById('filterDateToBtn').querySelector('span').textContent = 'Select Date';
+            document.getElementById('filterDateToBtn').classList.remove('has-date');
+
+            renderReviews(allReviewsData);
+        }
+
+        function applyResFilters() {
+            const fromDate = document.getElementById('resFilterFrom').value;
+            const toDate = document.getElementById('resFilterTo').value;
+            const occasion = document.getElementById('resFilterOccasion').value;
+
+            let filtered = [...allReservationsData];
+
+            if (fromDate) {
+                filtered = filtered.filter(r => r.date >= fromDate);
+            }
+            if (toDate) {
+                filtered = filtered.filter(r => r.date <= toDate);
+            }
+            if (occasion) {
+                filtered = filtered.filter(r => r.occasion === occasion);
+            }
+
+            renderReservations(filtered);
+        }
+
+        function clearResFilters() {
+            document.getElementById('resFilterFrom').value = '';
+            document.getElementById('resFilterTo').value = '';
+            document.getElementById('resFilterOccasion').value = '';
+
+            document.getElementById('resFilterFromBtn').querySelector('span').textContent = 'Select Date';
+            document.getElementById('resFilterFromBtn').classList.remove('has-date');
+            document.getElementById('resFilterToBtn').querySelector('span').textContent = 'Select Date';
+            document.getElementById('resFilterToBtn').classList.remove('has-date');
+
+            renderReservations(allReservationsData);
+        }
+
+        function renderReservations(reservations) {
+            const resBody = document.getElementById('resBody');
+            if (reservations.length === 0) {
+                resBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 3rem;">No reservations match your filters.</td></tr>';
+                return;
+            }
+            resBody.innerHTML = reservations.map(res => `
+                <tr>
+                    <td style="font-weight: 500">${res.name}</td>
+                    <td>${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</td>
+                    <td style="color: var(--text-dim)">${res.occasion}</td>
+                    <td><span class="guest-chip">${res.guest_count} Guests</span></td>
+                    <td>${res.phone}</td>
+                </tr>
+            `).join('');
+        }
+
+        // --- iOS Style Wheel Picker Logic ---
+        let currentTargetInputId = null;
+        let selectedDateValue = null;
+
+        function initWheelPicker() {
+            const wheelScroll = document.getElementById('wheelScroll');
+            wheelScroll.innerHTML = '';
+
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            // Range: 60 days back to 90 days forward
+            for (let i = -60; i <= 90; i++) {
+                const d = new Date();
+                d.setDate(today.getDate() + i);
+
+                const dateStr = d.toISOString().split('T')[0];
+                const displayStr = i === 0 ? 'Today' : `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+
+                const item = document.createElement('div');
+                item.className = 'wheel-item';
+                item.dataset.value = dateStr;
+                item.textContent = displayStr;
+                wheelScroll.appendChild(item);
+            }
+
+            wheelScroll.onscroll = () => {
+                const items = wheelScroll.querySelectorAll('.wheel-item');
+                const containerCenter = wheelScroll.scrollTop + 120; // 240/2
+
+                items.forEach(item => {
+                    const itemCenter = item.offsetTop - wheelScroll.offsetTop + 24; // 48/2
+                    const dist = Math.abs(containerCenter - itemCenter);
+
+                    if (dist < 24) {
+                        item.style.color = '#E0115F';
+                        item.style.transform = 'scale(1.15)';
+                        item.style.opacity = '1';
+                        selectedDateValue = item.dataset.value;
+                    } else {
+                        item.style.color = 'rgba(255,255,255,0.3)';
+                        item.style.transform = 'scale(0.85)';
+                        item.style.opacity = '0.4';
+                    }
+                });
+            };
+
+            // Scroll to Today (60th item)
+            setTimeout(() => {
+                const todayItem = wheelScroll.children[60];
+                wheelScroll.scrollTop = todayItem.offsetTop - wheelScroll.offsetTop - 96;
+            }, 50);
+        }
+
+        function openWheelPicker(inputId) {
+            currentTargetInputId = inputId;
+            document.getElementById('wheelModalOverlay').classList.add('active');
+            initWheelPicker();
+        }
+
+        function closeWheelPicker() {
+            document.getElementById('wheelModalOverlay').classList.remove('active');
+        }
+
+        function confirmWheelDate() {
+            if (selectedDateValue && currentTargetInputId) {
+                const input = document.getElementById(currentTargetInputId);
+                const btn = document.getElementById(currentTargetInputId + 'Btn');
+                input.value = selectedDateValue;
+
+                const d = new Date(selectedDateValue);
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                btn.querySelector('span').textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+                btn.classList.add('has-date');
+
+                closeWheelPicker();
+            }
+        }
+
+        async function adminDeleteReview(reviewId) {
+            if (!confirm('Are you sure you want to delete this review?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/reviews/${reviewId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    allReviewsData = allReviewsData.filter(r => r.id !== reviewId);
+                    renderReviews(allReviewsData);
+                    document.getElementById('totalRev').textContent = allReviewsData.length;
+                }
             } catch (err) {
-                console.error('Error loading data:', err);
-            } finally {
-                document.getElementById('pageLoader').style.display = 'none';
+                console.error(err);
             }
         }
 
@@ -476,16 +1128,17 @@
             });
 
             if (res) {
-                loadData(); // Refresh
+                loadData();
             }
         }
 
         function logout() {
             localStorage.removeItem('aurous_token');
-            window.location.href = '/login';
+            window.location.href = '/';
         }
 
         loadData();
     </script>
 </body>
+
 </html>
