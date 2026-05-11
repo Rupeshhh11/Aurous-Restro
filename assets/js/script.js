@@ -71,73 +71,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }, index * 100 + 100);
     });
 
-    let startTime = null;
+    const preloaderEmoji = document.getElementById('preloader-emoji');
+    const emojiInner = preloaderEmoji?.querySelector('.emoji-bounce');
+    const emojis = ['👨‍🍳', '🍲', '🥘', '🍳', '🍱', '🍽️', '😋'];
 
-    function updateLoader(timestamp) {
-        if (!startTime) startTime = timestamp;
-
-        const progress = Math.min((timestamp - startTime) / 2000, 1);
-
-        const easeOutProgress = Math.min(progress * (2 - progress), 1);
-
-        count = easeOutProgress * 100;
-
-        counter.innerText = Math.floor(count) + "%";
-        if (progressLine) {
-            progressLine.style.width = count + "%";
-        }
-
-        if (count < 100) {
-            requestAnimationFrame(updateLoader);
-        } else {
-            if (counter) counter.innerText = "100%";
-
-            setTimeout(() => {
-                if (preloader) preloader.classList.add('slide-up');
-
-                if (canvas) {
-                    canvas.classList.replace('opacity-100', 'opacity-0');
-                    setTimeout(() => snowActive = false, 1000);
+    // Ultra-smooth GSAP Loader
+    if (preloader) {
+        const loaderTL = gsap.timeline({
+            delay: 0.2,
+            onUpdate: function() {
+                const progress = Math.floor(this.progress() * 100);
+                if (counter) counter.innerText = progress + "%";
+                
+                // Update Emoji Sequence
+                if (emojiInner) {
+                    const emojiIndex = Math.floor(this.progress() * (emojis.length - 1));
+                    if (emojiInner.innerText !== emojis[emojiIndex]) {
+                        emojiInner.innerText = emojis[emojiIndex];
+                        gsap.fromTo(emojiInner, { scale: 1.4 }, { scale: 1, duration: 0.3 });
+                    }
                 }
-                const treeLeft = document.getElementById('tree-left');
-                const treeRight = document.getElementById('tree-right');
-                if (treeLeft) treeLeft.style.transform = 'translateX(-100%) scale(0.8)';
-                if (treeLeft) treeLeft.classList.replace('opacity-100', 'opacity-0');
-                if (treeRight) treeRight.style.transform = 'translateX(100%) scale(0.8)';
-                if (treeRight) treeRight.classList.replace('opacity-100', 'opacity-0');
-
-                const heroBg = document.getElementById('hero-bg-wrapper');
-                if (heroBg) {
-                    heroBg.classList.replace('scale-100', 'scale-105');
-                }
-
-                const nav = document.getElementById('navbar');
-                if (nav) {
-                    setTimeout(() => {
-                        nav.classList.remove('opacity-0', '-translate-y-full');
-                    }, 400);
-                }
-
-                const mobileNav = document.getElementById('mobile-nav');
-                if (mobileNav) {
-                    setTimeout(() => {
-                        mobileNav.classList.remove('translate-y-full');
-                    }, 400);
-                }
-
-                if (heroContent) {
-                    heroContent.classList.remove('opacity-0', 'translate-y-16');
-                }
-
+            },
+            onComplete: () => {
+                if (counter) counter.innerText = "100%";
                 setTimeout(() => {
-                    document.body.style.overflow = '';
-                }, 1200);
+                    preloader.classList.add('slide-up');
 
-            }, 300);
-        }
+                    if (canvas) {
+                        canvas.classList.replace('opacity-100', 'opacity-0');
+                        setTimeout(() => snowActive = false, 1000);
+                    }
+
+                    const heroBg = document.getElementById('hero-bg-wrapper');
+                    if (heroBg) heroBg.classList.replace('scale-100', 'scale-105');
+
+                    const nav = document.getElementById('navbar');
+                    if (nav) {
+                        setTimeout(() => {
+                            nav.classList.remove('opacity-0', '-translate-y-full');
+                        }, 400);
+                    }
+
+                    const mobileNav = document.getElementById('mobile-nav');
+                    if (mobileNav) {
+                        setTimeout(() => {
+                            mobileNav.classList.remove('translate-y-full');
+                        }, 400);
+                    }
+
+                    if (heroContent) {
+                        heroContent.classList.remove('opacity-0', 'translate-y-16');
+                    }
+
+                    setTimeout(() => {
+                        document.body.style.overflow = '';
+                    }, 1200);
+                }, 400);
+            }
+        });
+
+        loaderTL.to(progressLine, { width: "100%", duration: 2.5, ease: "power2.inOut" });
+        loaderTL.to(preloaderEmoji, { left: "100%", duration: 2.5, ease: "power2.inOut" }, 0);
     }
-
-    requestAnimationFrame(updateLoader);
 
 
     const navbar = document.getElementById('navbar');
@@ -267,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const playToggleLabel = playStatus.closest('label');
         const musicPlayerWidget = document.querySelector('.group\\/he');
-        
+
         if (musicPlayerWidget) {
             musicPlayerWidget.addEventListener('mouseenter', () => {
                 if (!isMusicPlaying) {
@@ -335,11 +330,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (musicProgress) {
             musicProgress.addEventListener('mousedown', () => musicProgress.dataset.isDragging = 'true');
             musicProgress.addEventListener('touchstart', () => musicProgress.dataset.isDragging = 'true');
-            
+
             musicProgress.addEventListener('input', (e) => {
                 if (musicCurrentTime) musicCurrentTime.innerText = formatTime(e.target.value);
             });
-            
+
             musicProgress.addEventListener('change', (e) => {
                 bgMusic.currentTime = e.target.value;
                 musicProgress.dataset.isDragging = 'false';
@@ -357,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openReview(e) {
         if (e) e.preventDefault();
-        if(reviewModal && reviewBox) {
+        if (reviewModal && reviewBox) {
             reviewModal.classList.remove('opacity-0', 'pointer-events-none');
             reviewBox.classList.remove('translate-y-10');
             reviewBox.classList.add('translate-y-0', 'scale-100');
@@ -367,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeReview(e) {
         if (e) e.preventDefault();
-        if(reviewModal && reviewBox) {
+        if (reviewModal && reviewBox) {
             reviewModal.classList.add('opacity-0', 'pointer-events-none');
             reviewBox.classList.remove('translate-y-0', 'scale-100');
             reviewBox.classList.add('translate-y-10');
@@ -386,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starInputs.forEach(star => {
             star.addEventListener('click', () => {
                 const value = parseInt(star.getAttribute('data-value'));
-                if(ratingInput) ratingInput.value = value;
+                if (ratingInput) ratingInput.value = value;
                 starInputs.forEach((s, idx) => {
                     if (idx < value) {
                         s.classList.add('text-[#E0115F]');
@@ -451,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getStarsHtml(rating) {
         let stars = '';
-        for(let i=1; i<=5; i++) {
+        for (let i = 1; i <= 5; i++) {
             if (i <= rating) {
                 stars += '<i class="fa-solid fa-star"></i>';
             } else if (i - 0.5 === rating) {
@@ -477,13 +472,29 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('aurous_reviews', JSON.stringify(reviews));
     }
 
-    window.deleteReview = function(id) {
+    window.deleteReview = async function (id) {
         if (!confirm('Are you sure you want to delete this review?')) return;
-        
+
+        // Try deleting from API first (numeric IDs are from backend)
+        if (typeof id === 'number' || !isNaN(parseInt(id))) {
+            try {
+                const response = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    // Remove from apiReviews cache
+                    if (window.apiReviews) {
+                        window.apiReviews = window.apiReviews.filter(r => r.id != id);
+                    }
+                }
+            } catch (err) {
+                console.log('API delete failed, trying local:', err);
+            }
+        }
+
+        // Also try local storage delete
         let stored = getStoredReviews();
         let initialLength = stored.length;
         stored = stored.filter(r => r.id !== id);
-        
+
         if (stored.length !== initialLength) {
             localStorage.setItem('aurous_reviews', JSON.stringify(stored));
         } else {
@@ -493,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('deleted_default_reviews', JSON.stringify(deletedDefaults));
             }
         }
-        
+
         if (document.getElementById('reviews-container')) {
             window.renderReviews('reviews-container', 3);
         }
@@ -502,12 +513,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.renderReviews = function(containerId, limit = null, filterStars = 0) {
+    window.renderReviews = function (containerId, limit = null, filterStars = 0) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
         let allReviews = [...(window.apiReviews || []), ...getStoredReviews(), ...defaultReviews];
-        
+
         let deletedDefaults = JSON.parse(localStorage.getItem('deleted_default_reviews') || '[]');
         allReviews = allReviews.filter(r => !deletedDefaults.includes(r.id));
         allReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -530,8 +541,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const isGrid = containerId === 'all-reviews-container';
 
         allReviews.forEach((review, index) => {
-            const reviewImage = review.image || 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000';
-            const avatarHtml = review.avatar 
+            let images = [];
+            if (review.image) {
+                images = review.image.split(',');
+            } else {
+                images = ['https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000'];
+            }
+            const firstImage = images[0];
+            const hasMultipleImages = images.length > 1;
+
+            if (!window.reviewGalleries) window.reviewGalleries = {};
+            window.reviewGalleries[review.id] = { images: images, text: review.text };
+
+            const galleryOverlay = hasMultipleImages ? `
+                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center z-20 cursor-pointer backdrop-blur-sm" onclick="openGallery('${review.id}')">
+                    <div class="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-3 transform scale-75 group-hover:scale-100 transition-transform duration-500 delay-100">
+                        <i class="fa-regular fa-images text-white text-xl"></i>
+                    </div>
+                    <span class="text-white text-xs font-bold uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">+${images.length - 1} Photos</span>
+                </div>
+            ` : '';
+
+            const avatarHtml = review.avatar
                 ? `<img src="${review.avatar}" alt="${review.name}" class="w-12 h-12 rounded-full object-cover border-2 border-[#E0115F]">`
                 : `<div class="w-12 h-12 rounded-full bg-[#E0115F] flex items-center justify-center text-white font-bold text-lg border-2 border-[#E0115F] flex-shrink-0">${review.name.charAt(0)}</div>`;
 
@@ -541,9 +572,14 @@ document.addEventListener('DOMContentLoaded', () => {
             ` : '';
 
             const replyHtml = review.reply_text ? `
-                <div class="mt-6 p-4 bg-[#E0115F]/5 border-l-2 border-[#E0115F] rounded-r-xl">
-                    <p class="text-[10px] uppercase tracking-widest text-[#E0115F] font-bold mb-1">Owner's Response</p>
-                    <p class="text-white/70 text-xs italic">"${review.reply_text}"</p>
+                <div class="mt-6 flex gap-3 items-end">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-[#E0115F] to-[#ff4d85] flex flex-shrink-0 items-center justify-center shadow-[0_0_15px_rgba(224,17,95,0.4)] z-10">
+                        <i class="fa-solid fa-crown text-white text-[10px]"></i>
+                    </div>
+                    <div class="relative bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl rounded-bl-sm p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)] max-w-[85%]">
+                        <span class="text-[10px] uppercase tracking-widest text-[#ff4d85] font-bold mb-1.5 block">Aurous Admin</span>
+                        <p class="text-white/90 text-sm leading-relaxed font-medium tracking-wide">"${review.reply_text}"</p>
+                    </div>
                 </div>
             ` : '';
 
@@ -552,8 +588,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isGrid) {
                 html = `
                     <div class="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/10 transition-colors group flex flex-col h-full relative overflow-hidden">
-                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 relative shrink-0">
-                            <img src="${reviewImage}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Review Image">
+                        <div class="w-full h-48 rounded-2xl overflow-hidden mb-6 relative shrink-0 bg-black">
+                            <img src="${firstImage}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="Review Image">
+                            ${galleryOverlay}
                         </div>
                         <div class="flex justify-between items-start mb-4">
                             <div class="flex gap-1 text-[#E0115F] text-sm">${getStarsHtml(review.rating)}</div>
@@ -564,25 +601,26 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <h3 class="text-xl font-bold mb-3 tracking-tight">"${review.title}"</h3>
                         <p class="text-white/60 text-sm leading-relaxed font-light mb-4 flex-grow">"${review.text}"</p>
-                        ${replyHtml}
-                        <div class="flex items-center gap-4 mt-6">
+                        <div class="flex items-center gap-4 mt-auto">
                             ${avatarHtml}
                             <div class="flex flex-col">
                                 <h4 class="font-bold text-sm tracking-wide uppercase">${review.name}</h4>
                                 <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">${review.tag}</span>
                             </div>
                         </div>
+                        ${replyHtml}
                     </div>
                 `;
             } else {
                 const isReverse = index % 2 !== 0;
                 html = `
                     <div class="flex flex-col md:${isReverse ? 'flex-row-reverse' : 'flex-row'} items-center gap-10 md:gap-0 relative group">
-                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl">
-                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full"></div>
-                            <img src="${reviewImage}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" alt="Review Image">
+                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl bg-black">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full pointer-events-none"></div>
+                            <img src="${firstImage}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Review Image">
+                            ${galleryOverlay}
                         </div>
-                        <div class="w-[90%] mx-auto -mt-[220px] relative z-40 md:mt-0 md:w-[45%] md:absolute ${isReverse ? 'md:left-0' : 'md:right-0'} bg-black/70 md:bg-[#050505]/60 backdrop-blur-[15px] md:backdrop-blur-2xl p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                        <div class="w-[90%] mx-auto -mt-[220px] relative z-40 md:mt-0 md:w-[45%] md:absolute ${isReverse ? 'md:left-0' : 'md:right-0'} bg-black/80 md:bg-[#050505]/70 backdrop-blur-[20px] p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
                             <div class="flex justify-between items-start mb-6">
                                 <div class="flex gap-1 text-[#E0115F] text-lg">${getStarsHtml(review.rating)}</div>
                                 <div class="flex items-center gap-4">
@@ -592,14 +630,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                             <h3 class="text-2xl font-bold mb-4 tracking-tight">"${review.title}"</h3>
                             <p class="text-white/60 text-base leading-relaxed font-light mb-4">"${review.text}"</p>
-                            ${replyHtml}
-                            <div class="flex items-center gap-4 mt-8">
+                            <div class="flex items-center gap-4 mt-6">
                                 ${avatarHtml}
                                 <div class="flex flex-col">
                                     <h4 class="font-bold text-sm tracking-wide uppercase">${review.name}</h4>
                                     <span class="text-[10px] text-white/40 uppercase tracking-widest mt-1">${review.tag}</span>
                                 </div>
                             </div>
+                            ${replyHtml}
                         </div>
                     </div>
                 `;
@@ -609,7 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Load reviews from API
-    window.loadReviewsFromAPI = async function() {
+    window.loadReviewsFromAPI = async function () {
         try {
             const response = await fetch('/api/reviews');
             if (response.ok) {
@@ -648,12 +686,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('review-image');
         const fileLabel = document.getElementById('review-image-label');
         if (fileInput && fileLabel) {
-            fileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    fileLabel.innerHTML = '<i class="fa-solid fa-check text-[#E0115F] text-lg mb-1"></i><span class="text-[#E0115F]">Selected</span>';
+            fileInput.addEventListener('change', function () {
+                if (this.files && this.files.length > 0) {
+                    const count = this.files.length;
+                    fileLabel.innerHTML = `<i class="fa-solid fa-check text-[#E0115F] text-lg mb-1"></i><span class="text-[#E0115F]">${count} Photo${count > 1 ? 's' : ''} Selected</span>`;
                     fileLabel.classList.add('border-[#E0115F]/50');
                 } else {
-                    fileLabel.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i><span>Upload</span>';
+                    fileLabel.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i><span>Upload Photos</span>';
                     fileLabel.classList.remove('border-[#E0115F]/50');
                 }
             });
@@ -667,7 +706,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let ratingInputObj = document.getElementById('review-rating');
             const rating = ratingInputObj ? parseInt(ratingInputObj.value) : 5;
             const text = document.getElementById('review-text').value;
-            const imageFile = document.getElementById('review-image')?.files[0];
+            const imageFiles = document.getElementById('review-image')?.files;
 
             const submitBtn = reviewForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
@@ -679,8 +718,10 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('location', location);
             formData.append('rating', rating);
             formData.append('review_text', text);
-            if (imageFile) {
-                formData.append('image', imageFile);
+            if (imageFiles && imageFiles.length > 0) {
+                for (let i = 0; i < imageFiles.length; i++) {
+                    formData.append('images', imageFiles[i]);
+                }
             }
 
             try {
@@ -692,12 +733,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     closeReview();
                     reviewForm.reset();
-                    if(starInputs.length > 0) starInputs[4].click();
+                    if (starInputs.length > 0) starInputs[4].click();
                     if (fileLabel) {
                         fileLabel.innerHTML = '<i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i><span>Upload</span>';
                         fileLabel.classList.remove('border-[#E0115F]/50');
                     }
-                    
+
                     // Reload reviews from API
                     await loadReviewsFromAPI();
                 } else {
@@ -742,11 +783,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openReservation(e) {
         if (e) e.preventDefault();
-        if(reservationModal && reservationBox && typeof gsap !== 'undefined') {
+        if (reservationModal && reservationBox && typeof gsap !== 'undefined') {
             reservationModal.classList.remove('opacity-0', 'pointer-events-none');
             document.body.style.overflow = 'hidden';
-            
-            gsap.fromTo(reservationBox, 
+
+            gsap.fromTo(reservationBox,
                 { y: '100%', filter: 'blur(20px)', opacity: 0 },
                 { y: '0%', filter: 'blur(0px)', opacity: 1, duration: 1, ease: 'elastic.out(1, 0.8)' }
             );
@@ -755,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeReservation(e) {
         if (e) e.preventDefault();
-        if(reservationModal && reservationBox && typeof gsap !== 'undefined') {
+        if (reservationModal && reservationBox && typeof gsap !== 'undefined') {
             gsap.to(reservationBox, {
                 y: '100%', filter: 'blur(10px)', opacity: 0, duration: 0.6, ease: 'power3.in',
                 onComplete: () => {
@@ -796,7 +837,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const reservationForm = document.getElementById('reservation-form');
-    
+
     const wheelDate = document.getElementById('wheel-date');
     const wheelHour = document.getElementById('wheel-hour');
     const wheelMinute = document.getElementById('wheel-minute');
@@ -810,7 +851,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const today = new Date();
-        
+
         for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
@@ -854,27 +895,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function setupWheelScroll(wheelContainer, inputElement) {
             const items = wheelContainer.querySelectorAll('.wheel-item');
-            
+
             function onScroll() {
                 const containerCenter = wheelContainer.scrollTop + 96;
-                
+
                 items.forEach(item => {
                     const itemCenter = item.offsetTop + 24;
                     const dist = Math.abs(containerCenter - itemCenter);
-                    
+
                     if (dist < 24) {
                         gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.2 });
-                        if(inputElement) inputElement.value = item.dataset.value;
+                        if (inputElement) inputElement.value = item.dataset.value;
                     } else {
                         gsap.to(item, { scale: 0.85, opacity: 0.4, color: 'rgba(255,255,255,0.5)', textShadow: 'none', duration: 0.2 });
                     }
                 });
             }
-            
+
             wheelContainer.addEventListener('scroll', onScroll);
-            
+
             onScroll();
-            
+
             items.forEach(item => {
                 item.addEventListener('click', () => {
                     const scrollPos = item.offsetTop - 72;
@@ -894,7 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reservationForm) {
         reservationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const submitBtn = reservationForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
             submitBtn.innerText = "Reserving...";
@@ -904,10 +945,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: document.getElementById('reserve-name').value,
                 phone: document.getElementById('reserve-phone').value,
                 occasion: document.getElementById('occasion').value,
-                date: document.getElementById('selected-date').value,
-                hour: document.getElementById('selected-hour').value,
-                minute: document.getElementById('selected-minute').value,
-                ampm: document.getElementById('selected-ampm').value,
+                date: document.getElementById('selected-date').value || document.querySelector('#wheel-date .wheel-item')?.dataset.value || '',
+                hour: document.getElementById('selected-hour').value || document.querySelector('#wheel-hour .wheel-item')?.dataset.value || '',
+                minute: document.getElementById('selected-minute').value || document.querySelector('#wheel-minute .wheel-item')?.dataset.value || '',
+                ampm: document.getElementById('selected-ampm').value || document.querySelector('#wheel-ampm .wheel-item')?.dataset.value || '',
                 guest_count: parseInt(document.getElementById('guest-input').value)
             };
 
@@ -930,7 +971,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         guestInput.value = 2;
                         guestCountDisplay.innerText = 2;
                         const wheelDate = document.getElementById('wheel-date');
-                        if(wheelDate) wheelDate.scrollTo({ top: 0, behavior: 'smooth' });
+                        if (wheelDate) wheelDate.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 600);
                 } else {
                     alert("Failed to reserve table. Please try again.");
@@ -944,5 +985,99 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    window.openGallery = function (reviewId) {
+        const galleryData = window.reviewGalleries[reviewId];
+        if (!galleryData || !galleryData.images || galleryData.images.length === 0) return;
+
+        const images = galleryData.images;
+        const text = galleryData.text;
+
+        let currentIndex = 0;
+
+        const modalHtml = `
+            <div id="gallery-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+                <button onclick="closeGallery()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors z-50 group">
+                    <i class="fa-solid fa-xmark text-lg group-hover:scale-110 transition-transform"></i>
+                </button>
+                
+                <div class="relative w-full h-[80vh] flex flex-col items-center justify-center px-4 md:px-16 mt-4">
+                    <img id="gallery-image" src="${images[0]}" class="max-w-full max-h-[85%] object-contain rounded-xl shadow-2xl transition-all duration-300 transform scale-95">
+                    
+                    <div id="gallery-review-text" class="mt-6 px-6 max-w-3xl text-center text-white/80 text-sm md:text-base italic font-light transition-opacity duration-300">
+                        "${text}"
+                    </div>
+                    
+                    <button id="gallery-prev" class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#E0115F] backdrop-blur-md transition-all z-50 ${images.length <= 1 ? 'hidden' : ''}">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    
+                    <button id="gallery-next" class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#E0115F] backdrop-blur-md transition-all z-50 ${images.length <= 1 ? 'hidden' : ''}">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="absolute bottom-8 flex gap-3" id="gallery-dots">
+                    ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full ${i === 0 ? 'bg-[#E0115F] scale-125' : 'bg-white/30'} transition-all duration-300"></div>`).join('')}
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.body.style.overflow = 'hidden';
+
+        const modal = document.getElementById('gallery-modal');
+        const img = document.getElementById('gallery-image');
+        const textDiv = document.getElementById('gallery-review-text');
+        const dots = document.getElementById('gallery-dots').children;
+
+        requestAnimationFrame(() => {
+            modal.classList.remove('opacity-0');
+            img.classList.remove('scale-95');
+            img.classList.add('scale-100');
+        });
+
+        const updateImage = (index) => {
+            img.classList.add('opacity-0', 'scale-95');
+            img.classList.remove('scale-100');
+            
+            if (textDiv) {
+                if (index === 0) textDiv.classList.remove('opacity-0');
+                else textDiv.classList.add('opacity-0');
+            }
+            
+            setTimeout(() => {
+                img.src = images[index];
+                Array.from(dots).forEach((dot, i) => {
+                    dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === index ? 'bg-[#E0115F] scale-125' : 'bg-white/30'}`;
+                });
+                img.classList.remove('opacity-0', 'scale-95');
+                img.classList.add('scale-100');
+            }, 200);
+        };
+        
+        document.getElementById('gallery-prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateImage(currentIndex);
+        });
+        
+        document.getElementById('gallery-next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateImage(currentIndex);
+        });
+    };
+    
+    window.closeGallery = function() {
+        const modal = document.getElementById('gallery-modal');
+        if (modal) {
+            modal.classList.add('opacity-0');
+            const img = document.getElementById('gallery-image');
+            if (img) img.classList.add('scale-95');
+            setTimeout(() => {
+                modal.remove();
+                document.body.style.overflow = '';
+            }, 300);
+        }
+    };
 
 });
