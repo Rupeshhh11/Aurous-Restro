@@ -216,8 +216,14 @@ input:-webkit-autofill:active {
     }
 }
 
-.plate-bounce {
-    animation: plate-bounce 0.5s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+@keyframes emoji-bounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(-10deg); }
+    75% { transform: translateY(-10px) rotate(10deg); }
+}
+
+.emoji-bounce {
+    animation: emoji-bounce 1s ease-in-out infinite;
 }
 
 @keyframes steam-rise {
