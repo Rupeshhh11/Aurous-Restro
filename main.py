@@ -99,24 +99,28 @@ async def create_review(
     location: str = Form(...),
     rating: int = Form(...),
     review_text: str = Form(...),
-    image: UploadFile = File(None),
+    images: List[UploadFile] = File(None),
     db: Session = Depends(get_db)
 ):
-    image_url = None
-    if image and image.filename:
-        file_extension = os.path.splitext(image.filename)[1]
-        unique_filename = f"{uuid.uuid4().hex}{file_extension}"
-        file_path = f"assets/images/uploads/{unique_filename}"
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(image.file, buffer)
-        image_url = f"/{file_path}"
+    image_urls = []
+    if images:
+        for img in images:
+            if img.filename:
+                file_extension = os.path.splitext(img.filename)[1]
+                unique_filename = f"{uuid.uuid4().hex}{file_extension}"
+                file_path = f"assets/images/uploads/{unique_filename}"
+                with open(file_path, "wb") as buffer:
+                    shutil.copyfileobj(img.file, buffer)
+                image_urls.append(f"/{file_path}")
+    
+    image_url_str = ",".join(image_urls) if image_urls else None
 
     db_review = models.Review(
         name=name,
         location=location,
         rating=rating,
         review_text=review_text,
-        image_url=image_url
+        image_url=image_url_str
     )
     db.add(db_review)
     db.commit()
@@ -160,6 +164,24 @@ def admin_reply_to_review(reply: schemas.ReviewReply, current_member: models.Mem
     db.refresh(db_review)
     return db_review
 
+@app.delete("/api/reviews/{review_id}")
+def delete_review_public(review_id: int, db: Session = Depends(get_db)):
+    db_review = db.query(models.Review).filter(models.Review.id == review_id).first()
+    if not db_review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    db.delete(db_review)
+    db.commit()
+    return {"detail": "Review deleted"}
+
+@app.delete("/api/admin/reviews/{review_id}")
+def admin_delete_review(review_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_review = db.query(models.Review).filter(models.Review.id == review_id).first()
+    if not db_review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    db.delete(db_review)
+    db.commit()
+    return {"detail": "Review deleted"}
+
 # --- Static Routes ---
 
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
@@ -177,6 +199,7 @@ def read_dashboard():
     return FileResponse("dashboard.html")
 
 @app.get("/reviews")
+@app.get("/reviews.html")
 def read_reviews_page():
     return FileResponse("reviews.html")
 
