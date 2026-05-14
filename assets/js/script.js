@@ -1,4 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Toast Notification System
+    window.showToast = function(message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `
+            <i class="fa-solid fa-circle-check"></i>
+            <span>${message}</span>
+        `;
+        container.appendChild(toast);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            toast.classList.add('toast-out');
+            setTimeout(() => toast.remove(), 400);
+        }, 3000);
+    };
+
 
 
     const counter = document.getElementById('counter');
@@ -12,7 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (preloader) {
         document.body.style.overflow = 'hidden';
     }
+    
+    // Force scroll to top and clear hash on refresh
+    if (window.location.hash) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
     window.scrollTo(0, 0);
+    setTimeout(() => window.scrollTo(0, 0), 10);
 
     const canvas = document.getElementById('snow-canvas');
     let ctx, snowParticles = [], snowActive = false;
@@ -159,9 +186,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loginModal = document.getElementById('login-modal');
     const openLoginBtn = document.getElementById('open-login');
+    const openListViewBtn = document.getElementById('open-list-view');
     const closeLoginBtn = document.getElementById('close-login');
     const closeLoginBg = document.getElementById('close-login-bg');
     const loginBox = document.getElementById('login-box');
+    const resBadge = document.getElementById('res-badge');
+    
+    // My Reservation Modal Elements
+    const myResModal = document.getElementById('my-res-modal');
+    const myResBox = document.getElementById('my-res-box');
+    const myResContent = document.getElementById('my-res-content');
+    const closeMyResBtn = document.getElementById('close-my-res');
+    const closeMyResBg = document.getElementById('close-my-res-bg');
+    const resToAdminBtn = document.getElementById('res-to-admin');
 
     function openLogin(e) {
         if (e) e.preventDefault();
@@ -179,9 +216,85 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
+    function checkResStatus() {
+        const resData = localStorage.getItem('user_reservation');
+        if (resData && resBadge) {
+            resBadge.classList.remove('hidden');
+        } else if (resBadge) {
+            resBadge.classList.add('hidden');
+        }
+    }
+    checkResStatus();
+
+    function openMyRes() {
+        const resData = JSON.parse(localStorage.getItem('user_reservation') || 'null');
+        
+        if (resData) {
+            const dateObj = new Date(resData.date);
+            const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+            const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+            const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
+            
+            myResContent.innerHTML = `
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">Your Reservation</h3>
+                    <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
+                </div>
+                
+                <div class="space-y-4 text-left bg-white/5 p-5 rounded-2xl border border-white/5">
+                    <div>
+                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Date & Time</span>
+                        <p class="text-sm font-bold text-white">${formattedDate} @ ${formattedTime}</p>
+                    </div>
+                    <div>
+                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Guests & Occasion</span>
+                        <p class="text-sm font-bold text-white">${resData.guest_count} People • ${resData.occasion.replace('_', ' ')}</p>
+                    </div>
+                </div>
+                
+                <p class="text-[10px] text-white/40 mt-6 italic">Looking forward to seeing you at Aurous!</p>
+            `;
+        } else {
+            myResContent.innerHTML = `
+                <div class="py-6">
+                    <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-calendar-xmark text-white/20 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">No Reservation Yet</h3>
+                    <p class="text-xs text-white/40 mt-2">Book your table now to experience the best of Aurous.</p>
+                </div>
+            `;
+        }
+
+        myResModal.classList.remove('opacity-0', 'pointer-events-none');
+        myResBox.classList.remove('translate-y-10');
+        myResBox.classList.add('translate-y-0');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMyRes() {
+        myResModal.classList.add('opacity-0', 'pointer-events-none');
+        myResBox.classList.remove('translate-y-0');
+        myResBox.classList.add('translate-y-10');
+        document.body.style.overflow = '';
+    }
+
     if (openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
+    if (openListViewBtn) openListViewBtn.addEventListener('click', openMyRes);
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
+    
+    if (closeMyResBtn) closeMyResBtn.addEventListener('click', closeMyRes);
+    if (closeMyResBg) closeMyResBg.addEventListener('click', closeMyRes);
+    if (resToAdminBtn) {
+        resToAdminBtn.addEventListener('click', () => {
+            closeMyRes();
+            setTimeout(openLogin, 400);
+        });
+    }
 
     // Admin Login Logic for Main Page
     const adminLoginForm = document.getElementById('admin-login-form');
@@ -264,22 +377,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const musicPlayerWidget = document.querySelector('.group\\/he');
 
         if (musicPlayerWidget) {
-            musicPlayerWidget.addEventListener('mouseenter', () => {
-                if (!isMusicPlaying) {
-                    playStatus.checked = true;
+            // Click to toggle on mobile/desktop
+            musicPlayerWidget.addEventListener('click', (e) => {
+                // Don't trigger if clicking child controls (progress bar, skip buttons)
+                if (e.target.closest('input[type="range"]') || e.target.closest('.space-x-5')) return;
+                
+                playStatus.checked = !playStatus.checked;
+                if (playStatus.checked) {
                     bgMusic.volume = 0.6;
                     bgMusic.play().then(() => {
                         isMusicPlaying = true;
                         if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
-                    }).catch((err) => {
-                        console.warn("Autoplay prevented:", err);
-                        playStatus.checked = false;
-                    });
+                    }).catch(err => console.warn("Play prevented:", err));
                 } else {
                     bgMusic.pause();
                     isMusicPlaying = false;
-                    playStatus.checked = false;
                     if (playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
+                }
+            });
+
+            // Keep hover for desktop if desired, but click is primary now
+            musicPlayerWidget.addEventListener('mouseenter', () => {
+                if (window.innerWidth > 768 && !isMusicPlaying) {
+                    // Optional: keep auto-play on hover for desktop
                 }
             });
         }
@@ -373,6 +493,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openReviewBtn) openReviewBtn.addEventListener('click', openReview);
     if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReview);
     if (closeReviewBg) closeReviewBg.addEventListener('click', closeReview);
+
+    const guestPlus = document.getElementById('guest-plus');
+    const guestMinus = document.getElementById('guest-minus');
+    const guestCountDisplay = document.getElementById('guest-count');
+    const guestInput = document.getElementById('guest-input');
+
+    if (guestPlus && guestMinus && guestCountDisplay && guestInput) {
+        guestPlus.addEventListener('click', () => {
+            let count = parseInt(guestInput.value);
+            if (count < 20) {
+                count++;
+                guestCountDisplay.innerText = count;
+                guestInput.value = count;
+            }
+        });
+
+        guestMinus.addEventListener('click', () => {
+            let count = parseInt(guestInput.value);
+            if (count > 1) {
+                count--;
+                guestCountDisplay.innerText = count;
+                guestInput.value = count;
+            }
+        });
+    }
 
     const starInputs = document.querySelectorAll('#star-rating-input i');
     const ratingInput = document.getElementById('review-rating');
@@ -614,13 +759,13 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const isReverse = index % 2 !== 0;
                 html = `
-                    <div class="flex flex-col md:${isReverse ? 'flex-row-reverse' : 'flex-row'} items-center gap-10 md:gap-0 relative group">
-                        <div class="w-full md:w-3/5 h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden relative shadow-2xl bg-black">
+                    <div class="flex flex-col md:${isReverse ? 'flex-row-reverse' : 'flex-row'} items-center gap-4 md:gap-0 relative group">
+                        <div class="w-full md:w-3/5 h-[160px] md:h-[500px] rounded-[1rem] md:rounded-[2rem] overflow-hidden relative shadow-2xl bg-black">
                             <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-700 z-10 w-full h-full pointer-events-none"></div>
                             <img src="${firstImage}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Review Image">
                             ${galleryOverlay}
                         </div>
-                        <div class="w-[90%] mx-auto -mt-[220px] relative z-40 md:mt-0 md:w-[45%] md:absolute ${isReverse ? 'md:left-0' : 'md:right-0'} bg-black/80 md:bg-[#050505]/70 backdrop-blur-[20px] p-8 md:p-12 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
+                        <div class="w-[96%] mx-auto -mt-[60px] md:-mt-0 relative z-40 md:w-[45%] md:absolute ${isReverse ? 'md:left-0' : 'md:right-0'} bg-black/98 md:bg-[#050505]/70 backdrop-blur-[20px] p-3 md:p-12 rounded-[1.2rem] md:rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] md:-translate-y-8 md:group-hover:-translate-y-12 transition-all duration-700">
                             <div class="flex justify-between items-start mb-6">
                                 <div class="flex gap-1 text-[#E0115F] text-lg">${getStarsHtml(review.rating)}</div>
                                 <div class="flex items-center gap-4">
@@ -628,8 +773,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                     ${deleteBtn}
                                 </div>
                             </div>
-                            <h3 class="text-2xl font-bold mb-4 tracking-tight">"${review.title}"</h3>
-                            <p class="text-white/60 text-base leading-relaxed font-light mb-4">"${review.text}"</p>
+                            <h3 class="text-sm md:text-2xl font-bold mb-1 md:mb-4 tracking-tight">"${review.title}"</h3>
+                            <p class="text-[10px] md:text-base leading-relaxed font-light mb-4">"${review.text}"</p>
                             <div class="flex items-center gap-4 mt-6">
                                 ${avatarHtml}
                                 <div class="flex flex-col">
@@ -741,12 +886,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Reload reviews from API
                     await loadReviewsFromAPI();
+                    window.showToast("Review submitted successfully! ✨");
                 } else {
-                    alert("Failed to submit review. Please try again.");
+                    window.showToast("❌ Failed to submit review.");
                 }
             } catch (error) {
                 console.error("Error submitting review:", error);
-                alert("An error occurred. Please try again.");
+                window.showToast("❌ Connection error.");
             } finally {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -811,30 +957,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeReservationBtn) closeReservationBtn.addEventListener('click', closeReservation);
     if (closeReservationBg) closeReservationBg.addEventListener('click', closeReservation);
 
-    const guestMinus = document.getElementById('guest-minus');
-    const guestPlus = document.getElementById('guest-plus');
-    const guestCountDisplay = document.getElementById('guest-count');
-    const guestInput = document.getElementById('guest-input');
 
-    if (guestMinus && guestPlus && guestCountDisplay && guestInput) {
-        guestMinus.addEventListener('click', () => {
-            let current = parseInt(guestInput.value);
-            if (current > 1) {
-                current--;
-                guestInput.value = current;
-                guestCountDisplay.innerText = current;
-            }
-        });
-
-        guestPlus.addEventListener('click', () => {
-            let current = parseInt(guestInput.value);
-            if (current < 20) {
-                current++;
-                guestInput.value = current;
-                guestCountDisplay.innerText = current;
-            }
-        });
-    }
 
     const reservationForm = document.getElementById('reservation-form');
 
@@ -861,15 +984,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateNum = d.getDate();
 
             const div = document.createElement('div');
-            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-base md:text-lg font-bold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.className = 'snap-center h-[37px] flex flex-col items-center justify-center text-white/50 cursor-pointer transition-all duration-300 wheel-item select-none';
             div.dataset.value = dateStr;
-            div.innerHTML = `${dayName}, ${monthName} ${dateNum}`;
+            div.innerHTML = `<span class="text-[7.5px] md:text-[8px] uppercase tracking-widest font-black mb-0.5">${dayName}</span><span class="text-[9.5px] md:text-[10px] font-bold">${monthName} ${dateNum}</span>`;
             wheelDate.appendChild(div);
         }
 
         for (let i = 1; i <= 12; i++) {
             const div = document.createElement('div');
-            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-xl md:text-2xl font-extrabold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.className = 'snap-center h-[37px] flex items-center justify-center text-white/50 text-[13px] md:text-base font-black cursor-pointer transition-all duration-300 wheel-item select-none';
             div.dataset.value = i.toString();
             div.innerHTML = i.toString();
             wheelHour.appendChild(div);
@@ -878,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = ['00', '15', '30', '45'];
         minutes.forEach(m => {
             const div = document.createElement('div');
-            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-xl md:text-2xl font-extrabold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.className = 'snap-center h-[37px] flex items-center justify-center text-white/50 text-[13px] md:text-base font-black cursor-pointer transition-all duration-300 wheel-item select-none';
             div.dataset.value = m;
             div.innerHTML = m;
             wheelMinute.appendChild(div);
@@ -887,23 +1010,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const ampmValues = ['AM', 'PM'];
         ampmValues.forEach(v => {
             const div = document.createElement('div');
-            div.className = 'snap-center h-12 flex items-center justify-center text-white/50 text-xl md:text-2xl font-extrabold cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.className = 'snap-center h-[37px] flex items-center justify-center text-white/50 text-[13px] md:text-base font-black cursor-pointer transition-all duration-300 wheel-item select-none';
             div.dataset.value = v;
             div.innerHTML = v;
             wheelAmpm.appendChild(div);
         });
 
+        // Phone number 10-digit limit
+        const phoneInput = document.getElementById('reserve-phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+            });
+        }
+
         function setupWheelScroll(wheelContainer, inputElement) {
             const items = wheelContainer.querySelectorAll('.wheel-item');
 
             function onScroll() {
-                const containerCenter = wheelContainer.scrollTop + 96;
+                const containerCenter = wheelContainer.scrollTop + (wheelContainer.offsetHeight / 2);
 
                 items.forEach(item => {
-                    const itemCenter = item.offsetTop + 24;
+                    const itemCenter = item.offsetTop + (item.offsetHeight / 2);
                     const dist = Math.abs(containerCenter - itemCenter);
 
-                    if (dist < 24) {
+                    if (dist < (item.offsetHeight / 2)) {
                         gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.2 });
                         if (inputElement) inputElement.value = item.dataset.value;
                     } else {
@@ -918,7 +1049,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             items.forEach(item => {
                 item.addEventListener('click', () => {
-                    const scrollPos = item.offsetTop - 72;
+                    const scrollPos = item.offsetTop - (wheelContainer.offsetHeight / 2) + (item.offsetHeight / 2);
                     wheelContainer.scrollTo({ top: scrollPos, behavior: 'smooth' });
                 });
             });
@@ -966,7 +1097,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     closeReservation();
                     setTimeout(() => {
-                        alert("Your exclusive experience has been reserved!");
+                        const successModal = document.getElementById('success-modal');
+                        const successMessage = document.getElementById('success-message');
+                        if (successModal) {
+                            if (successMessage) {
+                                const name = formData.name.split(' ')[0]; // Use first name
+                                const dateObj = new Date(formData.date);
+                                const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+                                const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+                                const formattedTime = `${formData.hour}:${formData.minute} ${formData.ampm}`;
+                                
+                                const occasionText = formData.occasion !== 'casual' ? ` for your ${formData.occasion.replace('_', ' ')}` : '';
+                                successMessage.innerHTML = `See you soon, ${name}${occasionText}!<br>Meet you on ${formattedDate} at ${formattedTime}.`;
+                            }
+                            
+                            // Save reservation locally
+                            localStorage.setItem('user_reservation', JSON.stringify(formData));
+                            checkResStatus();
+
+                            successModal.classList.add('active');
+
+                            // Party Pops (Confetti) - Mobile Only
+                            if (window.innerWidth <= 768) {
+                                for (let i = 0; i < 50; i++) {
+                                    const confetti = document.createElement('div');
+                                    confetti.className = 'confetti';
+                                    confetti.style.left = Math.random() * 100 + 'vw';
+                                    confetti.style.backgroundColor = ['#22c55e', '#ffffff', '#E0115F', '#facc15'][Math.floor(Math.random() * 4)];
+                                    confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                                    document.body.appendChild(confetti);
+                                    setTimeout(() => confetti.remove(), 5000);
+                                }
+                            }
+                            
+                            // Allow clicking to close
+                            const closeSuccess = () => {
+                                successModal.classList.remove('active');
+                                successModal.removeEventListener('click', closeSuccess);
+                            };
+                            successModal.addEventListener('click', closeSuccess);
+
+                            // Hide after 7 seconds automatically
+                            setTimeout(() => {
+                                if (successModal.classList.contains('active')) {
+                                    successModal.classList.remove('active');
+                                }
+                            }, 7000);
+                        }
+                        
                         reservationForm.reset();
                         guestInput.value = 2;
                         guestCountDisplay.innerText = 2;
@@ -974,11 +1152,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (wheelDate) wheelDate.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 600);
                 } else {
-                    alert("Failed to reserve table. Please try again.");
+                    window.showToast("❌ Failed to reserve table.");
                 }
             } catch (error) {
                 console.error("Error submitting reservation:", error);
-                alert("An error occurred. Please try again.");
+                window.showToast("❌ Connection error.");
             } finally {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -1065,8 +1243,81 @@ document.addEventListener('DOMContentLoaded', () => {
             currentIndex = (currentIndex + 1) % images.length;
             updateImage(currentIndex);
         });
+
+        // Swipe Support for Gallery
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        modal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        modal.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+        
+        function handleSwipe() {
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) {
+                currentIndex = (currentIndex + 1) % images.length;
+                updateImage(currentIndex);
+            } else if (touchEndX > touchStartX + threshold) {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                updateImage(currentIndex);
+            }
+        }
     };
     
+    // Active Section Tracking for Mobile Nav
+    const navLinksMapping = {
+        'hero': document.getElementById('nav-home'),
+        'vibe': document.getElementById('nav-vibe'),
+        'menu': document.getElementById('nav-menu'),
+        'echoes': document.getElementById('nav-echoes')
+    };
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '-40% 0px -40% 0px',
+        threshold: 0
+    };
+
+    let activeId = 'hero';
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                activeId = entry.target.id;
+                
+                // Remove active from all
+                Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
+                
+                // Add active to current
+                if (navLinksMapping[activeId]) {
+                    navLinksMapping[activeId].classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Watch sections
+    ['hero', 'vibe', 'menu', 'echoes'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+    });
+
+    // Special case for top/bottom of page
+    window.addEventListener('scroll', () => {
+        if (window.scrollY < 50) {
+            Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
+            navLinksMapping['hero']?.classList.add('active');
+        } else if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+            Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
+            navLinksMapping['echoes']?.classList.add('active');
+        }
+    });
+
     window.closeGallery = function() {
         const modal = document.getElementById('gallery-modal');
         if (modal) {

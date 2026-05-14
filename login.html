@@ -125,6 +125,29 @@
             box-shadow: 0 10px 20px -5px rgba(224, 17, 95, 0.4);
         }
 
+        .btn-login {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-login::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.7s ease;
+            z-index: -1;
+        }
+
+        .btn-login:hover::after {
+            left: 150%;
+        }
+
         .error-message {
             color: #ff4444;
             font-size: 0.85rem;
@@ -167,9 +190,9 @@
                 <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="current-password">
             </div>
             
-            <button type="submit" class="btn-login">
+            <button type="submit" class="btn-login btn-shine-effect">
                 <span class="loader" id="loader"></span>
-                Login
+                <span>Login</span>
             </button>
             
             <div id="errorMessage" class="error-message">Invalid username or password</div>
