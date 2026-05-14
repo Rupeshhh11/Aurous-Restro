@@ -113,6 +113,119 @@
             background: rgba(255, 68, 68, 0.1);
         }
 
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg);
+            transition: all 0.7s ease;
+            z-index: -1;
+        }
+
+        .btn-shine:hover::after {
+            left: 150%;
+        }
+
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 0 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border);
+            z-index: 100;
+            padding: 0 2rem;
+            align-items: center;
+            justify-content: space-around;
+            backdrop-filter: blur(20px);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .mobile-nav-item.active {
+            color: var(--primary);
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Table Cards */
+        .res-cards {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .res-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .res-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .res-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .res-card-label {
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
         /* Main Content */
         .main-content {
             margin-left: 280px;
@@ -621,31 +734,72 @@
             box-shadow: 0 6px 20px rgba(224, 17, 95, 0.4);
         }
 
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
             .sidebar {
-                width: 80px;
-                padding: 1rem;
-            }
-
-            .sidebar .logo,
-            .sidebar span,
-            .nav-link span {
                 display: none;
             }
 
-            .main-content {
-                margin-left: 80px;
-                padding: 1.5rem;
+            .mobile-header, .mobile-nav {
+                display: flex;
             }
 
-            .nav-link i {
-                margin-right: 0;
-                font-size: 1.2rem;
+            .main-content {
+                margin-left: 0;
+                padding: 5rem 1.25rem 6rem 1.25rem;
+            }
+
+            .header {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .filter-bar {
-                padding: 0.75rem;
-                gap: 0.5rem;
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            .filter-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .filter-group input, .filter-group select, .date-picker-btn {
+                min-width: unset;
+                flex-grow: 1;
+                text-align: right;
+            }
+
+            .filter-btn-apply {
+                width: 100%;
+                justify-content: center;
+                padding: 0.8rem;
+            }
+
+            .filter-btn-clear {
+                width: 100%;
+                text-align: center;
+            }
+
+            .data-card {
+                padding: 0;
+                background: transparent;
+                border: none;
+            }
+
+            table {
+                display: none;
+            }
+
+            .res-cards {
+                display: flex;
+            }
+
+            .stat-card .value {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -655,6 +809,22 @@
     <div id="pageLoader" class="page-loader">
         <div class="spinner"></div>
     </div>
+
+    <header class="mobile-header">
+        <h1 class="logo" style="margin-bottom: 0; font-size: 1.2rem;">AUROUS <span style="font-size: 0.7rem; letter-spacing: 2px;">ADMIN</span></h1>
+        <div onclick="logout()" style="color: #ff4444; font-size: 1.2rem;"><i class="fas fa-power-off"></i></div>
+    </header>
+
+    <nav class="mobile-nav">
+        <a class="mobile-nav-item active" onclick="showSection('reservations')" id="m-nav-reservations">
+            <i class="fas fa-calendar-check"></i>
+            <span>Res</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('reviews')" id="m-nav-reviews">
+            <i class="fas fa-star"></i>
+            <span>Reviews</span>
+        </a>
+    </nav>
 
     <aside class="sidebar">
         <h1 class="logo">AUROUS <span>ADMIN</span></h1>
@@ -751,6 +921,9 @@
                         <!-- Filled by JS -->
                     </tbody>
                 </table>
+                <div id="resCards" class="res-cards">
+                    <!-- Filled by JS for mobile -->
+                </div>
             </div>
         </section>
 
@@ -842,9 +1015,17 @@
         function showSection(section) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelectorAll('.mobile-nav-item').forEach(l => l.classList.remove('active'));
 
             document.getElementById(section + 'Section').classList.add('active');
-            event.currentTarget.classList.add('active');
+            
+            // Handle both desktop and mobile nav active states
+            const navLink = document.querySelector(`.nav-link[onclick*="${section}"]`);
+            if (navLink) navLink.classList.add('active');
+            
+            const mobileNavLink = document.getElementById('m-nav-' + section);
+            if (mobileNavLink) mobileNavLink.classList.add('active');
+
             document.getElementById('sectionTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
         }
 
@@ -1005,10 +1186,14 @@
 
         function renderReservations(reservations) {
             const resBody = document.getElementById('resBody');
+            const resCards = document.getElementById('resCards');
+            
             if (reservations.length === 0) {
                 resBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-dim); padding: 3rem;">No reservations match your filters.</td></tr>';
+                resCards.innerHTML = '<p style="color: var(--text-dim); text-align: center; padding: 2rem; width: 100%;">No reservations found.</p>';
                 return;
             }
+
             resBody.innerHTML = reservations.map(res => `
                 <tr>
                     <td style="font-weight: 500">${res.name}</td>
@@ -1017,6 +1202,29 @@
                     <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                     <td>${res.phone}</td>
                 </tr>
+            `).join('');
+
+            resCards.innerHTML = reservations.map(res => `
+                <div class="res-card">
+                    <div class="res-card-header">
+                        <span style="font-weight: 600; color: white;">${res.name}</span>
+                        <span class="guest-chip">${res.guest_count} PPL</span>
+                    </div>
+                    <div class="res-card-body">
+                        <div>
+                            <div class="res-card-label">Date & Time</div>
+                            <div>${new Date(res.date).toLocaleDateString()} ${res.hour}:${res.minute} ${res.ampm}</div>
+                        </div>
+                        <div>
+                            <div class="res-card-label">Occasion</div>
+                            <div>${res.occasion}</div>
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <div class="res-card-label">Contact Information</div>
+                            <div style="color: var(--primary); font-weight: 500;"><i class="fas fa-phone-alt" style="font-size: 0.7rem; margin-right: 5px;"></i> ${res.phone}</div>
+                        </div>
+                    </div>
+                </div>
             `).join('');
         }
 
