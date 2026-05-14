@@ -1,6 +1,16 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from database import Base
 import datetime
+
+class Member(Base):
+    __tablename__ = "members"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
+    full_name = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 class Reservation(Base):
     __tablename__ = "reservations"
@@ -25,4 +35,6 @@ class Review(Base):
     rating = Column(Integer)
     review_text = Column(String)
     image_url = Column(String, nullable=True)
+    reply_text = Column(String, nullable=True)
+    replied_at = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
