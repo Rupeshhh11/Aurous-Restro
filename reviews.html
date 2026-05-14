@@ -6,18 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reviews Archive | Aurous Restro Lounge</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.9">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media (max-width: 768px) {
+            .social-icons {
+                gap: 28px !important;
+            }
+            .social-icons a {
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 12px !important;
+            }
+            .social-icons a svg {
+                width: 100% !important;
+                height: 100% !important;
+                transform: scale(0.75) !important;
+            }
+            .social-icons .insta a svg {
+                transform: scale(1.0) !important;
+            }
+            .social-icons .tele a svg {
+                transform: scale(0.95) !important;
+            }
+            .nav-brand-text {
+                font-size: 1.15rem !important;
+            }
+            .footer-margin-fix {
+                margin-top: 1.5rem !important;
+                padding-top: 1.5rem !important;
+            }
+            .copyright-fix {
+                margin-bottom: 2.8rem !important;
+            }
+        }
+    </style>
 </head>
 
 <body
     class="bg-[#050505] text-[#FAFAFA] font-sans antialiased overflow-x-hidden selection:bg-[#E0115F] selection:text-white">
 
-    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-4 rounded-full z-50 flex justify-between items-center bg-[#0a0a0a]/85 backdrop-blur-xl border border-[#E0115F]/30 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-[1000ms]"
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-5xl px-6 py-3.5 md:py-3 rounded-full z-50 flex justify-between items-center bg-[#0a0a0a]/85 backdrop-blur-xl border border-[#E0115F]/30 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-[1000ms]"
         id="navbar">
         <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-[#E0115F] animate-pulse"></div>
-            <a href="/" class="text-xl font-bold tracking-tighter uppercase">Aurous<span
+            <div class="w-1.5 h-1.5 rounded-full bg-[#E0115F] animate-pulse"></div>
+            <a href="/" class="nav-brand-text text-lg font-bold tracking-tighter uppercase">Aurous<span
                     class="text-[#E0115F]">.</span></a>
         </div>
         <div class="hidden md:flex gap-8 text-xs uppercase tracking-widest font-medium text-white/60">
@@ -26,7 +59,7 @@
             <a href="/#echoes" class="hover:text-white transition-colors">Reviews</a>
         </div>
         <a href="/"
-            class="bg-white/10 text-white px-6 py-2.5 rounded-full text-xs uppercase tracking-widest font-semibold border border-white/5 btn-glass-creative">
+            class="bg-white/10 text-white px-4 py-2 md:px-5 md:py-2 rounded-full text-[10px] md:text-xs uppercase tracking-widest font-semibold border border-white/5 btn-glass-creative">
             Back to Home
         </a>
     </nav>
@@ -72,11 +105,11 @@
                 Aurous</h1>
 
             <div
-                class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-10 border-t border-white/10 pt-10">
-                <div class="social-icons mx-auto md:mx-0">
+                class="footer-margin-fix max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 mt-10 border-t border-white/10 pt-10">
+                <div class="social-icons flex flex-col md:flex-col justify-center md:justify-start gap-4 mx-auto md:mx-0">
                     <div class="icon-sz insta">
                         <a href="#" target="_blank" aria-label="Instagram">
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="38" height="38"
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="44" height="44"
                                 fill="currentColor" viewBox="0 0 24 24">
                                 <path fill="currentColor" fill-rule="evenodd"
                                     d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"
@@ -87,7 +120,7 @@
                     </div>
                     <div class="icon-sz tele">
                         <a href="#" target="_blank" aria-label="WhatsApp">
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
                                 fill="currentColor" viewBox="0 0 24 24">
                                 <path fill="currentColor" fill-rule="evenodd"
                                     d="M12 4a8 8 0 0 0-6.895 12.06l.569.718-.697 2.359 2.32-.648.379.243A8 8 0 1 0 12 4ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.96 9.96 0 0 1-5.016-1.347l-4.948 1.382 1.426-4.829-.006-.007-.033-.055A9.958 9.958 0 0 1 2 12Z"
@@ -100,7 +133,7 @@
                     </div>
                     <div class="icon-sz gift">
                         <a href="#" target="_blank" aria-label="Gift">
-                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="40" height="40"
                                 fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M20 7h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C10.4 2.842 8.949 2 7.5 2A3.5 3.5 0 0 0 4 5.5c.003.52.123 1.033.351 1.5H4a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9a2 2 0 0 0-2-2Zm-9.942 0H7.5a1.5 1.5 0 0 1 0-3c.9 0 2 .754 3.092 2.122-.219.337-.392.635-.534.878Zm6.1 0h-3.742c.933-1.368 2.371-3 3.739-3a1.5 1.5 0 0 1 0 3h.003ZM13 14h-2v8h2v-8Zm-4 0H4v6a2 2 0 0 0 2 2h3v-8Zm6 0v8h3a2 2 0 0 0 2-2v-6h-5Z" />
@@ -122,7 +155,7 @@
                     <p class="text-white/50 text-sm">12:00 PM to 10:00 PM</p>
                 </div>
             </div>
-            <p class="text-center text-white/30 text-xs mt-10">© 2026 Aurous Restro Lounge. All Rights Reserved.</p>
+            <p class="copyright-fix text-center text-white/30 text-xs mt-10">© 2026 Aurous Restro Lounge. All Rights Reserved.</p>
         </footer>
     </main>
 
@@ -205,7 +238,9 @@
         </div>
     </div>
 
-    <script src="assets/js/script.js"></script>
+    <div id="toast-container" class="fixed top-8 left-1/2 -translate-x-1/2 z-[300] flex flex-col gap-3 pointer-events-none w-full max-w-xs md:max-w-md px-6"></div>
+
+    <script src="assets/js/script.js?v=1.5"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.currentReviewFilter = 0;
