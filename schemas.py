@@ -54,3 +54,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class BulkDelete(BaseModel):
+    ids: list[int]
