@@ -905,16 +905,21 @@
                     <i class="fas fa-filter"></i> Filter
                 </button>
                 <button class="filter-btn-clear" onclick="clearResFilters()">Clear</button>
+                <button id="bulkDeleteBtn" class="filter-btn-apply" style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;" onclick="deleteSelectedReservations()">
+                    <i class="fas fa-trash-alt"></i> Delete Selected (<span id="selectedCount">0</span>)
+                </button>
             </div>
             <div class="data-card">
                 <table id="resTable">
                     <thead>
                         <tr>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllRes" onclick="toggleAllReservations(this)" style="cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary);"></th>
                             <th>Guest</th>
                             <th>Date &amp; Time</th>
                             <th>Occasion</th>
                             <th>Guests</th>
                             <th>Phone</th>
+                            <th style="text-align: right;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="resBody">
@@ -1195,20 +1200,34 @@
             }
 
             resBody.innerHTML = reservations.map(res => `
-                <tr>
+                <tr data-id="${res.id}">
+                    <td><input type="checkbox" class="res-checkbox" data-id="${res.id}" onchange="updateSelectionState()" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary);"></td>
                     <td style="font-weight: 500">${res.name}</td>
                     <td>${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</td>
                     <td style="color: var(--text-dim)">${res.occasion}</td>
                     <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                     <td>${res.phone}</td>
+                    <td style="text-align: right;">
+                        <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
                 </tr>
             `).join('');
 
             resCards.innerHTML = reservations.map(res => `
-                <div class="res-card">
+                <div class="res-card" data-id="${res.id}">
                     <div class="res-card-header">
-                        <span style="font-weight: 600; color: white;">${res.name}</span>
-                        <span class="guest-chip">${res.guest_count} PPL</span>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" class="res-checkbox" data-id="${res.id}" onchange="updateSelectionState()" style="cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary);">
+                            <span style="font-weight: 600; color: white;">${res.name}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="guest-chip">${res.guest_count} PPL</span>
+                            <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
+                            </button>
+                        </div>
                     </div>
                     <div class="res-card-body">
                         <div>
@@ -1339,6 +1358,87 @@
                 loadData();
             }
         }
+
+        // --- Multi-Select & Delete Logic ---
+        function toggleAllReservations(source) {
+            const checkboxes = document.querySelectorAll('.res-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+            updateSelectionState();
+        }
+
+        function updateSelectionState() {
+            const checkboxes = document.querySelectorAll('.res-checkbox:checked');
+            const bulkBtn = document.getElementById('bulkDeleteBtn');
+            const countSpan = document.getElementById('selectedCount');
+            const selectAll = document.getElementById('selectAllRes');
+            const total = document.querySelectorAll('.res-checkbox').length;
+
+            countSpan.textContent = checkboxes.length;
+            bulkBtn.style.display = checkboxes.length > 0 ? 'flex' : 'none';
+            
+            if (selectAll) {
+                selectAll.checked = total > 0 && checkboxes.length === total;
+            }
+        }
+
+        async function deleteSelectedReservations() {
+            const checkboxes = document.querySelectorAll('.res-checkbox:checked');
+            const ids = Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
+            
+            if (ids.length === 0) return;
+            if (!confirm(`Are you sure you want to delete ${ids.length} selected reservations?`)) return;
+
+            try {
+                const response = await fetch('/api/admin/reservations/bulk-delete', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ids })
+                });
+
+                if (response.ok) {
+                    allReservationsData = allReservationsData.filter(r => !ids.includes(r.id));
+                    renderReservations(allReservationsData);
+                    document.getElementById('totalRes').textContent = allReservationsData.length;
+                    document.getElementById('selectAllRes').checked = false;
+                    updateSelectionState();
+                    showToast(`${ids.length} reservations deleted successfully`);
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Failed to delete reservations');
+            }
+        }
+
+        async function adminDeleteReservation(resId) {
+            if (!confirm('Are you sure you want to delete this reservation?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/reservations/${resId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    allReservationsData = allReservationsData.filter(r => r.id !== resId);
+                    renderReservations(allReservationsData);
+                    document.getElementById('totalRes').textContent = allReservationsData.length;
+                    updateSelectionState();
+                    showToast('Reservation deleted');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Simple Toast helper for dashboard (reuse logic from index if needed, but here's a quick one)
+        function showToast(message) {
+            // Check if index.js window.showToast is available (it won't be in admin standalone)
+            // For now, alert or a simple log. Actually, let's add a quick toast container if not exists.
+            alert(message);
+        }
+
 
         function logout() {
             localStorage.removeItem('aurous_token');
