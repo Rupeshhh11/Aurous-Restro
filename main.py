@@ -181,6 +181,22 @@ def admin_delete_review(review_id: int, current_member: models.Member = Depends(
     db.delete(db_review)
     db.commit()
     return {"detail": "Review deleted"}
+    
+@app.delete("/api/admin/reservations/{reservation_id}")
+def admin_delete_reservation(reservation_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db.delete(db_res)
+    db.commit()
+    return {"detail": "Reservation deleted"}
+
+@app.post("/api/admin/reservations/bulk-delete")
+def admin_bulk_delete_reservations(data: schemas.BulkDelete, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db.query(models.Reservation).filter(models.Reservation.id.in_(data.ids)).delete(synchronize_session=False)
+    db.commit()
+    return {"detail": f"{len(data.ids)} reservations deleted"}
+
 
 # --- Static Routes ---
 
