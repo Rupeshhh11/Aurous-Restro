@@ -1199,24 +1199,39 @@
                 return;
             }
 
-            resBody.innerHTML = reservations.map(res => `
-                <tr data-id="${res.id}">
+            resBody.innerHTML = reservations.map(res => {
+                const isCompleted = res.status === 'completed';
+                const rowStyle = isCompleted ? 'background: rgba(46, 204, 113, 0.05); border-left: 3px solid #2ecc71;' : '';
+                return `
+                <tr data-id="${res.id}" style="${rowStyle}">
                     <td><input type="checkbox" class="res-checkbox" data-id="${res.id}" onchange="updateSelectionState()" style="cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary);"></td>
                     <td style="font-weight: 500">${res.name}</td>
                     <td>${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</td>
                     <td style="color: var(--text-dim)">${res.occasion}</td>
                     <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                     <td>${res.phone}</td>
-                    <td style="text-align: right;">
-                        <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'">
+                    <td style="text-align: right; white-space: nowrap;">
+                        ${isCompleted ? `
+                            <button style="background: transparent; color: #2ecc71; border: none; cursor: default; margin-right: 10px;">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+                        ` : `
+                            <button onclick="adminCompleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s; margin-right: 10px;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Mark Complete">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        `}
+                        <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'" title="Delete">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
-            `).join('');
+            `}).join('');
 
-            resCards.innerHTML = reservations.map(res => `
-                <div class="res-card" data-id="${res.id}">
+            resCards.innerHTML = reservations.map(res => {
+                const isCompleted = res.status === 'completed';
+                const cardStyle = isCompleted ? 'background: rgba(46, 204, 113, 0.05); border-color: rgba(46, 204, 113, 0.3);' : '';
+                return `
+                <div class="res-card" data-id="${res.id}" style="${cardStyle}">
                     <div class="res-card-header">
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <input type="checkbox" class="res-checkbox" data-id="${res.id}" onchange="updateSelectionState()" style="cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary);">
@@ -1224,7 +1239,16 @@
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <span class="guest-chip">${res.guest_count} PPL</span>
-                            <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            ${isCompleted ? `
+                                <button style="background: rgba(46,204,113,0.1); color: #2ecc71; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: default;">
+                                    <i class="fas fa-check-circle" style="font-size: 0.8rem;"></i>
+                                </button>
+                            ` : `
+                                <button onclick="adminCompleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Mark Complete">
+                                    <i class="fas fa-check" style="font-size: 0.8rem;"></i>
+                                </button>
+                            `}
+                            <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" title="Delete">
                                 <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
                             </button>
                         </div>
@@ -1244,7 +1268,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // --- iOS Style Wheel Picker Logic ---
@@ -1439,6 +1463,55 @@
             alert(message);
         }
 
+        async function adminCompleteReservation(resId) {
+            if (!confirm('Mark this reservation as complete?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/reservations/${resId}/complete`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const index = allReservationsData.findIndex(r => r.id === resId);
+                    if (index !== -1) {
+                        allReservationsData[index].status = 'completed';
+                    }
+                    renderReservations(allReservationsData);
+                    showToast('Reservation marked as complete');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        const alertedReservations = new Set();
+        
+        function checkUpcomingReservations() {
+            if (!allReservationsData || allReservationsData.length === 0) return;
+            
+            const now = new Date();
+            
+            allReservationsData.forEach(res => {
+                if (res.status === 'completed' || alertedReservations.has(res.id)) return;
+                
+                const resDate = new Date(res.date);
+                let hour = parseInt(res.hour);
+                if (res.ampm.toUpperCase() === 'PM' && hour !== 12) hour += 12;
+                if (res.ampm.toUpperCase() === 'AM' && hour === 12) hour = 0;
+                
+                resDate.setHours(hour, parseInt(res.minute), 0, 0);
+                
+                const diffMs = resDate - now;
+                const diffMins = Math.floor(diffMs / 60000);
+                
+                if (diffMins === 30 || diffMins === 29) {
+                    alertedReservations.add(res.id);
+                    alert(`UPCOMING RESERVATION IN 30 MINS!\n\nName: ${res.name}\nPhone: ${res.phone}\nGuests: ${res.guest_count}\n\nPlease call them to confirm.`);
+                }
+            });
+        }
+        
+        setInterval(checkUpcomingReservations, 60000);
 
         function logout() {
             localStorage.removeItem('aurous_token');
