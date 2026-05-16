@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -67,10 +68,19 @@ async def get_current_member(token: str = Depends(oauth2_scheme), db: Session = 
 # Ensure upload directory exists
 os.makedirs("assets/images/uploads", exist_ok=True)
 
-# Create a default admin user if none exists
+# Create a default admin user if none exists and handle DB migrations gracefully
 @app.on_event("startup")
-async def create_admin():
+async def startup_event():
     db = next(get_db())
+    
+    # Try to add the new 'status' column if it doesn't exist (migration)
+    try:
+        db.execute(text("ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'"))
+        db.commit()
+    except Exception as e:
+        # It's okay if it fails (e.g., column already exists)
+        db.rollback()
+
     admin = db.query(models.Member).filter(models.Member.username == "admin").first()
     if not admin:
         hashed_pw = get_password_hash("aurous123")
@@ -190,6 +200,16 @@ def admin_delete_reservation(reservation_id: int, current_member: models.Member 
     db.delete(db_res)
     db.commit()
     return {"detail": "Reservation deleted"}
+
+@app.patch("/api/admin/reservations/{reservation_id}/complete")
+def admin_complete_reservation(reservation_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db_res.status = "completed"
+    db.commit()
+    db.refresh(db_res)
+    return db_res
 
 @app.post("/api/admin/reservations/bulk-delete")
 def admin_bulk_delete_reservations(data: schemas.BulkDelete, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
