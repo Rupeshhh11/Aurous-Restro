@@ -11,6 +11,7 @@ class ReservationCreate(BaseModel):
     minute: str
     ampm: str
     guest_count: int
+    status: str = "pending"
 
 class ReservationResponse(ReservationCreate):
     id: int
