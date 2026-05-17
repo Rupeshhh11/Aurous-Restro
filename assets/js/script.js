@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const myResContent = document.getElementById('my-res-content');
     const closeMyResBtn = document.getElementById('close-my-res');
     const closeMyResBg = document.getElementById('close-my-res-bg');
-    const resToAdminBtn = document.getElementById('res-to-admin');
+    const cancelResBtn = document.getElementById('cancel-res');
 
     function openLogin(e) {
         if (e) e.preventDefault();
@@ -216,9 +216,55 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
+    function getReservations() {
+        let resList = [];
+        try {
+            resList = JSON.parse(localStorage.getItem('user_reservations') || '[]');
+            if (!Array.isArray(resList)) resList = [];
+        } catch(e) { resList = []; }
+        
+        // Migration from old single object
+        const oldRes = localStorage.getItem('user_reservation');
+        if (oldRes) {
+            try { 
+                const p = JSON.parse(oldRes);
+                if (p) resList.push(p);
+            } catch(e){}
+            localStorage.removeItem('user_reservation');
+            localStorage.setItem('user_reservations', JSON.stringify(resList));
+        }
+        
+        // Clean up past reservations (older than yesterday)
+        const now = new Date();
+        now.setHours(0,0,0,0);
+        resList = resList.filter(r => {
+            if(!r.date) return false;
+            const rDate = new Date(r.date);
+            return rDate >= now;
+        });
+        
+        // Sort by date and time, soonest first
+        resList.sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            if (dateA < dateB) return -1;
+            if (dateA > dateB) return 1;
+            
+            // same date, check time
+            let hA = parseInt(a.hour); if(a.ampm === 'PM' && hA !== 12) hA+=12; else if(a.ampm === 'AM' && hA === 12) hA=0;
+            let hB = parseInt(b.hour); if(b.ampm === 'PM' && hB !== 12) hB+=12; else if(b.ampm === 'AM' && hB === 12) hB=0;
+            
+            if (hA !== hB) return hA - hB;
+            return parseInt(a.minute) - parseInt(b.minute);
+        });
+        
+        localStorage.setItem('user_reservations', JSON.stringify(resList));
+        return resList;
+    }
+
     function checkResStatus() {
-        const resData = localStorage.getItem('user_reservation');
-        if (resData && resBadge) {
+        const resList = getReservations();
+        if (resList.length > 0 && resBadge) {
             resBadge.classList.remove('hidden');
         } else if (resBadge) {
             resBadge.classList.add('hidden');
@@ -226,45 +272,95 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     checkResStatus();
 
-    function openMyRes() {
-        const resData = JSON.parse(localStorage.getItem('user_reservation') || 'null');
+    window.openResDetail = function(index) {
+        const resList = getReservations();
+        const resData = resList[index];
+        if (!resData) return openMyRes();
         
-        if (resData) {
-            const dateObj = new Date(resData.date);
-            const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
-            const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
-            const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
+        const dateObj = new Date(resData.date);
+        const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
+        const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+        const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
+        
+        myResContent.innerHTML = `
+            <button onclick="openMyRes()" class="text-white/50 hover:text-white absolute top-4 left-4 text-xs transition-colors flex items-center gap-1">
+                <i class="fas fa-arrow-left"></i> LIST
+            </button>
+            <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white uppercase tracking-tight">Hello, ${resData.name.split(' ')[0]}</h3>
+            <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
             
+            <div class="space-y-4 text-left bg-white/5 p-5 rounded-2xl border border-white/5 mt-6">
+                <div>
+                    <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Date & Time</span>
+                    <p class="text-sm font-bold text-white">${formattedDate} @ ${formattedTime}</p>
+                </div>
+                <div>
+                    <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Guests & Occasion</span>
+                    <p class="text-sm font-bold text-white">${resData.guest_count} People • ${resData.occasion.replace('_', ' ')}</p>
+                </div>
+            </div>
+            
+            <p class="text-[10px] text-white/40 mt-6 italic">Looking forward to seeing you at Aurous!</p>
+            
+            <div class="mt-8 pt-6 border-t border-white/5">
+                <button id="cancel-res-btn" data-index="${index}" class="px-6 py-2 border border-[#E0115F]/30 bg-[#E0115F]/10 text-[#E0115F] rounded-full text-[10px] uppercase tracking-widest hover:bg-[#E0115F] hover:text-white transition-all font-bold">
+                    Cancel Reservation
+                </button>
+            </div>
+        `;
+    };
+
+    window.openMyRes = function() {
+        const resList = getReservations();
+        
+        if (resList.length > 0) {
             myResContent.innerHTML = `
-                <div class="mb-6">
-                    <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">Your Reservation</h3>
-                    <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
+                <div class="mb-8">
+                    <h3 class="text-2xl font-black text-white uppercase tracking-tighter">Your Bookings</h3>
+                    <div class="w-10 h-1 bg-[#E0115F] mx-auto mt-2 rounded-full"></div>
+                    <p class="text-[9px] text-white/40 font-bold uppercase tracking-[0.2em] mt-3">${resList.length} Active Reservations</p>
                 </div>
-                
-                <div class="space-y-4 text-left bg-white/5 p-5 rounded-2xl border border-white/5">
-                    <div>
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Date & Time</span>
-                        <p class="text-sm font-bold text-white">${formattedDate} @ ${formattedTime}</p>
-                    </div>
-                    <div>
-                        <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Guests & Occasion</span>
-                        <p class="text-sm font-bold text-white">${resData.guest_count} People • ${resData.occasion.replace('_', ' ')}</p>
-                    </div>
+                <div class="space-y-4 max-h-[350px] overflow-y-auto pr-1 custom-scroll text-left">
+                    ${resList.map((res, i) => {
+                        const d = new Date(res.date);
+                        const day = d.getDate();
+                        const month = d.toLocaleDateString('en-US', {month: 'short'});
+                        return `
+                        <div class="bg-white/[0.03] border border-white/10 hover:border-[#E0115F]/50 p-5 rounded-2xl transition-all flex items-center justify-between group active:scale-[0.98]">
+                            <div class="flex items-center gap-4 cursor-pointer flex-1" onclick="openResDetail(${i})">
+                                <div class="w-12 h-12 rounded-xl bg-[#E0115F]/10 border border-[#E0115F]/20 flex flex-col items-center justify-center">
+                                    <span class="text-[10px] uppercase font-bold text-[#E0115F] leading-none">${month}</span>
+                                    <span class="text-lg font-black text-white leading-none mt-1">${day}</span>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-bold text-white">${res.hour}:${res.minute} ${res.ampm}</div>
+                                    <div class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5 font-medium">${res.guest_count} GUESTS • ${res.occasion.toUpperCase()}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-9 h-9 rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center border border-rose-500/20 active:scale-95" title="Cancel Reservation">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                                <div onclick="openResDetail(${i})" class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#E0115F]/20 transition-all cursor-pointer">
+                                    <i class="fas fa-chevron-right text-white/20 group-hover:text-[#E0115F] transition-colors text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                        `
+                    }).join('')}
                 </div>
-                
-                <p class="text-[10px] text-white/40 mt-6 italic">Looking forward to seeing you at Aurous!</p>
             `;
         } else {
             myResContent.innerHTML = `
-                <div class="py-6">
-                    <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-solid fa-calendar-xmark text-white/20 text-2xl"></i>
+                <div class="py-10">
+                    <div class="w-20 h-20 bg-white/[0.03] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
+                        <i class="fa-solid fa-calendar-xmark text-white/10 text-3xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">No Reservation Yet</h3>
-                    <p class="text-xs text-white/40 mt-2">Book your table now to experience the best of Aurous.</p>
+                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">No Active Bookings</h3>
+                    <p class="text-xs text-white/40 mt-3 max-w-[200px] mx-auto leading-relaxed">You haven't made any reservations yet. Ready to experience Aurous?</p>
                 </div>
             `;
         }
@@ -273,7 +369,28 @@ document.addEventListener('DOMContentLoaded', () => {
         myResBox.classList.remove('translate-y-10');
         myResBox.classList.add('translate-y-0');
         document.body.style.overflow = 'hidden';
-    }
+    };
+
+    window.cancelFromList = async function(index) {
+        if (confirm('Are you sure you want to cancel this reservation?')) {
+            let resList = getReservations();
+            const resData = resList[index];
+            
+            if (resData && resData.id) {
+                try {
+                    await fetch(`/api/reservations/${resData.id}/cancel`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                } catch (err) {}
+            }
+            
+            resList.splice(index, 1);
+            localStorage.setItem('user_reservations', JSON.stringify(resList));
+            checkResStatus();
+            openMyRes(); // Refresh the list
+        }
+    };
 
     function closeMyRes() {
         myResModal.classList.add('opacity-0', 'pointer-events-none');
@@ -283,18 +400,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (openLoginBtn) openLoginBtn.addEventListener('click', openLogin);
-    if (openListViewBtn) openListViewBtn.addEventListener('click', openMyRes);
+    if (openListViewBtn) openListViewBtn.addEventListener('click', window.openMyRes);
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
     
     if (closeMyResBtn) closeMyResBtn.addEventListener('click', closeMyRes);
     if (closeMyResBg) closeMyResBg.addEventListener('click', closeMyRes);
-    if (resToAdminBtn) {
-        resToAdminBtn.addEventListener('click', () => {
-            closeMyRes();
-            setTimeout(openLogin, 400);
-        });
-    }
+    
+    // Dynamically get it because it might have been injected
+    document.addEventListener('click', async (e) => {
+        if (e.target && e.target.closest('#cancel-res-btn')) {
+            const btn = e.target.closest('#cancel-res-btn');
+            const index = parseInt(btn.dataset.index);
+            if (confirm('Are you sure you want to cancel your reservation?')) {
+                let resList = getReservations();
+                const resData = resList[index];
+                
+                if (resData && resData.id) {
+                    try {
+                        const response = await fetch(`/api/reservations/${resData.id}/cancel`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' }
+                        });
+                        if (!response.ok) {
+                            console.error('Failed to cancel on backend');
+                        }
+                    } catch (err) {
+                        console.error('Error cancelling reservation:', err);
+                    }
+                }
+                
+                if (resList.length > index) {
+                    resList.splice(index, 1);
+                    localStorage.setItem('user_reservations', JSON.stringify(resList));
+                }
+                
+                checkResStatus();
+                if (window.showToast) window.showToast('Reservation Cancelled');
+                
+                if (resList.length > 0) {
+                    openMyRes(); // go back to list
+                } else {
+                    closeMyRes();
+                }
+            }
+        }
+    });
 
     // Admin Login Logic for Main Page
     const adminLoginForm = document.getElementById('admin-login-form');
@@ -1095,6 +1246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 if (response.ok) {
+                    const responseData = await response.json();
+                    formData.id = responseData.id; // Save backend ID
                     closeReservation();
                     setTimeout(() => {
                         const successModal = document.getElementById('success-modal');
@@ -1112,7 +1265,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             
                             // Save reservation locally
-                            localStorage.setItem('user_reservation', JSON.stringify(formData));
+                            const resList = getReservations();
+                            resList.push(formData);
+                            localStorage.setItem('user_reservations', JSON.stringify(resList));
+                            
                             checkResStatus();
 
                             successModal.classList.add('active');
