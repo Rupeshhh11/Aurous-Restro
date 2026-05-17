@@ -217,6 +217,15 @@ def admin_bulk_delete_reservations(data: schemas.BulkDelete, current_member: mod
     db.commit()
     return {"detail": f"{len(data.ids)} reservations deleted"}
 
+@app.patch("/api/reservations/{reservation_id}/cancel")
+def cancel_reservation(reservation_id: int, db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db_res.status = "cancelled"
+    db.commit()
+    db.refresh(db_res)
+    return db_res
 
 # --- Static Routes ---
 
