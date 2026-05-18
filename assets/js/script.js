@@ -282,15 +282,55 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
         const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
         
+        let headerBadgeHtml = '';
+        let actionBtnHtml = '';
+        
+        if (resData.status === 'completed') {
+            headerBadgeHtml = `
+                <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/25">
+                    <i class="fa-solid fa-circle-check text-green-500 text-2xl animate-pulse"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Thank You, ${resData.name.split(' ')[0]}!</h3>
+                <p class="text-[10px] text-green-500 font-bold uppercase tracking-widest mt-1">Thank you for dining with us</p>
+            `;
+            actionBtnHtml = `
+                <button onclick="window.deleteFromList(${index})" class="px-6 py-2 border border-white/20 bg-white/5 text-white/70 rounded-full text-[10px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
+                    Delete Record
+                </button>
+            `;
+        } else if (resData.status === 'cancelled') {
+            headerBadgeHtml = `
+                <div class="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/25">
+                    <i class="fa-solid fa-circle-xmark text-rose-500 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Cancelled</h3>
+                <p class="text-[10px] text-rose-500 font-bold uppercase tracking-widest mt-1">Reservation Cancelled</p>
+            `;
+            actionBtnHtml = `
+                <button onclick="window.deleteFromList(${index})" class="px-6 py-2 border border-white/20 bg-white/5 text-white/70 rounded-full text-[10px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
+                    Delete Record
+                </button>
+            `;
+        } else {
+            headerBadgeHtml = `
+                <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Hello, ${resData.name.split(' ')[0]}</h3>
+                <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
+            `;
+            actionBtnHtml = `
+                <button id="cancel-res-btn" data-index="${index}" class="px-6 py-2 border border-[#E0115F]/30 bg-[#E0115F]/10 text-[#E0115F] rounded-full text-[10px] uppercase tracking-widest hover:bg-[#E0115F] hover:text-white transition-all font-bold">
+                    Cancel Reservation
+                </button>
+            `;
+        }
+        
         myResContent.innerHTML = `
             <button onclick="openMyRes()" class="text-white/50 hover:text-white absolute top-4 left-4 text-xs transition-colors flex items-center gap-1">
                 <i class="fas fa-arrow-left"></i> LIST
             </button>
-            <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white uppercase tracking-tight">Hello, ${resData.name.split(' ')[0]}</h3>
-            <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
+            ${headerBadgeHtml}
             
             <div class="space-y-4 text-left bg-white/5 p-5 rounded-2xl border border-white/5 mt-6">
                 <div>
@@ -306,14 +346,42 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="text-[10px] text-white/40 mt-6 italic">Looking forward to seeing you at Aurous!</p>
             
             <div class="mt-8 pt-6 border-t border-white/5">
-                <button id="cancel-res-btn" data-index="${index}" class="px-6 py-2 border border-[#E0115F]/30 bg-[#E0115F]/10 text-[#E0115F] rounded-full text-[10px] uppercase tracking-widest hover:bg-[#E0115F] hover:text-white transition-all font-bold">
-                    Cancel Reservation
-                </button>
+                ${actionBtnHtml}
             </div>
         `;
     };
 
-    window.openMyRes = function() {
+    window.openMyRes = async function() {
+        const localList = getReservations();
+        
+        // Sync statuses with the server
+        if (localList.length > 0) {
+            const ids = localList.map(r => r.id).filter(id => id !== undefined);
+            if (ids.length > 0) {
+                try {
+                    const response = await fetch('/api/reservations/sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ids })
+                    });
+                    if (response.ok) {
+                        const updatedList = await response.json();
+                        const mergedList = localList.map(localRes => {
+                            const match = updatedList.find(u => u.id === localRes.id);
+                            if (match) {
+                                return { ...localRes, ...match };
+                            }
+                            return localRes;
+                        });
+                        const activeList = mergedList.filter(r => r.deleted_by_user !== 1);
+                        localStorage.setItem('user_reservations', JSON.stringify(activeList));
+                    }
+                } catch (err) {
+                    console.error('Failed to sync reservations:', err);
+                }
+            }
+        }
+
         const resList = getReservations();
         
         if (resList.length > 0) {
@@ -328,6 +396,33 @@ document.addEventListener('DOMContentLoaded', () => {
                         const d = new Date(res.date);
                         const day = d.getDate();
                         const month = d.toLocaleDateString('en-US', {month: 'short'});
+                        
+                        let actionHtml = '';
+                        let statusBadgeHtml = '';
+                        
+                        if (res.status === 'completed') {
+                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(46,204,113,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(46,204,113,0.2);"><i class="fas fa-heart"></i> Thank You!</span>`;
+                            actionHtml = `
+                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-9 h-9 rounded-full bg-white/5 text-white/50 hover:bg-[#ff4444]/20 hover:text-[#ff4444] transition-all flex items-center justify-center border border-white/10 active:scale-95" title="Delete Record">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            `;
+                        } else if (res.status === 'cancelled') {
+                            statusBadgeHtml = `<span style="color: #e74c3c; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(231,76,60,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(231,76,60,0.2);"><i class="fas fa-times-circle"></i> Cancelled</span>`;
+                            actionHtml = `
+                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-9 h-9 rounded-full bg-white/5 text-white/50 hover:bg-[#ff4444]/20 hover:text-[#ff4444] transition-all flex items-center justify-center border border-white/10 active:scale-95" title="Delete Record">
+                                    <i class="fas fa-trash-alt text-xs"></i>
+                                </button>
+                            `;
+                        } else {
+                            statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(243,156,18,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(243,156,18,0.2);"><i class="fas fa-clock"></i> Pending</span>`;
+                            actionHtml = `
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-9 h-9 rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center border border-rose-500/20 active:scale-95" title="Cancel Reservation">
+                                    <i class="fas fa-ban text-xs"></i>
+                                </button>
+                            `;
+                        }
+
                         return `
                         <div class="bg-white/[0.03] border border-white/10 hover:border-[#E0115F]/50 p-5 rounded-2xl transition-all flex items-center justify-between group active:scale-[0.98]">
                             <div class="flex items-center gap-4 cursor-pointer flex-1" onclick="openResDetail(${i})">
@@ -337,19 +432,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <div>
                                     <div class="text-sm font-bold text-white">${res.hour}:${res.minute} ${res.ampm}</div>
-                                    <div class="text-[9px] text-white/40 uppercase tracking-widest mt-0.5 font-medium">${res.guest_count} GUESTS • ${res.occasion.toUpperCase()}</div>
+                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
+                                        <span class="text-[9px] text-white/40 uppercase tracking-widest font-medium">${res.guest_count} PPL</span>
+                                        ${statusBadgeHtml}
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-9 h-9 rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center border border-rose-500/20 active:scale-95" title="Cancel Reservation">
-                                    <i class="fas fa-trash-alt text-xs"></i>
-                                </button>
+                                ${actionHtml}
                                 <div onclick="openResDetail(${i})" class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#E0115F]/20 transition-all cursor-pointer">
                                     <i class="fas fa-chevron-right text-white/20 group-hover:text-[#E0115F] transition-colors text-xs"></i>
                                 </div>
                             </div>
                         </div>
-                        `
+                        `;
                     }).join('')}
                 </div>
             `;
@@ -378,11 +474,41 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (resData && resData.id) {
                 try {
-                    await fetch(`/api/reservations/${resData.id}/cancel`, {
+                    const response = await fetch(`/api/reservations/${resData.id}/cancel`, {
                         method: 'PATCH',
                         headers: { 'Content-Type': 'application/json' }
                     });
-                } catch (err) {}
+                    if (response.ok) {
+                        resList[index].status = 'cancelled';
+                        localStorage.setItem('user_reservations', JSON.stringify(resList));
+                    }
+                } catch (err) {
+                    console.error('Error cancelling reservation:', err);
+                }
+            } else {
+                resList.splice(index, 1);
+                localStorage.setItem('user_reservations', JSON.stringify(resList));
+            }
+            
+            checkResStatus();
+            openMyRes(); // Refresh the list
+        }
+    };
+
+    window.deleteFromList = async function(index) {
+        if (confirm('Are you sure you want to delete this booking from your list?')) {
+            let resList = getReservations();
+            const resData = resList[index];
+            
+            if (resData && resData.id) {
+                try {
+                    await fetch(`/api/reservations/${resData.id}/user-delete`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                } catch (err) {
+                    console.error('Error deleting reservation:', err);
+                }
             }
             
             resList.splice(index, 1);
@@ -422,27 +548,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             method: 'PATCH',
                             headers: { 'Content-Type': 'application/json' }
                         });
-                        if (!response.ok) {
-                            console.error('Failed to cancel on backend');
+                        if (response.ok) {
+                            resList[index].status = 'cancelled';
+                            localStorage.setItem('user_reservations', JSON.stringify(resList));
                         }
                     } catch (err) {
                         console.error('Error cancelling reservation:', err);
                     }
-                }
-                
-                if (resList.length > index) {
+                } else {
                     resList.splice(index, 1);
                     localStorage.setItem('user_reservations', JSON.stringify(resList));
                 }
                 
                 checkResStatus();
                 if (window.showToast) window.showToast('Reservation Cancelled');
-                
-                if (resList.length > 0) {
-                    openMyRes(); // go back to list
-                } else {
-                    closeMyRes();
-                }
+                openMyRes(); // go back to list
             }
         }
     });
