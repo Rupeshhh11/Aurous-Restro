@@ -73,12 +73,23 @@ os.makedirs("assets/images/uploads", exist_ok=True)
 async def startup_event():
     db = next(get_db())
     
-    # Try to add the new 'status' column if it doesn't exist (migration)
+    # Try to add the new columns if they don't exist (migration)
     try:
         db.execute(text("ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'"))
         db.commit()
     except Exception as e:
-        # It's okay if it fails (e.g., column already exists)
+        db.rollback()
+
+    try:
+        db.execute(text("ALTER TABLE reservations ADD COLUMN deleted_by_admin INTEGER DEFAULT 0"))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+
+    try:
+        db.execute(text("ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0"))
+        db.commit()
+    except Exception as e:
         db.rollback()
 
     admin = db.query(models.Member).filter(models.Member.username == "admin").first()
@@ -156,7 +167,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @app.get("/api/admin/reservations", response_model=List[schemas.ReservationResponse])
 def admin_get_reservations(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    return db.query(models.Reservation).order_by(models.Reservation.created_at.desc()).all()
+    return db.query(models.Reservation).filter(models.Reservation.deleted_by_admin == 0).order_by(models.Reservation.created_at.desc()).all()
 
 @app.get("/api/admin/reviews", response_model=List[schemas.ReviewResponse])
 def admin_get_reviews(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
@@ -197,7 +208,7 @@ def admin_delete_reservation(reservation_id: int, current_member: models.Member 
     db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
     if not db_res:
         raise HTTPException(status_code=404, detail="Reservation not found")
-    db.delete(db_res)
+    db_res.deleted_by_admin = 1
     db.commit()
     return {"detail": "Reservation deleted"}
 
@@ -213,7 +224,7 @@ def admin_complete_reservation(reservation_id: int, current_member: models.Membe
 
 @app.post("/api/admin/reservations/bulk-delete")
 def admin_bulk_delete_reservations(data: schemas.BulkDelete, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    db.query(models.Reservation).filter(models.Reservation.id.in_(data.ids)).delete(synchronize_session=False)
+    db.query(models.Reservation).filter(models.Reservation.id.in_(data.ids)).update({"deleted_by_admin": 1}, synchronize_session=False)
     db.commit()
     return {"detail": f"{len(data.ids)} reservations deleted"}
 
@@ -226,6 +237,22 @@ def cancel_reservation(reservation_id: int, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_res)
     return db_res
+
+@app.post("/api/reservations/sync", response_model=List[schemas.ReservationResponse])
+def sync_reservations(data: schemas.BulkDelete, db: Session = Depends(get_db)):
+    return db.query(models.Reservation).filter(
+        models.Reservation.id.in_(data.ids),
+        models.Reservation.deleted_by_user == 0
+    ).all()
+
+@app.patch("/api/reservations/{reservation_id}/user-delete")
+def user_delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db_res.deleted_by_user = 1
+    db.commit()
+    return {"detail": "Reservation deleted by user"}
 
 # --- Static Routes ---
 
