@@ -517,6 +517,13 @@
             width: 100%;
             padding: 1rem 0;
         }
+        @keyframes pulse-fast {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(0.9); }
+        }
+        .animate-pulse-fast {
+            animation: pulse-fast 1s infinite;
+        }
 
         .filter-bar {
             display: flex;
@@ -1480,20 +1487,42 @@
             let rowsHtml = '';
             for (let i = 0; i < sortedRes.length; i++) {
                 const res = sortedRes[i];
+                const resDate = new Date(res.date);
+                let hour = parseInt(res.hour);
+                if (res.ampm.toUpperCase() === 'PM' && hour !== 12) hour += 12;
+                if (res.ampm.toUpperCase() === 'AM' && hour === 12) hour = 0;
+                resDate.setHours(hour, parseInt(res.minute), 0, 0);
+                const targetTimeISO = resDate.toISOString();
+
                 rowsHtml += `
                     <tr data-id="${res.id}">
                         <td style="font-weight: 500">${res.name}</td>
-                        <td style="color: var(--primary); font-weight: 500;">${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</td>
+                        <td style="color: var(--primary); font-weight: 500;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span>${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</span>
+                                <span class="live-res-timer" data-target-time="${targetTimeISO}" style="background: rgba(224, 17, 95, 0.15); color: #ff2e7e; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid rgba(224, 17, 95, 0.25); display: none; align-items: center; gap: 4px;"></span>
+                            </div>
+                        </td>
                         <td style="color: var(--text-dim)">${res.occasion}</td>
                         <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                         <td>${res.phone}</td>
-                        <td style="text-align: center; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                            <button onclick="adminCompleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Mark Complete">
-                                <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
-                            </button>
-                            <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'" title="Delete">
-                                <i class="fas fa-trash-alt" style="font-size: 1.2rem;"></i>
-                            </button>
+                        <td style="text-align: center; white-space: nowrap;">
+                            ${
+                                res.status === 'completed'
+                                ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(46,204,113,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-check-circle"></i> Completed</span>`
+                                : res.status === 'cancelled'
+                                ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(231,76,60,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-times-circle"></i> Cancelled</span>`
+                                : `
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    <button onclick="adminCompleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Mark Complete">
+                                        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                                    </button>
+                                    <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'" title="Delete">
+                                        <i class="fas fa-trash-alt" style="font-size: 1.2rem;"></i>
+                                    </button>
+                                </div>
+                                `
+                            }
                         </td>
                     </tr>
                 `;
@@ -1519,6 +1548,13 @@
             let cardsHtml = '';
             for (let i = 0; i < sortedRes.length; i++) {
                 const res = sortedRes[i];
+                const resDate = new Date(res.date);
+                let hour = parseInt(res.hour);
+                if (res.ampm.toUpperCase() === 'PM' && hour !== 12) hour += 12;
+                if (res.ampm.toUpperCase() === 'AM' && hour === 12) hour = 0;
+                resDate.setHours(hour, parseInt(res.minute), 0, 0);
+                const targetTimeISO = resDate.toISOString();
+
                 cardsHtml += `
                     <div class="res-card" data-id="${res.id}" style="background: linear-gradient(145deg, rgba(224, 17, 95, 0.1), rgba(20, 20, 20, 0.8)); border-color: rgba(224, 17, 95, 0.3); box-shadow: 0 4px 15px rgba(224, 17, 95, 0.05);">
                         <div class="res-card-header">
@@ -1527,18 +1563,29 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 2;">
                                 <span class="guest-chip">${res.guest_count} PPL</span>
-                                <button onclick="adminCompleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Mark Complete">
-                                    <i class="fas fa-check" style="font-size: 1.3rem;"></i>
-                                </button>
-                                <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'; this.style.background='rgba(255,68,68,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Delete">
-                                    <i class="fas fa-trash-alt" style="font-size: 1.1rem;"></i>
-                                </button>
+                                ${
+                                    res.status === 'completed'
+                                    ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(46,204,113,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> Done</span>`
+                                    : res.status === 'cancelled'
+                                    ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(231,76,60,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Cancel</span>`
+                                    : `
+                                    <button onclick="adminCompleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Mark Complete">
+                                        <i class="fas fa-check" style="font-size: 1.3rem;"></i>
+                                    </button>
+                                    <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'; this.style.background='rgba(255,68,68,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Delete">
+                                        <i class="fas fa-trash-alt" style="font-size: 1.1rem;"></i>
+                                    </button>
+                                    `
+                                }
                             </div>
                         </div>
                         <div class="res-card-body">
                             <div>
                                 <div class="res-card-label">Date & Time</div>
-                                <div>${new Date(res.date).toLocaleDateString()} ${res.hour}:${res.minute} ${res.ampm}</div>
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <span>${new Date(res.date).toLocaleDateString()} ${res.hour}:${res.minute} ${res.ampm}</span>
+                                    <span class="live-res-timer" data-target-time="${targetTimeISO}" style="background: rgba(224, 17, 95, 0.15); color: #ff2e7e; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; border: 1px solid rgba(224, 17, 95, 0.25); display: none; align-items: center; gap: 4px;"></span>
+                                </div>
                             </div>
                             <div>
                                 <div class="res-card-label">Occasion</div>
@@ -1566,6 +1613,7 @@
                 }
             }
             resCards.innerHTML = cardsHtml;
+            updateListTimers();
         }
 
         let currentHistoryTab = '';
@@ -1842,6 +1890,7 @@
                     allReservationsData = allReservationsData.filter(r => !ids.includes(r.id));
                     renderReservations(allReservationsData);
                     updateStatsValues();
+                    if (currentHistoryTab) renderHistory(allReservationsData);
                     document.getElementById('selectAllRes').checked = false;
                     updateSelectionState();
                     showToast(`${ids.length} reservations deleted successfully`);
@@ -1864,6 +1913,7 @@
                     allReservationsData = allReservationsData.filter(r => r.id !== resId);
                     renderReservations(allReservationsData);
                     updateStatsValues();
+                    if (currentHistoryTab) renderHistory(allReservationsData);
                     updateSelectionState();
                     showToast('Reservation deleted');
                 }
@@ -2149,7 +2199,8 @@
                 if (response.ok) {
                     allReservationsData = allReservationsData.filter(r => !ids.includes(r.id));
                     renderHistory(allReservationsData);
-                    document.getElementById('totalRes').textContent = allReservationsData.length;
+                    renderReservations(allReservationsData);
+                    updateStatsValues();
                     document.getElementById('selectAllHistory').checked = false;
                     updateHistorySelectionState();
                     showToast(`${ids.length} records deleted successfully`);
@@ -2198,7 +2249,35 @@
             }
         }
 
+        function updateListTimers() {
+            const now = new Date();
+            document.querySelectorAll('.live-res-timer').forEach(el => {
+                const targetStr = el.dataset.targetTime;
+                if (!targetStr) return;
+                const targetTime = new Date(targetStr);
+                const diffMs = targetTime - now;
+
+                if (diffMs <= 0) {
+                    el.style.display = 'none';
+                    return;
+                }
+
+                const totalSecs = Math.floor(diffMs / 1000);
+                const totalMins = Math.floor(totalSecs / 60);
+
+                if (totalMins < 30) {
+                    const mins = String(totalMins).padStart(2, '0');
+                    const secs = String(totalSecs % 60).padStart(2, '0');
+                    el.style.display = 'inline-flex';
+                    el.innerHTML = `<i class="fas fa-clock animate-pulse-fast" style="font-size: 0.75rem;"></i> ${mins}:${secs}`;
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
         setInterval(checkUpcomingReservations, 60000);
+        setInterval(updateListTimers, 1000);
 
         function logout() {
             localStorage.removeItem('aurous_token');
