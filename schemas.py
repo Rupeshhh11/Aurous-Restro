@@ -16,6 +16,8 @@ class ReservationCreate(BaseModel):
 class ReservationResponse(ReservationCreate):
     id: int
     created_at: datetime
+    deleted_by_admin: int = 0
+    deleted_by_user: int = 0
     class Config:
         from_attributes = True
 
