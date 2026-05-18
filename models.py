@@ -25,6 +25,8 @@ class Reservation(Base):
     ampm = Column(String)
     guest_count = Column(Integer)
     status = Column(String, default="pending")
+    deleted_by_admin = Column(Integer, default=0)
+    deleted_by_user = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 class Review(Base):
