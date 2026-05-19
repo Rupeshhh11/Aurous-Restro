@@ -284,68 +284,141 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let headerBadgeHtml = '';
         let actionBtnHtml = '';
+        let statusMessageHtml = '';
+        let ticketStatusClass = '';
+        let ticketGlowClass = '';
         
         if (resData.status === 'completed') {
             headerBadgeHtml = `
-                <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/25">
-                    <i class="fa-solid fa-circle-check text-green-500 text-2xl animate-pulse"></i>
+                <div class="w-11 h-11 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-green-500/20 shadow-[0_0_12px_rgba(46,204,113,0.15)]">
+                    <i class="fa-solid fa-circle-check text-green-500 text-lg"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Thank You, ${resData.name.split(' ')[0]}!</h3>
-                <p class="text-[10px] text-green-500 font-bold uppercase tracking-widest mt-1">Thank you for dining with us</p>
+                <h3 class="text-base font-bold text-white uppercase tracking-tight">Done</h3>
+                <p class="text-[8px] text-green-500 font-bold uppercase tracking-widest mt-0.5">Please visit us again</p>
             `;
+            statusMessageHtml = `<p class="text-[9.5px] text-green-400/80 font-medium mt-3.5 leading-relaxed bg-green-500/5 border border-green-500/10 rounded-xl p-2.5"><i class="fas fa-sparkles text-green-400 mr-1"></i> Dining complete! Please visit us again.</p>`;
             actionBtnHtml = `
-                <button onclick="window.deleteFromList(${index})" class="px-6 py-2 border border-white/20 bg-white/5 text-white/70 rounded-full text-[10px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
+                <button onclick="window.deleteFromList(${index})" class="px-4.5 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
                     Delete Record
                 </button>
             `;
+            ticketStatusClass = 'border-l-4 border-l-green-500';
+            ticketGlowClass = 'shadow-[0_0_15px_rgba(46,204,113,0.05)]';
         } else if (resData.status === 'cancelled') {
             headerBadgeHtml = `
-                <div class="w-16 h-16 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-500/25">
-                    <i class="fa-solid fa-circle-xmark text-rose-500 text-2xl"></i>
+                <div class="w-11 h-11 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-rose-500/20">
+                    <i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Cancelled</h3>
-                <p class="text-[10px] text-rose-500 font-bold uppercase tracking-widest mt-1">Reservation Cancelled</p>
+                <h3 class="text-base font-bold text-white uppercase tracking-tight">Cancelled</h3>
+                <p class="text-[8px] text-rose-500 font-bold uppercase tracking-widest mt-0.5">Reservation Cancelled</p>
             `;
+            statusMessageHtml = `<p class="text-[9.5px] text-white/50 mt-3.5 leading-relaxed">This reservation has been cancelled. If this was a mistake, feel free to book a new table.</p>`;
             actionBtnHtml = `
-                <button onclick="window.deleteFromList(${index})" class="px-6 py-2 border border-white/20 bg-white/5 text-white/70 rounded-full text-[10px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
+                <button onclick="window.deleteFromList(${index})" class="px-4.5 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
                     Delete Record
                 </button>
             `;
-        } else {
+            ticketStatusClass = 'border-l-4 border-l-rose-500/50';
+        } else if (resData.status === 'confirmed') {
             headerBadgeHtml = `
-                <div class="w-16 h-16 bg-[#E0115F]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-calendar-check text-[#E0115F] text-2xl"></i>
+                <div class="w-11 h-11 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-green-500/30 shadow-[0_0_12px_rgba(46,204,113,0.15)]">
+                    <i class="fa-solid fa-check text-green-400 text-lg animate-pulse"></i>
                 </div>
-                <h3 class="text-xl font-bold text-white uppercase tracking-tight">Hello, ${resData.name.split(' ')[0]}</h3>
-                <p class="text-[10px] text-[#E0115F] font-bold uppercase tracking-widest mt-1">Confirmed & Ready</p>
+                <h3 class="text-base font-black text-white uppercase tracking-tighter">VIP Confirmed</h3>
+                <p class="text-[8px] text-green-400 font-bold uppercase tracking-widest mt-0.5 animate-pulse">Ready For You</p>
             `;
+            statusMessageHtml = `<p class="text-[9.5px] text-green-400/80 font-medium mt-3.5 leading-relaxed bg-green-500/5 border border-green-500/10 rounded-xl p-2.5"><i class="fas fa-sparkles text-green-400 mr-1"></i> Your VIP Table is fully confirmed! We look forward to welcoming you at Aurous.</p>`;
             actionBtnHtml = `
-                <button id="cancel-res-btn" data-index="${index}" class="px-6 py-2 border border-[#E0115F]/30 bg-[#E0115F]/10 text-[#E0115F] rounded-full text-[10px] uppercase tracking-widest hover:bg-[#E0115F] hover:text-white transition-all font-bold">
+                <button id="cancel-res-btn" data-index="${index}" class="px-4.5 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
                     Cancel Reservation
                 </button>
             `;
+            ticketStatusClass = 'border-l-4 border-l-green-500';
+            ticketGlowClass = 'shadow-[0_0_20px_rgba(46,204,113,0.1)]';
+        } else {
+            headerBadgeHtml = `
+                <div class="w-11 h-11 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-amber-500/20">
+                    <i class="fa-solid fa-clock text-amber-500 text-lg animate-pulse"></i>
+                </div>
+                <h3 class="text-base font-bold text-white uppercase tracking-tight">Pending</h3>
+                <p class="text-[8px] text-amber-500 font-bold uppercase tracking-widest mt-0.5">Awaiting Host</p>
+            `;
+            statusMessageHtml = `<p class="text-[9.5px] text-white/40 mt-3.5 leading-relaxed">Our host will call you shortly to confirm your table. Keep your phone handy!</p>`;
+            actionBtnHtml = `
+                <button id="cancel-res-btn" data-index="${index}" class="px-4.5 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
+                    Cancel Reservation
+                </button>
+            `;
+            ticketStatusClass = 'border-l-4 border-l-amber-500';
+            ticketGlowClass = 'shadow-[0_0_15px_rgba(243,156,18,0.05)]';
         }
         
         myResContent.innerHTML = `
-            <button onclick="openMyRes()" class="text-white/50 hover:text-white absolute top-4 left-4 text-xs transition-colors flex items-center gap-1">
-                <i class="fas fa-arrow-left"></i> LIST
+            <button onclick="openMyRes()" class="text-white/40 hover:text-white absolute top-4 left-4 text-[9px] tracking-widest uppercase font-bold transition-all flex items-center gap-1.5 active:scale-95">
+                <i class="fas fa-arrow-left text-xs"></i> Back
             </button>
-            ${headerBadgeHtml}
             
-            <div class="space-y-4 text-left bg-white/5 p-5 rounded-2xl border border-white/5 mt-6">
-                <div>
-                    <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Date & Time</span>
-                    <p class="text-sm font-bold text-white">${formattedDate} @ ${formattedTime}</p>
+            <div class="mt-2.5">
+                ${headerBadgeHtml}
+            </div>
+            
+            <!-- VIP PASS TICKET CARD -->
+            <div class="relative bg-white/[0.01] border border-white/10 rounded-2xl p-4 mt-4 overflow-hidden text-left ${ticketStatusClass} ${ticketGlowClass}">
+                <!-- Ticket notches -->
+                <div class="absolute -left-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-r border-white/10 z-10"></div>
+                <div class="absolute -right-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-l border-white/10 z-10"></div>
+                
+                <!-- Ticket Header/Stub -->
+                <div class="flex justify-between items-center mb-2.5">
+                    <span class="text-[7.5px] uppercase tracking-[0.25em] text-[#E0115F] font-black">Aurous Restro Lounge</span>
+                    <span class="text-[8.5px] uppercase font-bold text-white/30 tracking-wider">Pass #${resData.id || index + 100}</span>
                 </div>
-                <div>
-                    <span class="text-[9px] uppercase tracking-widest text-white/40 block mb-1">Guests & Occasion</span>
-                    <p class="text-sm font-bold text-white">${resData.guest_count} People • ${resData.occasion.replace('_', ' ')}</p>
+                <h4 class="text-sm font-black text-white tracking-tight uppercase mb-3">${resData.name}</h4>
+                
+                <!-- Dotted divider line -->
+                <div class="border-t border-dashed border-white/10 my-2.5"></div>
+                
+                <!-- Ticket Body/Details -->
+                <div class="grid grid-cols-2 gap-3 mt-1.5">
+                    <div>
+                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Date</span>
+                        <div class="text-[10px] font-bold text-white flex items-center">
+                            <i class="fa-regular fa-calendar-days text-[#E0115F] mr-1.2 text-[10px]"></i> ${formattedDate}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Time</span>
+                        <div class="text-[10px] font-bold text-white flex items-center">
+                            <i class="fa-regular fa-clock text-[#E0115F] mr-1.2 text-[10px]"></i> ${formattedTime}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Guests</span>
+                        <div class="text-[10px] font-bold text-white flex items-center">
+                            <i class="fa-solid fa-users text-[#E0115F] mr-1.2 text-[10px]"></i> ${resData.guest_count} Guests
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Occasion</span>
+                        <div class="text-[10px] font-bold text-white flex items-center capitalize">
+                            <i class="fa-solid fa-martini-glass text-[#E0115F] mr-1.2 text-[10px]"></i> ${resData.occasion.replace('_', ' ')}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dotted divider line -->
+                <div class="border-t border-dashed border-white/10 my-3"></div>
+                
+                <!-- Barcode simulation -->
+                <div class="flex flex-col items-center justify-center mt-0.5 select-none opacity-45">
+                    <div class="text-[10px] font-mono tracking-[0.22em] text-white/40">||||| | || ||| | ||| | ||</div>
+                    <div class="text-[6.5px] font-mono tracking-widest text-white/30 mt-0.5">AUR-${resData.id || 'CONFIRMED'}</div>
                 </div>
             </div>
             
-            <p class="text-[10px] text-white/40 mt-6 italic">Looking forward to seeing you at Aurous!</p>
+            ${statusMessageHtml}
             
-            <div class="mt-8 pt-6 border-t border-white/5">
+            <div class="mt-4.5 pt-3.5 border-t border-white/5">
                 ${actionBtnHtml}
             </div>
         `;
@@ -386,12 +459,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (resList.length > 0) {
             myResContent.innerHTML = `
-                <div class="mb-8">
-                    <h3 class="text-2xl font-black text-white uppercase tracking-tighter">Your Bookings</h3>
-                    <div class="w-10 h-1 bg-[#E0115F] mx-auto mt-2 rounded-full"></div>
-                    <p class="text-[9px] text-white/40 font-bold uppercase tracking-[0.2em] mt-3">${resList.length} Active Reservations</p>
+                <div class="mb-4">
+                    <h3 class="text-lg font-black text-white uppercase tracking-tight">Your Reservations</h3>
+                    <div class="w-6 h-[2px] bg-[#E0115F] mx-auto mt-1 rounded-full"></div>
+                    <p class="text-[7.5px] text-white/40 font-bold uppercase tracking-[0.2em] mt-2">${resList.length} Active Bookings</p>
                 </div>
-                <div class="space-y-4 max-h-[350px] overflow-y-auto pr-1 custom-scroll text-left">
+                <div class="space-y-2 max-h-[300px] overflow-y-auto pr-0.5 custom-scroll text-left">
                     ${resList.map((res, i) => {
                         const d = new Date(res.date);
                         const day = d.getDate();
@@ -399,50 +472,61 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         let actionHtml = '';
                         let statusBadgeHtml = '';
+                        let borderStyle = '';
+                        let glowStyle = '';
                         
                         if (res.status === 'completed') {
-                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(46,204,113,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(46,204,113,0.2);"><i class="fas fa-heart"></i> Thank You!</span>`;
+                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.15);"><i class="fas fa-check-circle"></i> Done</span>`;
                             actionHtml = `
-                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-9 h-9 rounded-full bg-white/5 text-white/50 hover:bg-[#ff4444]/20 hover:text-[#ff4444] transition-all flex items-center justify-center border border-white/10 active:scale-95" title="Delete Record">
-                                    <i class="fas fa-trash-alt text-xs"></i>
+                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-white/5 text-white/40 hover:bg-[#ff4444]/20 hover:text-[#ff4444] hover:border-[#ff4444]/30 transition-all flex items-center justify-center border border-white/10 active:scale-90" title="Delete Record">
+                                    <i class="fas fa-trash-alt text-[9px]"></i>
                                 </button>
                             `;
+                            borderStyle = 'border-l-4 border-l-green-500/50';
                         } else if (res.status === 'cancelled') {
-                            statusBadgeHtml = `<span style="color: #e74c3c; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(231,76,60,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(231,76,60,0.2);"><i class="fas fa-times-circle"></i> Cancelled</span>`;
+                            statusBadgeHtml = `<span style="color: #e74c3c; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(231,76,60,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(231,76,60,0.15);"><i class="fas fa-times-circle"></i> Cancelled</span>`;
                             actionHtml = `
-                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-9 h-9 rounded-full bg-white/5 text-white/50 hover:bg-[#ff4444]/20 hover:text-[#ff4444] transition-all flex items-center justify-center border border-white/10 active:scale-95" title="Delete Record">
-                                    <i class="fas fa-trash-alt text-xs"></i>
+                                <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-white/5 text-white/40 hover:bg-[#ff4444]/20 hover:text-[#ff4444] hover:border-[#ff4444]/30 transition-all flex items-center justify-center border border-white/10 active:scale-90" title="Delete Record">
+                                    <i class="fas fa-trash-alt text-[9px]"></i>
                                 </button>
                             `;
+                            borderStyle = 'border-l-4 border-l-rose-500/30';
+                        } else if (res.status === 'confirmed') {
+                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.1); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.25); box-shadow: 0 0 6px rgba(46,204,113,0.12);"><i class="fas fa-circle-check animate-pulse text-green-400"></i> Confirmed</span>`;
+                            actionHtml = `
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel Reservation">
+                                    <i class="fas fa-ban text-[9px]"></i>
+                                </button>
+                            `;
+                            borderStyle = 'border-l-4 border-l-green-500';
+                            glowStyle = 'box-shadow: 0 0 10px rgba(46, 204, 113, 0.06);';
                         } else {
-                            statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.65rem; background: rgba(243,156,18,0.1); padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid rgba(243,156,18,0.2);"><i class="fas fa-clock"></i> Pending</span>`;
+                            statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(243,156,18,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(243,156,18,0.15);"><i class="fas fa-clock animate-pulse"></i> Pending</span>`;
                             actionHtml = `
-                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-9 h-9 rounded-full bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center border border-rose-500/20 active:scale-95" title="Cancel Reservation">
-                                    <i class="fas fa-ban text-xs"></i>
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel Reservation">
+                                    <i class="fas fa-ban text-[9px]"></i>
                                 </button>
                             `;
+                            borderStyle = 'border-l-4 border-l-amber-500';
                         }
 
                         return `
-                        <div class="bg-white/[0.03] border border-white/10 hover:border-[#E0115F]/50 p-5 rounded-2xl transition-all flex items-center justify-between group active:scale-[0.98]">
-                            <div class="flex items-center gap-4 cursor-pointer flex-1" onclick="openResDetail(${i})">
-                                <div class="w-12 h-12 rounded-xl bg-[#E0115F]/10 border border-[#E0115F]/20 flex flex-col items-center justify-center">
-                                    <span class="text-[10px] uppercase font-bold text-[#E0115F] leading-none">${month}</span>
-                                    <span class="text-lg font-black text-white leading-none mt-1">${day}</span>
+                        <div class="bg-white/[0.015] border border-white/5 hover:border-white/10 p-2.5 rounded-xl transition-all flex items-center justify-between group active:scale-[0.99] ${borderStyle}" style="${glowStyle}">
+                            <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="openResDetail(${i})">
+                                <div class="w-8.5 h-8.5 rounded-lg bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center flex-shrink-0">
+                                    <span class="text-[7px] uppercase font-bold text-[#E0115F] leading-none">${month}</span>
+                                    <span class="text-xs font-black text-white leading-none mt-0.5">${day}</span>
                                 </div>
-                                <div>
-                                    <div class="text-sm font-bold text-white">${res.hour}:${res.minute} ${res.ampm}</div>
-                                    <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px;">
-                                        <span class="text-[9px] text-white/40 uppercase tracking-widest font-medium">${res.guest_count} PPL</span>
+                                <div class="min-w-0">
+                                    <div class="text-[11px] font-bold text-white tracking-wide">${res.hour}:${res.minute} ${res.ampm}</div>
+                                    <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                        <span class="text-[7.5px] text-white/30 font-bold uppercase tracking-wider"><i class="fas fa-users text-[#E0115F]/70 mr-0.5"></i> ${res.guest_count} PPL</span>
                                         ${statusBadgeHtml}
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1.5 flex-shrink-0">
                                 ${actionHtml}
-                                <div onclick="openResDetail(${i})" class="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#E0115F]/20 transition-all cursor-pointer">
-                                    <i class="fas fa-chevron-right text-white/20 group-hover:text-[#E0115F] transition-colors text-xs"></i>
-                                </div>
                             </div>
                         </div>
                         `;
@@ -452,11 +536,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             myResContent.innerHTML = `
                 <div class="py-10">
-                    <div class="w-20 h-20 bg-white/[0.03] rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
-                        <i class="fa-solid fa-calendar-xmark text-white/10 text-3xl"></i>
+                    <div class="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center mx-auto mb-5 border border-white/5">
+                        <i class="fa-solid fa-calendar-xmark text-white/10 text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-white uppercase tracking-tight">No Active Bookings</h3>
-                    <p class="text-xs text-white/40 mt-3 max-w-[200px] mx-auto leading-relaxed">You haven't made any reservations yet. Ready to experience Aurous?</p>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-tight">No Active Bookings</h3>
+                    <p class="text-[10px] text-white/40 mt-2 max-w-[190px] mx-auto leading-relaxed">You haven't made any reservations yet. Ready to experience Aurous?</p>
                 </div>
             `;
         }
