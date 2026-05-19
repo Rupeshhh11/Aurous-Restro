@@ -18,6 +18,8 @@ class ReservationResponse(ReservationCreate):
     created_at: datetime
     deleted_by_admin: int = 0
     deleted_by_user: int = 0
+    cancelled_at: Optional[str] = None
+    arriving_confirmed: Optional[int] = 0
     class Config:
         from_attributes = True
 
