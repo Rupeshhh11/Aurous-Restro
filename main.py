@@ -19,6 +19,21 @@ from database import engine, get_db
 # Create database tables
 models.Base.metadata.create_all(bind=engine)
 
+# Migration to add columns if they do not exist
+with engine.connect() as conn:
+    try:
+        conn.execute(text("ALTER TABLE reservations ADD COLUMN cancelled_at VARCHAR"))
+        conn.commit()
+    except Exception:
+        # column already exists or other error
+        pass
+    try:
+        conn.execute(text("ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"))
+        conn.commit()
+    except Exception:
+        # column already exists or other error
+        pass
+
 app = FastAPI(title="Aurous Restro API")
 
 # Auth settings
@@ -88,6 +103,12 @@ async def startup_event():
 
     try:
         db.execute(text("ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0"))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+
+    try:
+        db.execute(text("ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"))
         db.commit()
     except Exception as e:
         db.rollback()
@@ -222,6 +243,26 @@ def admin_complete_reservation(reservation_id: int, current_member: models.Membe
     db.refresh(db_res)
     return db_res
 
+@app.patch("/api/admin/reservations/{reservation_id}/confirm")
+def admin_confirm_reservation(reservation_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db_res.status = "confirmed"
+    db.commit()
+    db.refresh(db_res)
+    return db_res
+
+@app.patch("/api/admin/reservations/{reservation_id}/arrive-confirm")
+def admin_arrive_confirm_reservation(reservation_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+    if not db_res:
+        raise HTTPException(status_code=404, detail="Reservation not found")
+    db_res.arriving_confirmed = 1
+    db.commit()
+    db.refresh(db_res)
+    return db_res
+
 @app.post("/api/admin/reservations/bulk-delete")
 def admin_bulk_delete_reservations(data: schemas.BulkDelete, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
     db.query(models.Reservation).filter(models.Reservation.id.in_(data.ids)).update({"deleted_by_admin": 1}, synchronize_session=False)
@@ -234,6 +275,7 @@ def cancel_reservation(reservation_id: int, db: Session = Depends(get_db)):
     if not db_res:
         raise HTTPException(status_code=404, detail="Reservation not found")
     db_res.status = "cancelled"
+    db_res.cancelled_at = datetime.utcnow().strftime("%Y-%m-%d")
     db.commit()
     db.refresh(db_res)
     return db_res
