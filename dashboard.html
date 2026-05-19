@@ -1240,7 +1240,10 @@
 
             const todayTotal = todayRes.length;
             const todayCompleted = todayRes.filter(r => r.status === 'completed').length;
-            const todayCancelled = todayRes.filter(r => r.status === 'cancelled').length;
+            const todayCancelled = allReservationsData.filter(r => {
+                const cancelDate = r.cancelled_at || r.date;
+                return cancelDate === todayStr && r.status === 'cancelled';
+            }).length;
 
             document.getElementById('todayResVal').textContent = todayTotal;
             document.getElementById('todayCompletedVal').textContent = todayCompleted;
@@ -1419,10 +1422,13 @@
                 filtered = filtered.filter(r => r.date === todayStr && r.status === 'completed');
             } else if (activeStatsFilter === 'cancelled') {
                 const todayStr = getLocalDateString(0);
-                filtered = filtered.filter(r => r.date === todayStr && r.status === 'cancelled');
+                filtered = filtered.filter(r => {
+                    const cancelDate = r.cancelled_at || r.date;
+                    return cancelDate === todayStr && r.status === 'cancelled';
+                });
             } else {
-                // By default, Reservations tab only shows pending reservations
-                filtered = filtered.filter(r => r.status === 'pending');
+                // By default, Reservations tab shows pending and confirmed reservations
+                filtered = filtered.filter(r => r.status === 'pending' || r.status === 'confirmed');
             }
 
             // Apply standard filters
@@ -1464,8 +1470,8 @@
             const resCards = document.getElementById('resCards');
             
             // If a stats filter is active, we render the already-filtered list.
-            // Otherwise, we default to only showing pending/upcoming reservations.
-            const resToRender = activeStatsFilter ? reservations : reservations.filter(r => r.status === 'pending');
+            // Otherwise, we default to showing both pending and confirmed reservations.
+            const resToRender = activeStatsFilter ? reservations : reservations.filter(r => r.status === 'pending' || r.status === 'confirmed');
 
             if (resToRender.length === 0) {
                 resBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-dim); padding: 3rem;">No matching reservations found.</td></tr>';
@@ -1494,9 +1500,27 @@
                 resDate.setHours(hour, parseInt(res.minute), 0, 0);
                 const targetTimeISO = resDate.toISOString();
 
+                // Style side border when arriving_confirmed is true
+                const rowStyle = res.arriving_confirmed === 1 
+                    ? 'border-left: 4px solid #2ecc71; background: rgba(46, 204, 113, 0.02);' 
+                    : '';
+
                 rowsHtml += `
-                    <tr data-id="${res.id}">
-                        <td style="font-weight: 500">${res.name}</td>
+                    <tr data-id="${res.id}" style="${rowStyle}">
+                        <td style="font-weight: 500">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span>${res.name}</span>
+                                ${res.arriving_confirmed === 1 ? `
+                                    <span style="background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.4); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);" class="animate-pulse" title="Verified Arriving (30m Mark)">
+                                        <i class="fas fa-circle" style="font-size: 0.45rem;"></i> Verified
+                                    </span>
+                                ` : res.status === 'confirmed' ? `
+                                    <span style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px;" title="Confirmed Attending">
+                                        <i class="fas fa-check" style="font-size: 0.6rem;"></i> Confirmed
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </td>
                         <td style="color: var(--primary); font-weight: 500;">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <span>${new Date(res.date).toLocaleDateString()} at ${res.hour}:${res.minute} ${res.ampm}</span>
@@ -1514,6 +1538,11 @@
                                 ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(231,76,60,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-times-circle"></i> Cancelled</span>`
                                 : `
                                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    ${res.status === 'pending' ? `
+                                    <button onclick="adminConfirmReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s; padding: 0;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Confirm Booking Call">
+                                        <i class="fas fa-check" style="font-size: 1.3rem;"></i>
+                                    </button>
+                                    ` : ''}
                                     <button onclick="adminCompleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Mark Complete">
                                         <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
                                     </button>
@@ -1555,11 +1584,25 @@
                 resDate.setHours(hour, parseInt(res.minute), 0, 0);
                 const targetTimeISO = resDate.toISOString();
 
+                // Mobile card style (border left green when arriving_confirmed is true)
+                const cardStyle = res.arriving_confirmed === 1 
+                    ? 'border-left: 5px solid #2ecc71; background: linear-gradient(145deg, rgba(46, 204, 113, 0.05), rgba(20, 20, 20, 0.8)); border-color: rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.1);' 
+                    : 'background: linear-gradient(145deg, rgba(224, 17, 95, 0.1), rgba(20, 20, 20, 0.8)); border-color: rgba(224, 17, 95, 0.3); box-shadow: 0 4px 15px rgba(224, 17, 95, 0.05);';
+
                 cardsHtml += `
-                    <div class="res-card" data-id="${res.id}" style="background: linear-gradient(145deg, rgba(224, 17, 95, 0.1), rgba(20, 20, 20, 0.8)); border-color: rgba(224, 17, 95, 0.3); box-shadow: 0 4px 15px rgba(224, 17, 95, 0.05);">
+                    <div class="res-card" data-id="${res.id}" style="${cardStyle}">
                         <div class="res-card-header">
-                            <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                 <span style="font-weight: 600; color: white;">${res.name}</span>
+                                ${res.arriving_confirmed === 1 ? `
+                                    <span style="background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.4); font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 100px; display: inline-flex; align-items: center; gap: 3px; box-shadow: 0 0 8px rgba(46, 204, 113, 0.15);" class="animate-pulse">
+                                        <i class="fas fa-circle" style="font-size: 0.4rem;"></i> Verified
+                                    </span>
+                                ` : res.status === 'confirmed' ? `
+                                    <span style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 100px; display: inline-flex; align-items: center; gap: 3px;">
+                                        <i class="fas fa-check" style="font-size: 0.55rem;"></i> Confirmed
+                                    </span>
+                                ` : ''}
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 2;">
                                 <span class="guest-chip">${res.guest_count} PPL</span>
@@ -1569,12 +1612,19 @@
                                     : res.status === 'cancelled'
                                     ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(231,76,60,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Cancel</span>`
                                     : `
-                                    <button onclick="adminCompleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Mark Complete">
-                                        <i class="fas fa-check" style="font-size: 1.3rem;"></i>
-                                    </button>
-                                    <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'; this.style.background='rgba(255,68,68,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Delete">
-                                        <i class="fas fa-trash-alt" style="font-size: 1.1rem;"></i>
-                                    </button>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        ${res.status === 'pending' ? `
+                                        <button onclick="adminConfirmReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Confirm Booking Call">
+                                            <i class="fas fa-check" style="font-size: 1.2rem;"></i>
+                                        </button>
+                                        ` : ''}
+                                        <button onclick="adminCompleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Mark Complete">
+                                            <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+                                        </button>
+                                        <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'; this.style.background='rgba(255,68,68,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Delete">
+                                            <i class="fas fa-trash-alt" style="font-size: 1.1rem;"></i>
+                                        </button>
+                                    </div>
                                     `
                                 }
                             </div>
@@ -1977,6 +2027,95 @@
             }
         }
 
+        async function adminConfirmReservation(resId, alertBox = null) {
+            try {
+                const response = await fetch(`/api/admin/reservations/${resId}/confirm`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const index = allReservationsData.findIndex(r => r.id === resId);
+                    if (index !== -1) {
+                        allReservationsData[index].status = 'confirmed';
+                    }
+                    renderReservations(allReservationsData);
+                    updateStatsValues();
+                    if (currentHistoryTab) renderHistory(allReservationsData);
+                    showToast('Reservation confirmed!');
+                    if (alertBox && typeof alertBox.closeAlert === 'function') {
+                        alertBox.closeAlert();
+                    }
+                } else {
+                    showToast('Failed to confirm reservation');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Connection error');
+            }
+        }
+
+        async function adminArriveConfirmReservation(resId, alertBox = null) {
+            try {
+                const response = await fetch(`/api/admin/reservations/${resId}/arrive-confirm`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const index = allReservationsData.findIndex(r => r.id === resId);
+                    if (index !== -1) {
+                        allReservationsData[index].arriving_confirmed = 1;
+                    }
+                    renderReservations(allReservationsData);
+                    updateStatsValues();
+                    if (currentHistoryTab) renderHistory(allReservationsData);
+                    showToast('Arrival verified at 30-min reminder!');
+                    if (alertBox && typeof alertBox.closeAlert === 'function') {
+                        alertBox.closeAlert();
+                    }
+                } else {
+                    showToast('Failed to verify arrival');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Connection error');
+            }
+        }
+
+        async function adminCancelFromAlert(resId, alertBox = null) {
+            if (!confirm('Mark this reservation as cancelled? Both the user and dashboard will automatically reflect this.')) return;
+
+            try {
+                const response = await fetch(`/api/reservations/${resId}/cancel`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (response.ok) {
+                    const index = allReservationsData.findIndex(r => r.id === resId);
+                    if (index !== -1) {
+                        allReservationsData[index].status = 'cancelled';
+                    }
+                    renderReservations(allReservationsData);
+                    updateStatsValues();
+                    if (currentHistoryTab) renderHistory(allReservationsData);
+                    showToast('Reservation marked as cancelled');
+                    if (alertBox && typeof alertBox.closeAlert === 'function') {
+                        alertBox.closeAlert();
+                    }
+                } else {
+                    showToast('Failed to cancel reservation');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Connection error');
+            }
+        }
+
         const alertedReservations = new Set();
         let alertQueue = [];
         let isAlertShowing = false;
@@ -1995,6 +2134,7 @@
 
             const timerContainerId = `alert-timer-${res.id}`;
             const alertBox = document.createElement('div');
+            alertBox.classList.add('animated-alert-box');
             alertBox.style.background = 'linear-gradient(135deg, #121212, #070707)';
             alertBox.style.border = '1px solid #E0115F';
             alertBox.style.borderRadius = '16px';
@@ -2030,6 +2170,15 @@
                         <div style="color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Guests</div>
                         <div style="color: white; font-size: 0.8rem; font-weight: 500;"><i class="fas fa-users" style="color: #E0115F; margin-right: 4px; font-size: 0.75rem;"></i>${res.guest_count} Guests</div>
                     </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; position: relative; z-index: 10;">
+                    <button onclick="adminCancelFromAlert(${res.id}, this.closest('.animated-alert-box'))" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 8px; border-radius: 10px; background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.25); color: #ff4d4d; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(231, 76, 60, 0.2)'" onmouseout="this.style.background='rgba(231, 76, 60, 0.1)'">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button onclick="adminArriveConfirmReservation(${res.id}, this.closest('.animated-alert-box'))" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 8px; border-radius: 10px; background: rgba(46, 204, 113, 0.1); border: 1px solid rgba(46, 204, 113, 0.25); color: #2ecc71; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='rgba(46, 204, 113, 0.2)'" onmouseout="this.style.background='rgba(46, 204, 113, 0.1)'">
+                        <i class="fas fa-check"></i> Done (Confirm)
+                    </button>
                 </div>
             `;
             
@@ -2086,7 +2235,7 @@
             const now = new Date();
             
             allReservationsData.forEach(res => {
-                if (res.status === 'completed' || res.status === 'cancelled' || alertedReservations.has(res.id)) return;
+                if (res.status === 'completed' || res.status === 'cancelled' || res.arriving_confirmed === 1 || alertedReservations.has(res.id)) return;
                 
                 const resDate = new Date(res.date);
                 let hour = parseInt(res.hour);
