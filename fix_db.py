@@ -4,7 +4,7 @@ def check_and_update_db():
     conn = sqlite3.connect('aurous.db')
     cursor = conn.cursor()
     
-    # Check reviews table
+
     cursor.execute("PRAGMA table_info(reviews)")
     columns = [col[1] for col in cursor.fetchall()]
     
@@ -16,7 +16,7 @@ def check_and_update_db():
         print("Adding replied_at to reviews...")
         cursor.execute("ALTER TABLE reviews ADD COLUMN replied_at DATETIME")
         
-    # Check if members table exists
+
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='members'")
     if not cursor.fetchone():
         print("Creating members table...")
@@ -30,7 +30,7 @@ def check_and_update_db():
             )
         """)
     
-    # Reset admin user with correct hash for pbkdf2_sha256
+
     from passlib.context import CryptContext
     pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
     hashed_pw = pwd_context.hash("aurous123")

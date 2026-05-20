@@ -16,35 +16,35 @@ import models
 import schemas
 from database import engine, get_db
 
-# Create database tables
+
 models.Base.metadata.create_all(bind=engine)
 
-# Migration to add columns if they do not exist
+
 with engine.connect() as conn:
     try:
         conn.execute(text("ALTER TABLE reservations ADD COLUMN cancelled_at VARCHAR"))
         conn.commit()
     except Exception:
-        # column already exists or other error
+
         pass
     try:
         conn.execute(text("ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"))
         conn.commit()
     except Exception:
-        # column already exists or other error
+
         pass
 
 app = FastAPI(title="Aurous Restro API")
 
-# Auth settings
+
 SECRET_KEY = "aurous_secret_key_change_this_in_production"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 600 # Long expiry for convenience
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
-# Helper functions for Auth
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -80,15 +80,15 @@ async def get_current_member(token: str = Depends(oauth2_scheme), db: Session = 
         raise credentials_exception
     return user
 
-# Ensure upload directory exists
+
 os.makedirs("assets/images/uploads", exist_ok=True)
 
-# Create a default admin user if none exists and handle DB migrations gracefully
+
 @app.on_event("startup")
 async def startup_event():
     db = next(get_db())
     
-    # Try to add the new columns if they don't exist (migration)
+
     try:
         db.execute(text("ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'"))
         db.commit()
@@ -120,7 +120,7 @@ async def startup_event():
         db.add(admin_member)
         db.commit()
 
-# --- Public API Endpoints ---
+
 
 @app.post("/api/reservations", response_model=schemas.ReservationResponse)
 def create_reservation(reservation: schemas.ReservationCreate, db: Session = Depends(get_db)):
@@ -169,7 +169,7 @@ async def create_review(
     db.refresh(db_review)
     return db_review
 
-# --- Admin/Auth API Endpoints ---
+
 
 @app.post("/api/auth/login", response_model=schemas.Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -296,7 +296,7 @@ def user_delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Reservation deleted by user"}
 
-# --- Static Routes ---
+
 
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 

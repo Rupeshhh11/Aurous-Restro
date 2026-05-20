@@ -5,7 +5,7 @@
     --bg: #050505;
 }
 
-/* Preloader Styles */
+
 .preloader-char {
     display: inline-block;
     will-change: transform;
@@ -60,7 +60,7 @@ body {
     color: #ffffff;
 }
 
-/* Premium Button Hover Effects */
+
 .btn-primary-creative {
     position: relative;
     overflow: hidden;
@@ -103,7 +103,7 @@ body {
     z-index: -1;
 }
 
-/* Shared Premium Shine Effect */
+
 .btn-shine-effect {
     position: relative;
     overflow: hidden !important;
@@ -118,9 +118,9 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(
-        120deg, 
-        rgba(255, 255, 255, 0) 30%, 
-        rgba(255, 255, 255, 0.8) 50%, 
+        120deg,
+        rgba(255, 255, 255, 0) 30%,
+        rgba(255, 255, 255, 0.8) 50%,
         rgba(255, 255, 255, 0) 70%
     );
     transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
@@ -132,7 +132,7 @@ body {
     left: 150%;
 }
 
-.btn-shine-effect span, 
+.btn-shine-effect span,
 .btn-shine-effect i {
     position: relative;
     z-index: 3;
@@ -582,8 +582,8 @@ input:-webkit-autofill:active {
         width: 100% !important;
         height: 100% !important;
     }
-    
-    /* Vibe Section Mobile Side-by-Side */
+
+
     #vibe {
         flex-direction: row !important;
         gap: 0px !important;
@@ -644,7 +644,7 @@ input:-webkit-autofill:active {
     }
 }
 
-/* Bottom Nav Active State */
+
 .mobile-nav-link.active i {
     color: #E0115F !important;
     transform: scale(1.1);
@@ -657,7 +657,7 @@ input:-webkit-autofill:active {
     transition: all 0.3s ease;
 }
 
-/* Social Icons Scaling */
+
 .social-icons a {
     width: 32px !important;
     height: 32px !important;
@@ -671,9 +671,9 @@ input:-webkit-autofill:active {
         font-size: 18px !important;
     }
 }
-/* Reverted WhatsApp SVG to original size */
 
-/* Success Animation Modal */
+
+
 #success-modal {
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -708,7 +708,7 @@ input:-webkit-autofill:active {
     100% { transform: scale(1.5); opacity: 0; }
 }
 
-/* Success Animation Modal - Default Pink for PC */
+
 #success-modal.active .success-icon-box {
     background-color: #E0115F !important;
     box-shadow: 0 0 80px rgba(224, 17, 95, 0.8) !important;
@@ -723,7 +723,7 @@ input:-webkit-autofill:active {
     opacity: 0;
 }
 
-/* Mobile-Specific Green Theme */
+
 @media (max-width: 768px) {
     #success-modal.active .success-icon-box {
         background-color: #22c55e !important;
@@ -741,7 +741,7 @@ input:-webkit-autofill:active {
     }
 }
 
-/* Party Pops (Confetti) - Mobile Only */
+
 @media (max-width: 768px) {
     .confetti {
         position: fixed;
@@ -762,7 +762,7 @@ input:-webkit-autofill:active {
     100% { transform: scale(1); }
 }
 
-/* Toast Notification Styles */
+
 .toast {
     background: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(20px);
@@ -800,7 +800,7 @@ input:-webkit-autofill:active {
     100% { transform: scale(0.8); opacity: 0; }
 }
 
-/* Wheel Picker Selection Ring Enhancements */
+
 .selection-ring {
     height: 64px !important;
     border-top: 2px solid rgba(224, 17, 95, 0.5) !important;
@@ -820,13 +820,13 @@ input:-webkit-autofill:active {
         color: #E0115F !important;
     }
     .wheel-container-fixed {
-        height: 111px !important; /* 3 items: 37 * 3 */
+        height: 111px !important;
     }
     .selection-ring {
         height: 37px !important;
     }
 
-    /* Reservation Modal Bottom Sheet Logic */
+
     #reservation-modal.active {
         opacity: 1 !important;
         pointer-events: all !important;
@@ -837,7 +837,7 @@ input:-webkit-autofill:active {
         filter: blur(0) !important;
     }
 
-    /* Prevent mobile zoom on focus - Strict 16px */
+
     #reservation-form input,
     #reservation-form select {
         font-size: 16px !important;

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
-    // Toast Notification System
+
+
     window.showToast = function(message) {
         const container = document.getElementById('toast-container');
         if (!container) return;
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         container.appendChild(toast);
 
-        // Auto-remove after 3 seconds
+
         setTimeout(() => {
             toast.classList.add('toast-out');
             setTimeout(() => toast.remove(), 400);
@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (preloader) {
         document.body.style.overflow = 'hidden';
     }
-    
-    // Force scroll to top and clear hash on refresh
+
+
     if (window.location.hash) {
         window.history.replaceState(null, null, window.location.pathname + window.location.search);
     }
@@ -102,15 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const emojiInner = preloaderEmoji?.querySelector('.emoji-bounce');
     const emojis = ['👨‍🍳', '🍲', '🥘', '🍳', '🍱', '🍽️', '😋'];
 
-    // Ultra-smooth GSAP Loader
+
     if (preloader) {
         const loaderTL = gsap.timeline({
             delay: 0.2,
             onUpdate: function() {
                 const progress = Math.floor(this.progress() * 100);
                 if (counter) counter.innerText = progress + "%";
-                
-                // Update Emoji Sequence
+
+
                 if (emojiInner) {
                     const emojiIndex = Math.floor(this.progress() * (emojis.length - 1));
                     if (emojiInner.innerText !== emojis[emojiIndex]) {
@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeLoginBg = document.getElementById('close-login-bg');
     const loginBox = document.getElementById('login-box');
     const resBadge = document.getElementById('res-badge');
-    
-    // My Reservation Modal Elements
+
+
     const myResModal = document.getElementById('my-res-modal');
     const myResBox = document.getElementById('my-res-box');
     const myResContent = document.getElementById('my-res-content');
@@ -222,19 +222,19 @@ document.addEventListener('DOMContentLoaded', () => {
             resList = JSON.parse(localStorage.getItem('user_reservations') || '[]');
             if (!Array.isArray(resList)) resList = [];
         } catch(e) { resList = []; }
-        
-        // Migration from old single object
+
+
         const oldRes = localStorage.getItem('user_reservation');
         if (oldRes) {
-            try { 
+            try {
                 const p = JSON.parse(oldRes);
                 if (p) resList.push(p);
             } catch(e){}
             localStorage.removeItem('user_reservation');
             localStorage.setItem('user_reservations', JSON.stringify(resList));
         }
-        
-        // Clean up past reservations (older than yesterday)
+
+
         const now = new Date();
         now.setHours(0,0,0,0);
         resList = resList.filter(r => {
@@ -242,22 +242,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const rDate = new Date(r.date);
             return rDate >= now;
         });
-        
-        // Sort by date and time, soonest first
+
+
         resList.sort((a, b) => {
             const dateA = new Date(a.date);
             const dateB = new Date(b.date);
             if (dateA < dateB) return -1;
             if (dateA > dateB) return 1;
-            
-            // same date, check time
+
+
             let hA = parseInt(a.hour); if(a.ampm === 'PM' && hA !== 12) hA+=12; else if(a.ampm === 'AM' && hA === 12) hA=0;
             let hB = parseInt(b.hour); if(b.ampm === 'PM' && hB !== 12) hB+=12; else if(b.ampm === 'AM' && hB === 12) hB=0;
-            
+
             if (hA !== hB) return hA - hB;
             return parseInt(a.minute) - parseInt(b.minute);
         });
-        
+
         localStorage.setItem('user_reservations', JSON.stringify(resList));
         return resList;
     }
@@ -276,18 +276,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const resList = getReservations();
         const resData = resList[index];
         if (!resData) return openMyRes();
-        
+
         const dateObj = new Date(resData.date);
         const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
         const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
         const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
-        
+
         let headerBadgeHtml = '';
         let actionBtnHtml = '';
         let statusMessageHtml = '';
         let ticketStatusClass = '';
         let ticketGlowClass = '';
-        
+
         if (resData.status === 'completed') {
             headerBadgeHtml = `
                 <div class="w-11 h-11 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-green-500/20 shadow-[0_0_12px_rgba(46,204,113,0.15)]">
@@ -352,32 +352,32 @@ document.addEventListener('DOMContentLoaded', () => {
             ticketStatusClass = 'border-l-4 border-l-amber-500';
             ticketGlowClass = 'shadow-[0_0_15px_rgba(243,156,18,0.05)]';
         }
-        
+
         myResContent.innerHTML = `
             <button onclick="openMyRes()" class="text-white/40 hover:text-white absolute top-4 left-4 text-[9px] tracking-widest uppercase font-bold transition-all flex items-center gap-1.5 active:scale-95">
                 <i class="fas fa-arrow-left text-xs"></i> Back
             </button>
-            
+
             <div class="mt-2.5">
                 ${headerBadgeHtml}
             </div>
-            
+
             <!-- VIP PASS TICKET CARD -->
             <div class="relative bg-white/[0.01] border border-white/10 rounded-2xl p-4 mt-4 overflow-hidden text-left ${ticketStatusClass} ${ticketGlowClass}">
                 <!-- Ticket notches -->
                 <div class="absolute -left-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-r border-white/10 z-10"></div>
                 <div class="absolute -right-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-l border-white/10 z-10"></div>
-                
+
                 <!-- Ticket Header/Stub -->
                 <div class="flex justify-between items-center mb-2.5">
                     <span class="text-[7.5px] uppercase tracking-[0.25em] text-[#E0115F] font-black">Aurous Restro Lounge</span>
                     <span class="text-[8.5px] uppercase font-bold text-white/30 tracking-wider">Pass #${resData.id || index + 100}</span>
                 </div>
                 <h4 class="text-sm font-black text-white tracking-tight uppercase mb-3">${resData.name}</h4>
-                
+
                 <!-- Dotted divider line -->
                 <div class="border-t border-dashed border-white/10 my-2.5"></div>
-                
+
                 <!-- Ticket Body/Details -->
                 <div class="grid grid-cols-2 gap-3 mt-1.5">
                     <div>
@@ -405,19 +405,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Dotted divider line -->
                 <div class="border-t border-dashed border-white/10 my-3"></div>
-                
+
                 <!-- Barcode simulation -->
                 <div class="flex flex-col items-center justify-center mt-0.5 select-none opacity-45">
                     <div class="text-[10px] font-mono tracking-[0.22em] text-white/40">||||| | || ||| | ||| | ||</div>
                     <div class="text-[6.5px] font-mono tracking-widest text-white/30 mt-0.5">AUR-${resData.id || 'CONFIRMED'}</div>
                 </div>
             </div>
-            
+
             ${statusMessageHtml}
-            
+
             <div class="mt-4.5 pt-3.5 border-t border-white/5">
                 ${actionBtnHtml}
             </div>
@@ -426,8 +426,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.openMyRes = async function() {
         const localList = getReservations();
-        
-        // Sync statuses with the server
+
+
         if (localList.length > 0) {
             const ids = localList.map(r => r.id).filter(id => id !== undefined);
             if (ids.length > 0) {
@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const resList = getReservations();
-        
+
         if (resList.length > 0) {
             myResContent.innerHTML = `
                 <div class="mb-4">
@@ -469,12 +469,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         const d = new Date(res.date);
                         const day = d.getDate();
                         const month = d.toLocaleDateString('en-US', {month: 'short'});
-                        
+
                         let actionHtml = '';
                         let statusBadgeHtml = '';
                         let borderStyle = '';
                         let glowStyle = '';
-                        
+
                         if (res.status === 'completed') {
                             statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.15);"><i class="fas fa-check-circle"></i> Done</span>`;
                             actionHtml = `
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('Are you sure you want to cancel this reservation?')) {
             let resList = getReservations();
             const resData = resList[index];
-            
+
             if (resData && resData.id) {
                 try {
                     const response = await fetch(`/api/reservations/${resData.id}/cancel`, {
@@ -573,9 +573,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 resList.splice(index, 1);
                 localStorage.setItem('user_reservations', JSON.stringify(resList));
             }
-            
+
             checkResStatus();
-            openMyRes(); // Refresh the list
+            openMyRes();
         }
     };
 
@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (confirm('Are you sure you want to delete this booking from your list?')) {
             let resList = getReservations();
             const resData = resList[index];
-            
+
             if (resData && resData.id) {
                 try {
                     await fetch(`/api/reservations/${resData.id}/user-delete`, {
@@ -594,11 +594,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.error('Error deleting reservation:', err);
                 }
             }
-            
+
             resList.splice(index, 1);
             localStorage.setItem('user_reservations', JSON.stringify(resList));
             checkResStatus();
-            openMyRes(); // Refresh the list
+            openMyRes();
         }
     };
 
@@ -613,11 +613,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openListViewBtn) openListViewBtn.addEventListener('click', window.openMyRes);
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
-    
+
     if (closeMyResBtn) closeMyResBtn.addEventListener('click', closeMyRes);
     if (closeMyResBg) closeMyResBg.addEventListener('click', closeMyRes);
-    
-    // Dynamically get it because it might have been injected
+
+
     document.addEventListener('click', async (e) => {
         if (e.target && e.target.closest('#cancel-res-btn')) {
             const btn = e.target.closest('#cancel-res-btn');
@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (confirm('Are you sure you want to cancel your reservation?')) {
                 let resList = getReservations();
                 const resData = resList[index];
-                
+
                 if (resData && resData.id) {
                     try {
                         const response = await fetch(`/api/reservations/${resData.id}/cancel`, {
@@ -643,15 +643,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     resList.splice(index, 1);
                     localStorage.setItem('user_reservations', JSON.stringify(resList));
                 }
-                
+
                 checkResStatus();
                 if (window.showToast) window.showToast('Reservation Cancelled');
-                openMyRes(); // go back to list
+                openMyRes();
             }
         }
     });
 
-    // Admin Login Logic for Main Page
+
     const adminLoginForm = document.getElementById('admin-login-form');
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', async (e) => {
@@ -732,11 +732,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const musicPlayerWidget = document.querySelector('.group\\/he');
 
         if (musicPlayerWidget) {
-            // Click to toggle on mobile/desktop
+
             musicPlayerWidget.addEventListener('click', (e) => {
-                // Don't trigger if clicking child controls (progress bar, skip buttons)
+
                 if (e.target.closest('input[type="range"]') || e.target.closest('.space-x-5')) return;
-                
+
                 playStatus.checked = !playStatus.checked;
                 if (playStatus.checked) {
                     bgMusic.volume = 0.6;
@@ -751,10 +751,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Keep hover for desktop if desired, but click is primary now
+
             musicPlayerWidget.addEventListener('mouseenter', () => {
                 if (window.innerWidth > 768 && !isMusicPlaying) {
-                    // Optional: keep auto-play on hover for desktop
+
                 }
             });
         }
@@ -975,12 +975,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.deleteReview = async function (id) {
         if (!confirm('Are you sure you want to delete this review?')) return;
 
-        // Try deleting from API first (numeric IDs are from backend)
+
         if (typeof id === 'number' || !isNaN(parseInt(id))) {
             try {
                 const response = await fetch(`/api/reviews/${id}`, { method: 'DELETE' });
                 if (response.ok) {
-                    // Remove from apiReviews cache
+
                     if (window.apiReviews) {
                         window.apiReviews = window.apiReviews.filter(r => r.id != id);
                     }
@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Also try local storage delete
+
         let stored = getStoredReviews();
         let initialLength = stored.length;
         stored = stored.filter(r => r.id !== id);
@@ -1146,7 +1146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Load reviews from API
+
     window.loadReviewsFromAPI = async function () {
         try {
             const response = await fetch('/api/reviews');
@@ -1178,7 +1178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Initial load
+
     loadReviewsFromAPI();
 
     const reviewForm = document.getElementById('review-form');
@@ -1239,7 +1239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         fileLabel.classList.remove('border-[#E0115F]/50');
                     }
 
-                    // Reload reviews from API
+
                     await loadReviewsFromAPI();
                     window.showToast("Review submitted successfully! ✨");
                 } else {
@@ -1371,7 +1371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wheelAmpm.appendChild(div);
         });
 
-        // Phone number 10-digit limit
+
         const phoneInput = document.getElementById('reserve-phone');
         if (phoneInput) {
             phoneInput.addEventListener('input', (e) => {
@@ -1451,33 +1451,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     const responseData = await response.json();
-                    formData.id = responseData.id; // Save backend ID
+                    formData.id = responseData.id;
                     closeReservation();
                     setTimeout(() => {
                         const successModal = document.getElementById('success-modal');
                         const successMessage = document.getElementById('success-message');
                         if (successModal) {
                             if (successMessage) {
-                                const name = formData.name.split(' ')[0]; // Use first name
+                                const name = formData.name.split(' ')[0];
                                 const dateObj = new Date(formData.date);
                                 const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
                                 const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
                                 const formattedTime = `${formData.hour}:${formData.minute} ${formData.ampm}`;
-                                
+
                                 const occasionText = formData.occasion !== 'casual' ? ` for your ${formData.occasion.replace('_', ' ')}` : '';
                                 successMessage.innerHTML = `See you soon, ${name}${occasionText}!<br>Meet you on ${formattedDate} at ${formattedTime}.`;
                             }
-                            
-                            // Save reservation locally
+
+
                             const resList = getReservations();
                             resList.push(formData);
                             localStorage.setItem('user_reservations', JSON.stringify(resList));
-                            
+
                             checkResStatus();
 
                             successModal.classList.add('active');
 
-                            // Party Pops (Confetti) - Mobile Only
+
                             if (window.innerWidth <= 768) {
                                 for (let i = 0; i < 50; i++) {
                                     const confetti = document.createElement('div');
@@ -1489,22 +1489,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                     setTimeout(() => confetti.remove(), 5000);
                                 }
                             }
-                            
-                            // Allow clicking to close
+
+
                             const closeSuccess = () => {
                                 successModal.classList.remove('active');
                                 successModal.removeEventListener('click', closeSuccess);
                             };
                             successModal.addEventListener('click', closeSuccess);
 
-                            // Hide after 7 seconds automatically
+
                             setTimeout(() => {
                                 if (successModal.classList.contains('active')) {
                                     successModal.classList.remove('active');
                                 }
                             }, 7000);
                         }
-                        
+
                         reservationForm.reset();
                         guestInput.value = 2;
                         guestCountDisplay.innerText = 2;
@@ -1538,23 +1538,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button onclick="closeGallery()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors z-50 group">
                     <i class="fa-solid fa-xmark text-lg group-hover:scale-110 transition-transform"></i>
                 </button>
-                
+
                 <div class="relative w-full h-[80vh] flex flex-col items-center justify-center px-4 md:px-16 mt-4">
                     <img id="gallery-image" src="${images[0]}" class="max-w-full max-h-[85%] object-contain rounded-xl shadow-2xl transition-all duration-300 transform scale-95">
-                    
+
                     <div id="gallery-review-text" class="mt-6 px-6 max-w-3xl text-center text-white/80 text-sm md:text-base italic font-light transition-opacity duration-300">
                         "${text}"
                     </div>
-                    
+
                     <button id="gallery-prev" class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#E0115F] backdrop-blur-md transition-all z-50 ${images.length <= 1 ? 'hidden' : ''}">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    
+
                     <button id="gallery-next" class="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#E0115F] backdrop-blur-md transition-all z-50 ${images.length <= 1 ? 'hidden' : ''}">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
-                
+
                 <div class="absolute bottom-8 flex gap-3" id="gallery-dots">
                     ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full ${i === 0 ? 'bg-[#E0115F] scale-125' : 'bg-white/30'} transition-all duration-300"></div>`).join('')}
                 </div>
@@ -1578,12 +1578,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const updateImage = (index) => {
             img.classList.add('opacity-0', 'scale-95');
             img.classList.remove('scale-100');
-            
+
             if (textDiv) {
                 if (index === 0) textDiv.classList.remove('opacity-0');
                 else textDiv.classList.add('opacity-0');
             }
-            
+
             setTimeout(() => {
                 img.src = images[index];
                 Array.from(dots).forEach((dot, i) => {
@@ -1593,30 +1593,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 img.classList.add('scale-100');
             }, 200);
         };
-        
+
         document.getElementById('gallery-prev').addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + images.length) % images.length;
             updateImage(currentIndex);
         });
-        
+
         document.getElementById('gallery-next').addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % images.length;
             updateImage(currentIndex);
         });
 
-        // Swipe Support for Gallery
+
         let touchStartX = 0;
         let touchEndX = 0;
-        
+
         modal.addEventListener('touchstart', e => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
-        
+
         modal.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         }, { passive: true });
-        
+
         function handleSwipe() {
             const threshold = 50;
             if (touchEndX < touchStartX - threshold) {
@@ -1628,8 +1628,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     };
-    
-    // Active Section Tracking for Mobile Nav
+
+
     const navLinksMapping = {
         'hero': document.getElementById('nav-home'),
         'vibe': document.getElementById('nav-vibe'),
@@ -1649,11 +1649,11 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 activeId = entry.target.id;
-                
-                // Remove active from all
+
+
                 Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
-                
-                // Add active to current
+
+
                 if (navLinksMapping[activeId]) {
                     navLinksMapping[activeId].classList.add('active');
                 }
@@ -1661,13 +1661,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Watch sections
+
     ['hero', 'vibe', 'menu', 'echoes'].forEach(id => {
         const el = document.getElementById(id);
         if (el) observer.observe(el);
     });
 
-    // Special case for top/bottom of page
+
     window.addEventListener('scroll', () => {
         if (window.scrollY < 50) {
             Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));

@@ -37,7 +37,7 @@
             display: flex;
         }
 
-        /* Sidebar */
+
         .sidebar {
             width: 280px;
             background: var(--card-bg);
@@ -187,7 +187,7 @@
             font-size: 1.2rem;
         }
 
-        /* Responsive Table Cards */
+
         .res-cards {
             display: none;
             flex-direction: column;
@@ -226,7 +226,7 @@
             margin-bottom: 2px;
         }
 
-        /* Main Content */
+
         .main-content {
             margin-left: 280px;
             flex-grow: 1;
@@ -246,7 +246,7 @@
             font-size: 2.5rem;
         }
 
-        /* Stats Cards */
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -272,7 +272,7 @@
             font-weight: 600;
         }
 
-        /* Tables & Lists */
+
         .content-section {
             display: none;
             animation: fadeIn 0.5s ease;
@@ -328,7 +328,7 @@
             font-size: 0.85rem;
         }
 
-        /* Review Items */
+
         .review-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
@@ -412,7 +412,7 @@
             text-transform: uppercase;
         }
 
-        /* Loader */
+
         .page-loader {
             position: fixed;
             top: 0;
@@ -441,7 +441,7 @@
             }
         }
 
-        /* Stats & Dividers Styles */
+
         .clickable-stat {
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -689,7 +689,7 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Wheel Modal Overlay */
+
         .wheel-modal-overlay {
             position: fixed;
             inset: 0;
@@ -886,7 +886,7 @@
                 font-size: 1.5rem;
             }
         }
-    </style>
+</style>
 </head>
 
 <body>
@@ -949,7 +949,7 @@
         </div>
 
         <div class="stats-grid" id="statsGrid">
-            <!-- Reservations Stats (Today) -->
+
             <div class="stat-card clickable-stat" id="statResToday" onclick="toggleStatsFilter('today')" title="Filter: All Reservations Today">
                 <h3>Today's Reservations</h3>
                 <div class="value" id="todayResVal">0</div>
@@ -966,7 +966,7 @@
                 <div class="stat-indicator" style="background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2);">Cancelled Today</div>
             </div>
 
-            <!-- Reviews Stats -->
+
             <div class="stat-card" id="statTotalReviews" style="display: none;">
                 <h3>Total Reviews</h3>
                 <div class="value" id="totalRev">0</div>
@@ -976,14 +976,14 @@
                 <div class="value" id="avgRating">0.0</div>
             </div>
 
-            <!-- History Stats (Total overall) -->
+
             <div class="stat-card" id="statTotalRes" style="display: none;">
                 <h3>Total Reservations (All-Time)</h3>
                 <div class="value" id="totalRes">0</div>
             </div>
         </div>
 
-        <!-- Reservations Section -->
+
         <section id="reservationsSection" class="content-section active">
             <div class="filter-bar">
                 <div class="filter-group">
@@ -1027,16 +1027,16 @@
                         </tr>
                     </thead>
                     <tbody id="resBody">
-                        <!-- Filled by JS -->
+
                     </tbody>
                 </table>
                 <div id="resCards" class="res-cards">
-                    <!-- Filled by JS for mobile -->
+
                 </div>
             </div>
         </section>
 
-        <!-- History Section -->
+
         <section id="historySection" class="content-section">
             <div class="filter-bar">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-right: auto; flex-wrap: wrap;">
@@ -1047,7 +1047,7 @@
                         <i class="fas fa-times-circle"></i> Cancelled
                     </button>
                 </div>
-                
+
                 <div class="filter-group">
                     <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
                     <label>From</label>
@@ -1069,7 +1069,7 @@
                     <i class="fas fa-filter"></i> Filter
                 </button>
                 <button class="filter-btn-clear" onclick="clearHistoryFilters()">Clear</button>
-                
+
                 <button id="bulkDeleteHistoryBtn" class="filter-btn-apply" style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;" onclick="deleteSelectedHistory()">
                     <i class="fas fa-trash-alt"></i> Delete Selected (<span id="historySelectedCount">0</span>)
                 </button>
@@ -1089,16 +1089,16 @@
                         </tr>
                     </thead>
                     <tbody id="historyBody">
-                        <!-- Filled by JS -->
+
                     </tbody>
                 </table>
                 <div id="historyCards" class="res-cards">
-                    <!-- Filled by JS for mobile -->
+
                 </div>
             </div>
         </section>
 
-        <!-- Reviews Section -->
+
         <section id="reviewsSection" class="content-section">
             <div class="filter-bar">
                 <div class="filter-group">
@@ -1136,19 +1136,19 @@
                 <button class="filter-btn-clear" onclick="clearFilters()">Clear</button>
             </div>
             <div id="reviewsContainer">
-                <!-- Filled by JS -->
+
             </div>
         </section>
     </main>
 
-    <!-- Wheel Picker Modal -->
+
     <div id="wheelModalOverlay" class="wheel-modal-overlay">
         <div class="wheel-modal-box">
             <h4>Select Date</h4>
             <div class="wheel-container">
                 <div class="wheel-highlight"></div>
                 <div id="wheelScroll" class="wheel-scroll">
-                    <!-- Dates filled by JS -->
+
                 </div>
             </div>
             <div class="wheel-modal-actions">
@@ -1158,7 +1158,7 @@
         </div>
     </div>
 
-    <!-- Animated Alert Container -->
+
     <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px;"></div>
 
     <script>
@@ -1192,17 +1192,17 @@
             document.querySelectorAll('.mobile-nav-item').forEach(l => l.classList.remove('active'));
 
             document.getElementById(section + 'Section').classList.add('active');
-            
-            // Handle both desktop and mobile nav active states
+
+
             const navLink = document.querySelector(`.nav-link[onclick*="${section}"]`);
             if (navLink) navLink.classList.add('active');
-            
+
             const mobileNavLink = document.getElementById('m-nav-' + section);
             if (mobileNavLink) mobileNavLink.classList.add('active');
 
             document.getElementById('sectionTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
 
-            // Update stats grid card visibility
+
             updateStatsCardsVisibility(section);
         }
 
@@ -1249,7 +1249,7 @@
             document.getElementById('todayCompletedVal').textContent = todayCompleted;
             document.getElementById('todayCancelledVal').textContent = todayCancelled;
 
-            // Also update overall/all-time stats
+
             document.getElementById('totalRes').textContent = allReservationsData.length;
         }
 
@@ -1270,7 +1270,7 @@
                 updateStatsValues();
                 renderReservations(reservations);
 
-                // Initialize default history tab
+
                 switchHistoryTab('completed');
 
                 allReviewsData = reviews;
@@ -1319,7 +1319,7 @@
                                 ${rev.image_url.split(',').map(url => `<img src="${url.trim()}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer;" onclick="window.open('${url.trim()}','_blank')">`).join('')}
                             </div>
                         ` : ''}
-                        
+
                         ${rev.reply_text ? `
                             <div class="existing-reply">
                                 <h5>Your Reply</h5>
@@ -1369,7 +1369,7 @@
             document.getElementById('filterDateFrom').value = '';
             document.getElementById('filterDateTo').value = '';
             document.getElementById('filterRating').value = '0';
-            
+
             document.getElementById('filterDateFromBtn').querySelector('span').textContent = 'Select Date';
             document.getElementById('filterDateFromBtn').classList.remove('has-date');
             document.getElementById('filterDateToBtn').querySelector('span').textContent = 'Select Date';
@@ -1397,7 +1397,7 @@
                 activeStatsFilter = null;
             } else {
                 activeStatsFilter = filterType;
-                const cardId = filterType === 'today' ? 'statResToday' : 
+                const cardId = filterType === 'today' ? 'statResToday' :
                                filterType === 'completed' ? 'statCompletedToday' : 'statCancelledToday';
                 document.getElementById(cardId).classList.add('active-filter');
             }
@@ -1413,7 +1413,7 @@
 
             let filtered = [...allReservationsData];
 
-            // Apply stats dynamic filtering
+
             if (activeStatsFilter === 'today') {
                 const todayStr = getLocalDateString(0);
                 filtered = filtered.filter(r => r.date === todayStr);
@@ -1427,11 +1427,11 @@
                     return cancelDate === todayStr && r.status === 'cancelled';
                 });
             } else {
-                // By default, Reservations tab shows pending and confirmed reservations
+
                 filtered = filtered.filter(r => r.status === 'pending' || r.status === 'confirmed');
             }
 
-            // Apply standard filters
+
             if (fromDate) {
                 filtered = filtered.filter(r => r.date >= fromDate);
             }
@@ -1448,7 +1448,7 @@
         function clearResFilters() {
             document.getElementById('resFilterFrom').value = '';
             document.getElementById('resFilterTo').value = '';
-            
+
             const occasionEl = document.getElementById('resFilterOccasion');
             if (occasionEl) occasionEl.value = '';
 
@@ -1457,7 +1457,7 @@
             document.getElementById('resFilterToBtn').querySelector('span').textContent = 'Select Date';
             document.getElementById('resFilterToBtn').classList.remove('has-date');
 
-            // Reset active stats filter
+
             activeStatsFilter = null;
             const cards = ['statResToday', 'statCompletedToday', 'statCancelledToday'];
             cards.forEach(id => document.getElementById(id).classList.remove('active-filter'));
@@ -1468,9 +1468,9 @@
         function renderReservations(reservations) {
             const resBody = document.getElementById('resBody');
             const resCards = document.getElementById('resCards');
-            
-            // If a stats filter is active, we render the already-filtered list.
-            // Otherwise, we default to showing both pending and confirmed reservations.
+
+
+
             const resToRender = activeStatsFilter ? reservations : reservations.filter(r => r.status === 'pending' || r.status === 'confirmed');
 
             if (resToRender.length === 0) {
@@ -1479,7 +1479,7 @@
                 return;
             }
 
-            // Sort reservations chronologically by date and time
+
             const sortedRes = [...resToRender].sort((a, b) => {
                 const dateA = new Date(`${a.date} ${a.hour}:${a.minute} ${a.ampm}`);
                 const dateB = new Date(`${b.date} ${b.hour}:${b.minute} ${b.ampm}`);
@@ -1489,7 +1489,7 @@
             const todayStr = getLocalDateString(0);
             const tomorrowStr = getLocalDateString(1);
 
-            // RENDER DESKTOP ROWS
+
             let rowsHtml = '';
             for (let i = 0; i < sortedRes.length; i++) {
                 const res = sortedRes[i];
@@ -1500,9 +1500,9 @@
                 resDate.setHours(hour, parseInt(res.minute), 0, 0);
                 const targetTimeISO = resDate.toISOString();
 
-                // Style side border when arriving_confirmed is true
-                const rowStyle = res.arriving_confirmed === 1 
-                    ? 'border-left: 4px solid #2ecc71; background: rgba(46, 204, 113, 0.02);' 
+
+                const rowStyle = res.arriving_confirmed === 1
+                    ? 'border-left: 4px solid #2ecc71; background: rgba(46, 204, 113, 0.02);'
                     : '';
 
                 rowsHtml += `
@@ -1556,7 +1556,7 @@
                     </tr>
                 `;
 
-                // Check if we need to draw a date separator row
+
                 const nextRes = sortedRes[i + 1];
                 if (res.date === todayStr && nextRes && nextRes.date !== todayStr) {
                     const label = nextRes.date === tomorrowStr ? 'Tomorrow' : 'Future Reservations';
@@ -1573,7 +1573,7 @@
             }
             resBody.innerHTML = rowsHtml;
 
-            // RENDER MOBILE CARDS
+
             let cardsHtml = '';
             for (let i = 0; i < sortedRes.length; i++) {
                 const res = sortedRes[i];
@@ -1584,9 +1584,9 @@
                 resDate.setHours(hour, parseInt(res.minute), 0, 0);
                 const targetTimeISO = resDate.toISOString();
 
-                // Mobile card style (border left green when arriving_confirmed is true)
-                const cardStyle = res.arriving_confirmed === 1 
-                    ? 'border-left: 5px solid #2ecc71; background: linear-gradient(145deg, rgba(46, 204, 113, 0.05), rgba(20, 20, 20, 0.8)); border-color: rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.1);' 
+
+                const cardStyle = res.arriving_confirmed === 1
+                    ? 'border-left: 5px solid #2ecc71; background: linear-gradient(145deg, rgba(46, 204, 113, 0.05), rgba(20, 20, 20, 0.8)); border-color: rgba(46, 204, 113, 0.3); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.1);'
                     : 'background: linear-gradient(145deg, rgba(224, 17, 95, 0.1), rgba(20, 20, 20, 0.8)); border-color: rgba(224, 17, 95, 0.3); box-shadow: 0 4px 15px rgba(224, 17, 95, 0.05);';
 
                 cardsHtml += `
@@ -1649,7 +1649,7 @@
                     </div>
                 `;
 
-                // Check if we need to draw a date separator card
+
                 const nextRes = sortedRes[i + 1];
                 if (res.date === todayStr && nextRes && nextRes.date !== todayStr) {
                     const label = nextRes.date === tomorrowStr ? 'Tomorrow' : 'Future Reservations';
@@ -1672,16 +1672,16 @@
             currentHistoryTab = tab;
             document.getElementById('tab-completed').className = tab === 'completed' ? 'filter-btn-apply' : 'filter-btn-clear';
             document.getElementById('tab-completed').style.background = tab === 'completed' ? 'linear-gradient(135deg, #2ecc71, #27ae60)' : 'transparent';
-            
+
             document.getElementById('tab-cancelled').className = tab === 'cancelled' ? 'filter-btn-apply' : 'filter-btn-clear';
             document.getElementById('tab-cancelled').style.background = tab === 'cancelled' ? 'linear-gradient(135deg, #e74c3c, #c0392b)' : 'transparent';
-            
+
             applyHistoryFilters();
         }
 
         function applyHistoryFilters() {
             if (!currentHistoryTab) return;
-            
+
             const fromDate = document.getElementById('historyFilterFrom').value;
             const toDate = document.getElementById('historyFilterTo').value;
 
@@ -1700,7 +1700,7 @@
         function clearHistoryFilters() {
             document.getElementById('historyFilterFrom').value = '';
             document.getElementById('historyFilterTo').value = '';
-            
+
             document.getElementById('historyFilterFromBtn').querySelector('span').textContent = 'Select Date';
             document.getElementById('historyFilterFromBtn').classList.remove('has-date');
             document.getElementById('historyFilterToBtn').querySelector('span').textContent = 'Select Date';
@@ -1716,7 +1716,7 @@
         function renderHistoryList(historyRes) {
             const historyBody = document.getElementById('historyBody');
             const historyCards = document.getElementById('historyCards');
-            
+
             if (historyRes.length === 0) {
                 historyBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-dim); padding: 3rem;">No ${currentHistoryTab} reservations found matching the filters.</td></tr>`;
                 historyCards.innerHTML = `<p style="color: var(--text-dim); text-align: center; padding: 2rem; width: 100%;">No ${currentHistoryTab} reservations matching the filters.</p>`;
@@ -1785,7 +1785,7 @@
             `}).join('');
         }
 
-        // --- iOS Style Wheel Picker Logic ---
+
         let currentTargetInputId = null;
         let selectedDateValue = null;
 
@@ -1797,7 +1797,7 @@
             const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            // Range: 60 days back to 90 days forward
+
             for (let i = -60; i <= 90; i++) {
                 const d = new Date();
                 d.setDate(today.getDate() + i);
@@ -1814,10 +1814,10 @@
 
             wheelScroll.onscroll = () => {
                 const items = wheelScroll.querySelectorAll('.wheel-item');
-                const containerCenter = wheelScroll.scrollTop + 120; // 240/2
+                const containerCenter = wheelScroll.scrollTop + 120;
 
                 items.forEach(item => {
-                    const itemCenter = item.offsetTop - wheelScroll.offsetTop + 24; // 48/2
+                    const itemCenter = item.offsetTop - wheelScroll.offsetTop + 24;
                     const dist = Math.abs(containerCenter - itemCenter);
 
                     if (dist < 24) {
@@ -1833,7 +1833,7 @@
                 });
             };
 
-            // Scroll to Today (60th item)
+
             setTimeout(() => {
                 const todayItem = wheelScroll.children[60];
                 wheelScroll.scrollTop = todayItem.offsetTop - wheelScroll.offsetTop - 96;
@@ -1897,7 +1897,7 @@
             }
         }
 
-        // --- Multi-Select & Delete Logic ---
+
         function toggleAllReservations(source) {
             const checkboxes = document.querySelectorAll('.res-checkbox');
             checkboxes.forEach(cb => cb.checked = source.checked);
@@ -1913,7 +1913,7 @@
 
             countSpan.textContent = checkboxes.length;
             bulkBtn.style.display = checkboxes.length > 0 ? 'flex' : 'none';
-            
+
             if (selectAll) {
                 selectAll.checked = total > 0 && checkboxes.length === total;
             }
@@ -1922,14 +1922,14 @@
         async function deleteSelectedReservations() {
             const checkboxes = document.querySelectorAll('.res-checkbox:checked');
             const ids = Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
-            
+
             if (ids.length === 0) return;
             if (!confirm(`Are you sure you want to delete ${ids.length} selected reservations?`)) return;
 
             try {
                 const response = await fetch('/api/admin/reservations/bulk-delete', {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
@@ -2031,7 +2031,7 @@
             try {
                 const response = await fetch(`/api/admin/reservations/${resId}/confirm`, {
                     method: 'PATCH',
-                    headers: { 
+                    headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
@@ -2061,7 +2061,7 @@
             try {
                 const response = await fetch(`/api/admin/reservations/${resId}/arrive-confirm`, {
                     method: 'PATCH',
-                    headers: { 
+                    headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
@@ -2119,13 +2119,13 @@
         const alertedReservations = new Set();
         let alertQueue = [];
         let isAlertShowing = false;
-        
+
         function showNextAnimatedAlert() {
             if (isAlertShowing || alertQueue.length === 0) return;
             isAlertShowing = true;
             const res = alertQueue.shift();
-            
-            // Calculate reservation exact Date object
+
+
             const resDate = new Date(res.date);
             let hour = parseInt(res.hour);
             if (res.ampm.toUpperCase() === 'PM' && hour !== 12) hour += 12;
@@ -2143,7 +2143,7 @@
             alertBox.style.boxShadow = '0 10px 40px rgba(224, 17, 95, 0.4)';
             alertBox.style.transform = 'translateX(120%)';
             alertBox.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            
+
             alertBox.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px;">
                     <div style="color: #E0115F; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; display: flex; align-items: center; gap: 6px; letter-spacing: 1px;">
@@ -2152,7 +2152,7 @@
                     <button onclick="this.parentElement.parentElement.closeAlert()" style="background: transparent; border: none; color: white; cursor: pointer; opacity: 0.6; transition: 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6"><i class="fas fa-times"></i></button>
                 </div>
                 <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; color: white;">${res.name}</div>
-                
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px 15px; background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03);">
                     <div>
                         <div style="color: var(--text-dim); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Time</div>
@@ -2181,43 +2181,43 @@
                     </button>
                 </div>
             `;
-            
+
             document.getElementById('alertContainer').appendChild(alertBox);
-            
-            // Animate in
+
+
             setTimeout(() => {
                 alertBox.style.transform = 'translateX(0)';
             }, 50);
-            
+
             if (window.navigator && window.navigator.vibrate) {
                 window.navigator.vibrate([200, 100, 200]);
             }
 
-            // Real-time Countdown timer
+
             let timerInterval = setInterval(() => {
                 const now = new Date();
                 const diffMs = resDate - now;
-                
+
                 if (diffMs <= 0) {
                     clearInterval(timerInterval);
                     const timerEl = document.getElementById(timerContainerId);
                     if (timerEl) timerEl.textContent = "00:00";
                     return;
                 }
-                
+
                 const totalSecs = Math.floor(diffMs / 1000);
                 const mins = String(Math.floor(totalSecs / 60)).padStart(2, '0');
                 const secs = String(totalSecs % 60).padStart(2, '0');
-                
+
                 const timerEl = document.getElementById(timerContainerId);
                 if (timerEl) {
                     timerEl.textContent = `${mins}:${secs}`;
                 } else {
-                    // Element closed early, clean up interval
+
                     clearInterval(timerInterval);
                 }
             }, 1000);
-            
+
             alertBox.closeAlert = function() {
                 clearInterval(timerInterval);
                 alertBox.style.transform = 'translateX(120%)';
@@ -2228,36 +2228,36 @@
                 }, 500);
             };
         }
-        
+
         function checkUpcomingReservations() {
             if (!allReservationsData || allReservationsData.length === 0) return;
-            
+
             const now = new Date();
-            
+
             allReservationsData.forEach(res => {
                 if (res.status === 'completed' || res.status === 'cancelled' || res.arriving_confirmed === 1 || alertedReservations.has(res.id)) return;
-                
+
                 const resDate = new Date(res.date);
                 let hour = parseInt(res.hour);
                 if (res.ampm.toUpperCase() === 'PM' && hour !== 12) hour += 12;
                 if (res.ampm.toUpperCase() === 'AM' && hour === 12) hour = 0;
-                
+
                 resDate.setHours(hour, parseInt(res.minute), 0, 0);
-                
+
                 const diffMs = resDate - now;
                 const diffMins = Math.floor(diffMs / 60000);
-                
+
                 if (diffMins <= 30 && diffMins >= 0) {
                     alertedReservations.add(res.id);
                     alertQueue.push(res);
                 }
             });
-            
+
             if (alertQueue.length > 0) {
                 showNextAnimatedAlert();
             }
         }
-        
+
         let mobileSelectMode = false;
         let longPressTimer = null;
 
@@ -2265,7 +2265,7 @@
             mobileSelectMode = !mobileSelectMode;
             const selectBtn = document.getElementById('mobileSelectBtn');
             const checkboxes = document.querySelectorAll('.m-checkbox');
-            
+
             if (mobileSelectMode) {
                 selectBtn.style.color = '#E0115F';
                 selectBtn.style.borderColor = 'rgba(224, 17, 95, 0.5)';
@@ -2292,7 +2292,7 @@
                         window.navigator.vibrate(50);
                     }
                 }
-            }, 600); // 600ms long press
+            }, 600);
         }
 
         function cancelLongPress() {
@@ -2303,10 +2303,10 @@
         }
 
         function handleCardClick(e, id) {
-            // No selection in main reservations
+
         }
 
-        // --- History Selection Logic ---
+
         function toggleAllHistory(source) {
             const checkboxes = document.querySelectorAll('.history-checkbox');
             checkboxes.forEach(cb => cb.checked = source.checked);
@@ -2322,7 +2322,7 @@
 
             countSpan.textContent = checkboxes.length;
             bulkBtn.style.display = checkboxes.length > 0 ? 'flex' : 'none';
-            
+
             if (selectAll) {
                 selectAll.checked = total > 0 && checkboxes.length === total;
             }
@@ -2331,14 +2331,14 @@
         async function deleteSelectedHistory() {
             const checkboxes = document.querySelectorAll('.history-checkbox:checked');
             const ids = Array.from(checkboxes).map(cb => parseInt(cb.dataset.id));
-            
+
             if (ids.length === 0) return;
             if (!confirm(`Are you sure you want to delete ${ids.length} selected history records?`)) return;
 
             try {
                 const response = await fetch('/api/admin/reservations/bulk-delete', {
                     method: 'POST',
-                    headers: { 
+                    headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
@@ -2434,7 +2434,7 @@
         }
 
         loadData();
-    </script>
+</script>
 </body>
 
 </html>
