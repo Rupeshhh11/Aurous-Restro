@@ -886,6 +886,27 @@
                 font-size: 1.5rem;
             }
         }
+        .menu-cat-btn {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .menu-cat-btn:hover {
+            background: rgba(224, 17, 95, 0.1);
+            color: var(--primary);
+            border-color: rgba(224, 17, 95, 0.3);
+        }
+        .menu-cat-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
 </style>
 </head>
 
@@ -912,6 +933,18 @@
             <i class="fas fa-star"></i>
             <span>Reviews</span>
         </a>
+        <a class="mobile-nav-item" onclick="showSection('live-orders')" id="m-nav-live-orders">
+            <i class="fas fa-bell"></i>
+            <span>Orders</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('tables')" id="m-nav-tables">
+            <i class="fas fa-utensils"></i>
+            <span>Tables</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('menu')" id="m-nav-menu">
+            <i class="fas fa-book-open"></i>
+            <span>Menu</span>
+        </a>
     </nav>
 
     <aside class="sidebar">
@@ -933,6 +966,24 @@
                 <a class="nav-link" onclick="showSection('reviews')">
                     <i class="fas fa-star"></i>
                     <span>Reviews</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('live-orders')">
+                    <i class="fas fa-bell"></i>
+                    <span>Live Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('tables')">
+                    <i class="fas fa-utensils"></i>
+                    <span>Table Management</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('menu')">
+                    <i class="fas fa-book-open"></i>
+                    <span>Menu Management</span>
                 </a>
             </li>
         </ul>
@@ -1041,10 +1092,13 @@
             <div class="filter-bar">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-right: auto; flex-wrap: wrap;">
                     <button id="tab-completed" class="filter-btn-apply" style="background: linear-gradient(135deg, #2ecc71, #27ae60);" onclick="switchHistoryTab('completed')">
-                        <i class="fas fa-check-circle"></i> Completed
+                        <i class="fas fa-check-circle"></i> Completed Res.
                     </button>
                     <button id="tab-cancelled" class="filter-btn-clear" onclick="switchHistoryTab('cancelled')">
-                        <i class="fas fa-times-circle"></i> Cancelled
+                        <i class="fas fa-times-circle"></i> Cancelled Res.
+                    </button>
+                    <button id="tab-orders" class="filter-btn-clear" onclick="switchHistoryTab('orders')">
+                        <i class="fas fa-receipt"></i> Completed Orders
                     </button>
                 </div>
 
@@ -1098,6 +1152,47 @@
             </div>
         </section>
 
+        <section id="live-ordersSection" class="content-section">
+            <div class="data-card" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">Live Kitchen Orders</h3>
+                <div style="display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;">
+                    <button onclick="fetchOrders()" style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-sync"></i> Refresh</button>
+                    <button onclick="openManualOrderModal()" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-plus"></i> Manual Order Entry</button>
+                </div>
+                <div id="liveOrdersContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                </div>
+            </div>
+        </section>
+
+        <section id="tablesSection" class="content-section">
+            <div class="data-card" style="padding: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">Table Management</h3>
+                <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem;">Activate tables. Optionally link to a today's reservation so guest info shows in orders.</p>
+                <div style="display:flex; gap:0.75rem; margin-bottom:1rem;">
+                    <button onclick="fetchTables()" style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-sync"></i> Refresh Tables</button>
+                </div>
+                <div id="tablesGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                </div>
+            </div>
+        </section>
+
+        <section id="menuSection" class="content-section">
+            <div class="data-card" style="padding: 1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                    <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">Menu Management</h3>
+                    <button onclick="openMenuItemModal()" style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i class="fas fa-plus"></i> Add Item</button>
+                </div>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;" id="menuCategoryFilter">
+                    <button class="menu-cat-btn active" onclick="filterMenuByCategory('all')">All</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Non-Veg')">Non-Veg</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Veg')">Veg</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Drinks')">Drinks</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Roti')">Roti</button>
+                </div>
+                <div id="menuGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem;"></div>
+            </div>
+        </section>
+
 
         <section id="reviewsSection" class="content-section">
             <div class="filter-bar">
@@ -1140,6 +1235,58 @@
             </div>
         </section>
     </main>
+
+    <!-- Menu Item Modal -->
+    <div id="menuItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; display:none; align-items:center; justify-content:center;">
+        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:500px; max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                <h3 style="color:white; font-size:1.3rem; font-weight:700;" id="menuModalTitle">Add Menu Item</h3>
+                <button onclick="closeMenuItemModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <input id="menuItemName" placeholder="Item Name" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <select id="menuItemCategory" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                    <option value="Veg">Veg</option>
+                    <option value="Non-Veg">Non-Veg</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Roti">Roti</option>
+                    <option value="Desserts">Desserts</option>
+                    <option value="Starters">Starters</option>
+                </select>
+                <input id="menuItemPrice" type="number" placeholder="Price (₹)" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box; resize:vertical;"></textarea>
+                <input id="menuItemImage" placeholder="Image URL (optional)" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-dim); cursor:pointer;">
+                    <input type="checkbox" id="menuItemVeg" checked style="width:16px; height:16px; accent-color:var(--primary);"> Vegetarian
+                </label>
+                <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-dim); cursor:pointer;">
+                    <input type="checkbox" id="menuItemAvailable" checked style="width:16px; height:16px; accent-color:var(--primary);"> Available
+                </label>
+                <button id="menuItemSaveBtn" onclick="saveMenuItem()" style="background:var(--primary); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:1rem;">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manual Order Modal -->
+    <div id="manualOrderModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; align-items:center; justify-content:center;">
+        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:520px; max-height:90vh; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Manual Order Entry</h3>
+                <button onclick="closeManualOrderModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <select id="moTableNumber" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                    <option value="">Select Active Table...</option>
+                </select>
+                <div id="moItemsList" style="display:flex; flex-direction:column; gap:0.6rem;"></div>
+                <button onclick="addManualOrderItem()" style="background:rgba(255,255,255,0.05); border:1px dashed var(--border); color:var(--text-dim); padding:0.6rem; border-radius:8px; cursor:pointer;"><i class="fas fa-plus"></i> Add Item</button>
+                <div style="border-top:1px solid var(--border); padding-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span id="moTotal" style="font-size:1.2rem; font-weight:700; color:white;">Total: ₹0</span>
+                    <button onclick="submitManualOrder()" style="background:var(--primary); color:white; border:none; padding:0.7rem 1.5rem; border-radius:10px; font-weight:700; cursor:pointer;">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <div id="wheelModalOverlay" class="wheel-modal-overlay">
@@ -1230,6 +1377,12 @@
                 avgRat.style.display = 'block';
             } else if (section === 'history') {
                 totRes.style.display = 'block';
+            } else if (section === 'menu') {
+                fetchMenuAdmin();
+            } else if (section === 'live-orders') {
+                fetchOrders();
+            } else if (section === 'tables') {
+                fetchTables();
             }
         }
 
@@ -1270,11 +1423,14 @@
                 updateStatsValues();
                 renderReservations(reservations);
 
-
                 switchHistoryTab('completed');
 
                 allReviewsData = reviews;
                 renderReviews(reviews);
+                
+                fetchTables();
+                fetchOrders();
+                fetchMenuAdmin();
 
             } catch (err) {
                 console.error('Error loading data:', err);
@@ -1672,11 +1828,16 @@
             currentHistoryTab = tab;
             document.getElementById('tab-completed').className = tab === 'completed' ? 'filter-btn-apply' : 'filter-btn-clear';
             document.getElementById('tab-completed').style.background = tab === 'completed' ? 'linear-gradient(135deg, #2ecc71, #27ae60)' : 'transparent';
-
             document.getElementById('tab-cancelled').className = tab === 'cancelled' ? 'filter-btn-apply' : 'filter-btn-clear';
             document.getElementById('tab-cancelled').style.background = tab === 'cancelled' ? 'linear-gradient(135deg, #e74c3c, #c0392b)' : 'transparent';
+            document.getElementById('tab-orders').className = tab === 'orders' ? 'filter-btn-apply' : 'filter-btn-clear';
+            document.getElementById('tab-orders').style.background = tab === 'orders' ? 'linear-gradient(135deg, #3498db, #2980b9)' : 'transparent';
 
-            applyHistoryFilters();
+            if (tab === 'orders') {
+                renderOrdersHistory(allOrdersData);
+            } else {
+                applyHistoryFilters();
+            }
         }
 
         function applyHistoryFilters() {
@@ -2428,12 +2589,339 @@
         setInterval(checkUpcomingReservations, 60000);
         setInterval(updateListTimers, 1000);
 
+        async function fetchTables() {
+            try {
+                const tables = await apiFetch('/api/admin/tables');
+                renderTables(tables);
+            } catch(e) { console.error(e); }
+        }
+
+        function renderTables(tables) {
+            const grid = document.getElementById('tablesGrid');
+            const todayStr = getLocalDateString(0);
+            const todayRes = allReservationsData.filter(r => r.date === todayStr && r.status !== 'cancelled' && r.status !== 'completed');
+            grid.innerHTML = tables.map(t => {
+                const activeClass = t.is_active ? 'border-color: rgba(46,204,113,0.5); box-shadow: 0 0 16px rgba(46,204,113,0.08);' : '';
+                const guestInfo = t.reservation ? `<div style="margin-bottom:0.8rem; font-size:0.78rem; color:#2ecc71; background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.2); border-radius:8px; padding:0.4rem 0.6rem; text-align:left;"><i class="fas fa-user"></i> ${t.reservation.name} &bull; ${t.reservation.guest_count} guests &bull; ${t.reservation.hour}:${t.reservation.minute} ${t.reservation.ampm}</div>` : '';
+                const resDdOptions = todayRes.map(r => `<option value="${r.id}" ${t.reservation_id === r.id ? 'selected' : ''}>${r.name} (${r.hour}:${r.minute} ${r.ampm})</option>`).join('');
+                return `
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem; ${activeClass}">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                        <h4 style="font-size: 1.2rem; font-weight: bold;">Table ${t.table_number}</h4>
+                        <span style="font-size:0.7rem; font-weight:700; text-transform:uppercase; padding:2px 8px; border-radius:20px; background:${t.is_active ? 'rgba(46,204,113,0.15)' : 'rgba(255,255,255,0.05)'}; color:${t.is_active ? '#2ecc71' : 'var(--text-dim)'}; border:1px solid ${t.is_active ? 'rgba(46,204,113,0.3)' : 'var(--border)'};"> ${t.is_active ? 'Active' : 'Inactive'}</span>
+                    </div>
+                    ${guestInfo}
+                    ${t.is_active ? `
+                        <div style="background: rgba(46,204,113,0.1); color: #2ecc71; border: 1px solid #2ecc71; padding: 0.5rem; border-radius: 8px; font-size: 1.5rem; font-weight: bold; letter-spacing: 0.2em; margin-bottom: 0.8rem; text-align:center;">${t.auth_code}</div>
+                        <select onchange="assignReservation(${t.id}, this.value)" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.7rem; color:white; width:100%; font-size:0.8rem; margin-bottom:0.6rem; box-sizing:border-box;">
+                            <option value="">No reservation linked</option>
+                            ${resDdOptions}
+                        </select>
+                        <button onclick="clearTable(${t.id})" style="background: rgba(231,76,60,0.1); color: #e74c3c; border: 1px solid #e74c3c; padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; width: 100%; transition: 0.3s;">Clear Table</button>
+                    ` : `
+                        <select style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.45rem 0.7rem; color:white; width:100%; font-size:0.8rem; margin-bottom:0.6rem; box-sizing:border-box;" id="resForTable_${t.id}">
+                            <option value="">Link reservation (optional)</option>
+                            ${resDdOptions}
+                        </select>
+                        <button onclick="generateCode(${t.id}, document.getElementById('resForTable_${t.id}').value)" style="background: var(--primary); color: white; border: none; padding: 0.4rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.8rem; width: 100%; transition: 0.3s;">Activate &amp; Get Code</button>
+                    `}
+                </div>`;
+            }).join('');
+        }
+
+        async function generateCode(id, reservationId = '') {
+            const url = `/api/admin/tables/${id}/generate-code` + (reservationId ? `?reservation_id=${reservationId}` : '');
+            await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetchTables();
+        }
+
+        async function assignReservation(tableId, reservationId) {
+            const url = `/api/admin/tables/${tableId}/generate-code` + (reservationId ? `?reservation_id=${reservationId}` : '');
+            await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetchTables();
+            showToast('Reservation linked to table!');
+        }
+
+        async function clearTable(id) {
+            await fetch(`/api/admin/tables/${id}/clear`, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            fetchTables();
+        }
+
+        async function fetchOrders() {
+            try {
+                const orders = await apiFetch('/api/admin/orders');
+                allOrdersData = orders;
+                renderOrders(orders);
+            } catch(e) { console.error(e); }
+        }
+
+        function renderOrders(orders) {
+            const container = document.getElementById('liveOrdersContainer');
+            const liveOrders = orders.filter(o => o.status !== 'completed');
+            if (liveOrders.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-dim);">No live orders at the moment. Completed orders appear in History → Completed Orders.</p>';
+                return;
+            }
+            container.innerHTML = liveOrders.map(o => {
+                const guestName = o.reservation ? `<span style="color:#2ecc71; font-size:0.78rem;"><i class="fas fa-user"></i> ${o.reservation.name}</span>` : '';
+                const borderColor = o.status === 'pending' ? 'var(--primary)' : (o.status === 'preparing' ? '#f39c12' : 'var(--border)');
+                const glowColor = o.status === 'pending' ? 'rgba(224,17,95,0.12)' : (o.status === 'preparing' ? 'rgba(243,156,18,0.08)' : 'none');
+                const statusColors = { pending: '#E0115F', preparing: '#f39c12', served: '#3498db' };
+                return `
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid ${borderColor}; border-radius: 14px; padding: 1.5rem; box-shadow: 0 0 18px ${glowColor};">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
+                        <div>
+                            <h4 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 0.2rem;">Table ${o.table_number} ${guestName}</h4>
+                            <p style="font-size: 0.78rem; color: var(--text-dim);">Order #${o.id} &bull; ${new Date(o.created_at).toLocaleString()}</p>
+                        </div>
+                        <span style="display: inline-flex; align-items:center; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(${o.status==='pending'?'224,17,95':o.status==='preparing'?'243,156,18':'52,152,219'}, 0.18); color: ${statusColors[o.status] || 'white'}; border:1px solid ${borderColor};">${o.status}</span>
+                    </div>
+                    <ul style="list-style: none; margin-bottom: 1rem;">
+                        ${o.items.map(i => `<li style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;"><span>${i.quantity}x ${i.item_name}</span><span style="color:var(--primary);">₹${i.price_per_item * i.quantity}</span></li>`).join('')}
+                    </ul>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; flex-wrap:wrap; gap:0.5rem;">
+                        <span style="font-size: 1.2rem; font-weight: bold;">Total: ₹${o.total_amount}</span>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            ${o.status === 'pending' ? `<button onclick="updateOrderStatus(${o.id}, 'preparing')" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-fire"></i> Start Prep</button>` : ''}
+                            ${o.status === 'preparing' ? `<button onclick="updateOrderStatus(${o.id}, 'served')" style="background: #f39c12; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-concierge-bell"></i> Mark Served</button>` : ''}
+                            ${o.status === 'served' ? `<button onclick="updateOrderStatus(${o.id}, 'completed')" style="background: #2ecc71; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-check"></i> Complete (Paid)</button>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function updateOrderStatus(id, status) {
+            await fetch(`/api/admin/orders/${id}/status?status=${status}`, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
+            fetchOrders();
+            if (status === 'completed') showToast('Order completed & moved to History!');
+        }
+
+        // ── MENU MANAGEMENT ──────────────────────────────────────────────
+        let allMenuData = [];
+        let allOrdersData = [];
+        let editingMenuItemId = null;
+        let currentMenuCategory = 'all';
+
+        async function fetchMenuAdmin() {
+            try {
+                const items = await apiFetch('/api/admin/menu');
+                allMenuData = items;
+                renderMenuGrid(items);
+            } catch(e) { console.error(e); }
+        }
+
+        function filterMenuByCategory(cat) {
+            currentMenuCategory = cat;
+            document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'All' : cat)));
+            renderMenuGrid(allMenuData);
+        }
+
+        function renderMenuGrid(items) {
+            const filtered = currentMenuCategory === 'all' ? items : items.filter(i => i.category === currentMenuCategory);
+            const grid = document.getElementById('menuGrid');
+            if (!filtered.length) { grid.innerHTML = '<p style="color:var(--text-dim);">No items found.</p>'; return; }
+            grid.innerHTML = filtered.map(item => `
+                <div style="background:rgba(255,255,255,0.03); border:1px solid ${item.is_available ? 'var(--border)' : 'rgba(231,76,60,0.3)'}; border-radius:14px; overflow:hidden; transition:0.3s; position:relative;">
+                    ${!item.is_available ? '<div style="position:absolute;top:8px;right:8px;background:rgba(231,76,60,0.9);color:white;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;">Unavailable</div>' : ''}
+                    ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%;height:140px;object-fit:cover;">` : '<div style="width:100%;height:100px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;"><i class="fas fa-utensils" style="font-size:2rem;color:var(--text-dim);"></i></div>'}
+                    <div style="padding:1rem;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.3rem;">
+                            <span style="font-weight:700;color:white;font-size:1rem;">${item.name}</span>
+                            <span style="color:var(--primary);font-weight:700;">₹${item.price}</span>
+                        </div>
+                        <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;flex-wrap:wrap;">
+                            <span style="font-size:0.65rem;padding:2px 8px;border-radius:20px;background:${item.is_veg ? 'rgba(46,204,113,0.12)' : 'rgba(231,76,60,0.12)'};color:${item.is_veg ? '#2ecc71' : '#e74c3c'};border:1px solid ${item.is_veg ? 'rgba(46,204,113,0.3)' : 'rgba(231,76,60,0.3)'};">${item.is_veg ? '🟢 Veg' : '🔴 Non-Veg'}</span>
+                            <span style="font-size:0.65rem;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.05);color:var(--text-dim);">${item.category}</span>
+                        </div>
+                        ${item.description ? `<p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.7rem;line-height:1.4;">${item.description}</p>` : ''}
+                        <div style="display:flex;gap:0.5rem;">
+                            <button onclick="openMenuItemModal(${item.id})" style="flex:1;background:rgba(255,255,255,0.05);color:white;border:1px solid var(--border);padding:0.4rem;border-radius:8px;cursor:pointer;font-size:0.8rem;"><i class="fas fa-edit"></i> Edit</button>
+                            <button onclick="toggleMenuAvailability(${item.id}, ${item.is_available})" style="flex:1;background:${item.is_available ? 'rgba(231,76,60,0.1)' : 'rgba(46,204,113,0.1)'};color:${item.is_available ? '#e74c3c' : '#2ecc71'};border:1px solid ${item.is_available ? 'rgba(231,76,60,0.3)' : 'rgba(46,204,113,0.3)'};padding:0.4rem;border-radius:8px;cursor:pointer;font-size:0.8rem;">${item.is_available ? 'Disable' : 'Enable'}</button>
+                            <button onclick="deleteMenuItem(${item.id})" style="background:rgba(231,76,60,0.08);color:#e74c3c;border:1px solid rgba(231,76,60,0.2);width:34px;border-radius:8px;cursor:pointer;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openMenuItemModal(itemId = null) {
+            editingMenuItemId = itemId;
+            const modal = document.getElementById('menuItemModal');
+            document.getElementById('menuModalTitle').textContent = itemId ? 'Edit Menu Item' : 'Add Menu Item';
+            if (itemId) {
+                const item = allMenuData.find(i => i.id === itemId);
+                if (item) {
+                    document.getElementById('menuItemName').value = item.name;
+                    document.getElementById('menuItemCategory').value = item.category;
+                    document.getElementById('menuItemPrice').value = item.price;
+                    document.getElementById('menuItemDesc').value = item.description || '';
+                    document.getElementById('menuItemImage').value = item.image_url || '';
+                    document.getElementById('menuItemVeg').checked = item.is_veg;
+                    document.getElementById('menuItemAvailable').checked = item.is_available;
+                }
+            } else {
+                document.getElementById('menuItemName').value = '';
+                document.getElementById('menuItemCategory').value = 'Veg';
+                document.getElementById('menuItemPrice').value = '';
+                document.getElementById('menuItemDesc').value = '';
+                document.getElementById('menuItemImage').value = '';
+                document.getElementById('menuItemVeg').checked = true;
+                document.getElementById('menuItemAvailable').checked = true;
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeMenuItemModal() {
+            document.getElementById('menuItemModal').style.display = 'none';
+            editingMenuItemId = null;
+        }
+
+        async function saveMenuItem() {
+            const payload = {
+                name: document.getElementById('menuItemName').value.trim(),
+                category: document.getElementById('menuItemCategory').value,
+                price: parseInt(document.getElementById('menuItemPrice').value),
+                description: document.getElementById('menuItemDesc').value.trim() || null,
+                image_url: document.getElementById('menuItemImage').value.trim() || null,
+                is_veg: document.getElementById('menuItemVeg').checked,
+                is_available: document.getElementById('menuItemAvailable').checked
+            };
+            if (!payload.name || !payload.price) { showToast('Name and price are required'); return; }
+            const url = editingMenuItemId ? `/api/admin/menu/${editingMenuItemId}` : '/api/admin/menu';
+            const method = editingMenuItemId ? 'PUT' : 'POST';
+            const result = await apiFetch(url, method, payload);
+            if (result && result.id) {
+                showToast(editingMenuItemId ? 'Item updated!' : 'Item added!');
+                closeMenuItemModal();
+                fetchMenuAdmin();
+            }
+        }
+
+        async function toggleMenuAvailability(itemId, currentStatus) {
+            await apiFetch(`/api/admin/menu/${itemId}`, 'PUT', { is_available: !currentStatus });
+            fetchMenuAdmin();
+            showToast(currentStatus ? 'Item disabled' : 'Item enabled');
+        }
+
+        async function deleteMenuItem(itemId) {
+            if (!confirm('Delete this menu item?')) return;
+            const result = await fetch(`/api/admin/menu/${itemId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+            if (result.ok) { fetchMenuAdmin(); showToast('Item deleted'); }
+        }
+
+        // ── MANUAL ORDER ENTRY ────────────────────────────────────────────
+        let manualOrderItems = [];
+
+        async function openManualOrderModal() {
+            manualOrderItems = [{ name: '', qty: 1, price: 0 }];
+            const modal = document.getElementById('manualOrderModal');
+            // populate active tables
+            const tables = await apiFetch('/api/admin/tables');
+            const sel = document.getElementById('moTableNumber');
+            sel.innerHTML = '<option value="">Select Active Table...</option>' +
+                tables.filter(t => t.is_active).map(t => `<option value="${t.table_number}">Table ${t.table_number}${t.reservation ? ' — ' + t.reservation.name : ''}</option>`).join('');
+            renderManualOrderItems();
+            modal.style.display = 'flex';
+        }
+
+        function closeManualOrderModal() {
+            document.getElementById('manualOrderModal').style.display = 'none';
+        }
+
+        function renderManualOrderItems() {
+            const list = document.getElementById('moItemsList');
+            list.innerHTML = manualOrderItems.map((item, idx) => `
+                <div style="display:grid;grid-template-columns:1fr 60px 80px 30px;gap:0.4rem;align-items:center;">
+                    <input placeholder="Item name" value="${item.name}" oninput="manualOrderItems[${idx}].name=this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
+                    <input type="number" placeholder="Qty" value="${item.qty}" min="1" oninput="manualOrderItems[${idx}].qty=+this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
+                    <input type="number" placeholder="₹ Price" value="${item.price || ''}" min="0" oninput="manualOrderItems[${idx}].price=+this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
+                    <button onclick="removeManualItem(${idx})" style="background:rgba(231,76,60,0.1);color:#e74c3c;border:none;border-radius:8px;padding:0.4rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+            `).join('');
+            calcManualTotal();
+        }
+
+        function addManualOrderItem() {
+            manualOrderItems.push({ name: '', qty: 1, price: 0 });
+            renderManualOrderItems();
+        }
+
+        function removeManualItem(idx) {
+            manualOrderItems.splice(idx, 1);
+            renderManualOrderItems();
+        }
+
+        function calcManualTotal() {
+            const total = manualOrderItems.reduce((s, i) => s + (i.qty * i.price), 0);
+            document.getElementById('moTotal').textContent = `Total: ₹${total}`;
+        }
+
+        async function submitManualOrder() {
+            const tableNum = parseInt(document.getElementById('moTableNumber').value);
+            if (!tableNum) { showToast('Please select a table'); return; }
+            const items = manualOrderItems.filter(i => i.name.trim() && i.price > 0).map(i => ({ item_name: i.name.trim(), quantity: i.qty, price_per_item: i.price }));
+            if (!items.length) { showToast('Add at least one item with name and price'); return; }
+            const result = await apiFetch('/api/orders', 'POST', { table_number: tableNum, items });
+            if (result && result.id) {
+                showToast('Manual order placed successfully!');
+                closeManualOrderModal();
+                fetchOrders();
+            } else {
+                showToast('Failed to place order. Is the table active?');
+            }
+        }
+
+        // ── HISTORY ORDERS TAB ────────────────────────────────────────────
+        function renderOrdersHistory(orders) {
+            const completedOrders = orders.filter(o => o.status === 'completed');
+            const histBody = document.getElementById('historyBody');
+            const histCards = document.getElementById('historyCards');
+            if (completedOrders.length === 0) {
+                histBody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:3rem;">No completed orders yet.</td></tr>';
+                histCards.innerHTML = '<p style="color:var(--text-dim);padding:2rem;text-align:center;">No completed orders yet.</p>';
+                return;
+            }
+            histBody.innerHTML = completedOrders.map(o => {
+                const guest = o.reservation ? o.reservation.name : '—';
+                return `<tr style="background:rgba(46,204,113,0.04);border-left:3px solid #2ecc71;">
+                    <td></td>
+                    <td style="font-weight:500;">Table ${o.table_number}</td>
+                    <td>${new Date(o.created_at).toLocaleDateString()} ${new Date(o.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+                    <td style="color:var(--text-dim);font-size:0.85rem;">${o.items.map(i=>i.quantity+'x '+i.item_name).join(', ')}</td>
+                    <td style="color:#2ecc71;font-weight:600;text-transform:uppercase;font-size:0.8rem;">Completed</td>
+                    <td>${guest}</td>
+                    <td style="color:var(--primary);font-weight:700;">₹${o.total_amount}</td>
+                    <td></td>
+                </tr>`;
+            }).join('');
+            histCards.innerHTML = completedOrders.map(o => {
+                const guest = o.reservation ? o.reservation.name : 'Walk-in';
+                return `<div class="res-card" style="background:rgba(46,204,113,0.04);border-color:rgba(46,204,113,0.3);">
+                    <div class="res-card-header">
+                        <span style="font-weight:700;color:white;">Table ${o.table_number} — ${guest}</span>
+                        <span style="color:#2ecc71;font-weight:700;">₹${o.total_amount}</span>
+                    </div>
+                    <div class="res-card-body" style="grid-template-columns:1fr;">
+                        <div><div class="res-card-label">Items</div><div style="font-size:0.82rem;color:var(--text-dim);">${o.items.map(i=>i.quantity+'x '+i.item_name).join(', ')}</div></div>
+                        <div><div class="res-card-label">Time</div><div>${new Date(o.created_at).toLocaleString()}</div></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         function logout() {
             localStorage.removeItem('aurous_token');
             window.location.href = '/';
         }
 
         loadData();
+        // Optional auto-refresh for live orders every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('live-ordersSection').classList.contains('active')) {
+                fetchOrders();
+            }
+        }, 30000);
 </script>
 </body>
 
