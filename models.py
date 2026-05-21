@@ -1,45 +1,94 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Float, Text
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import List
 from database import Base
 import datetime
 
 class Member(Base):
     __tablename__ = "members"
 
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    full_name = Column(String)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    username: Mapped[str] = mapped_column(String, unique=True, index=True)
+    hashed_password: Mapped[str] = mapped_column(String)
+    full_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
 
 class Reservation(Base):
     __tablename__ = "reservations"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    phone = Column(String)
-    occasion = Column(String)
-    date = Column(String)
-    hour = Column(String)
-    minute = Column(String)
-    ampm = Column(String)
-    guest_count = Column(Integer)
-    status = Column(String, default="pending")
-    deleted_by_admin = Column(Integer, default=0)
-    deleted_by_user = Column(Integer, default=0)
-    cancelled_at = Column(String, nullable=True)
-    arriving_confirmed = Column(Integer, default=0)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    phone: Mapped[str] = mapped_column(String)
+    occasion: Mapped[str] = mapped_column(String)
+    date: Mapped[str] = mapped_column(String)
+    hour: Mapped[str] = mapped_column(String)
+    minute: Mapped[str] = mapped_column(String)
+    ampm: Mapped[str] = mapped_column(String)
+    guest_count: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String, default="pending")
+    deleted_by_admin: Mapped[int] = mapped_column(Integer, default=0)
+    deleted_by_user: Mapped[int] = mapped_column(Integer, default=0)
+    cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    arriving_confirmed: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
 
 class Review(Base):
     __tablename__ = "reviews"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    location = Column(String)
-    rating = Column(Integer)
-    review_text = Column(String)
-    image_url = Column(String, nullable=True)
-    reply_text = Column(String, nullable=True)
-    replied_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    location: Mapped[str] = mapped_column(String)
+    rating: Mapped[int] = mapped_column(Integer)
+    review_text: Mapped[str] = mapped_column(String)
+    image_url: Mapped[str | None] = mapped_column(String, nullable=True)
+    reply_text: Mapped[str | None] = mapped_column(String, nullable=True)
+    replied_at: Mapped[datetime.datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
+
+class ActiveTable(Base):
+    __tablename__ = "active_tables"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    table_number: Mapped[int] = mapped_column(Integer, unique=True, index=True)
+    auth_code: Mapped[str | None] = mapped_column(String, nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    reservation_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("reservations.id"), nullable=True)
+    updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
+    reservation: Mapped["Reservation"] = relationship("Reservation")
+
+class MenuItem(Base):
+    __tablename__ = "menu_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    name: Mapped[str] = mapped_column(String, index=True)
+    category: Mapped[str] = mapped_column(String, index=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    price: Mapped[int] = mapped_column(Integer)
+    image_url: Mapped[str | None] = mapped_column(String, nullable=True)
+    is_veg: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_available: Mapped[bool] = mapped_column(Boolean, default=True)
+
+class Order(Base):
+    __tablename__ = "orders"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    table_number: Mapped[int] = mapped_column(Integer, index=True)
+    status: Mapped[str] = mapped_column(String, default="pending")
+    total_amount: Mapped[int] = mapped_column(Integer, default=0)
+    reservation_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("reservations.id"), nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
+    
+    reservation: Mapped["Reservation"] = relationship("Reservation")
+    items: Mapped[List["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+
+class OrderItem(Base):
+    __tablename__ = "order_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    order_id: Mapped[int] = mapped_column(Integer, ForeignKey("orders.id"))
+    item_name: Mapped[str] = mapped_column(String)
+    quantity: Mapped[int] = mapped_column(Integer, default=1)
+    price_per_item: Mapped[int] = mapped_column(Integer)
+
+    order: Mapped["Order"] = relationship("Order", back_populates="items")
