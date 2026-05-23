@@ -342,6 +342,24 @@ input:-webkit-autofill:active {
     color: #706666;
 }
 
+    .category-chip {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.1rem 0.4rem;
+        border-radius: 999px;
+        font-size: 0.45rem;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap;
+    }
+
+    .category-chip.active {
+        background: rgba(224, 17, 95, 0.2);
+        border-color: #E0115F;
+        color: white;
+    }
+
 .tooltip {
     position: absolute;
     left: 60px;
