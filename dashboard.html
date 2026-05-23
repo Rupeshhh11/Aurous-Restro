@@ -230,7 +230,7 @@
         .main-content {
             margin-left: 280px;
             flex-grow: 1;
-            padding: 3rem;
+            padding: 1.5rem 3rem 3rem 3rem;
             max-width: 1200px;
         }
 
@@ -238,7 +238,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3rem;
+            margin-bottom: 1.5rem;
         }
 
         .header h2 {
@@ -1036,6 +1036,10 @@
 
 
         <section id="reservationsSection" class="content-section active">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <h3 style="color:#E0115F; font-size:1.4rem; font-weight:700;">Reservations</h3>
+                <button onclick="openWalkinModal()" style="background:var(--primary); color:white; border:none; padding:0.6rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-plus"></i> Add Walk-in</button>
+            </div>
             <div class="filter-bar">
                 <div class="filter-group">
                     <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
@@ -1097,11 +1101,9 @@
                     <button id="tab-cancelled" class="filter-btn-clear" onclick="switchHistoryTab('cancelled')">
                         <i class="fas fa-times-circle"></i> Cancelled Res.
                     </button>
-                    <button id="tab-orders" class="filter-btn-clear" onclick="switchHistoryTab('orders')">
-                        <i class="fas fa-receipt"></i> Completed Orders
-                    </button>
                 </div>
-
+            </div>
+            <div class="filter-bar" style="margin-bottom: 1rem;">
                 <div class="filter-group">
                     <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
                     <label>From</label>
@@ -1184,12 +1186,13 @@
                 </div>
                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;" id="menuCategoryFilter">
                     <button class="menu-cat-btn active" onclick="filterMenuByCategory('all')">All</button>
-                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Non-Veg')">Non-Veg</button>
-                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Veg')">Veg</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Starters')">Starters</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Main Course')">Main Course</button>
                     <button class="menu-cat-btn" onclick="filterMenuByCategory('Drinks')">Drinks</button>
                     <button class="menu-cat-btn" onclick="filterMenuByCategory('Roti')">Roti</button>
+                    <button class="menu-cat-btn" onclick="filterMenuByCategory('Desserts')">Desserts</button>
                 </div>
-                <div id="menuGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.2rem;"></div>
+                <div id="menuGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;"></div>
             </div>
         </section>
 
@@ -1246,16 +1249,19 @@
             <div style="display:flex; flex-direction:column; gap:1rem;">
                 <input id="menuItemName" placeholder="Item Name" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
                 <select id="menuItemCategory" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                    <option value="Veg">Veg</option>
-                    <option value="Non-Veg">Non-Veg</option>
+                    <option value="Starters">Starters</option>
+                    <option value="Main Course">Main Course</option>
                     <option value="Drinks">Drinks</option>
                     <option value="Roti">Roti</option>
                     <option value="Desserts">Desserts</option>
-                    <option value="Starters">Starters</option>
                 </select>
                 <input id="menuItemPrice" type="number" placeholder="Price (₹)" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
                 <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box; resize:vertical;"></textarea>
-                <input id="menuItemImage" placeholder="Image URL (optional)" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem;">
+                    <input type="file" id="menuItemImageFile" accept="image/*" style="display:none;" onchange="handleMenuImageUpload(event)">
+                    <button type="button" onclick="document.getElementById('menuItemImageFile').click()" style="background:rgba(255,255,255,0.1); border:none; padding:0.4rem 0.8rem; border-radius:6px; color:white; cursor:pointer;"><i class="fas fa-upload"></i> Upload Photo</button>
+                    <input id="menuItemImage" placeholder="Or enter Image URL" style="background:transparent; border:none; color:white; width:100%; box-sizing:border-box; outline:none; margin-left:0.5rem;">
+                </div>
                 <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-dim); cursor:pointer;">
                     <input type="checkbox" id="menuItemVeg" checked style="width:16px; height:16px; accent-color:var(--primary);"> Vegetarian
                 </label>
@@ -1287,8 +1293,42 @@
             </div>
         </div>
     </div>
+    <!-- Walk-in Modal -->
+    <div id="walkinModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; align-items:center; justify-content:center;">
+        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:400px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Add Walk-in</h3>
+                <button onclick="closeWalkinModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:1rem;">
+                <input id="wiName" placeholder="Guest Name" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <input id="wiPhone" placeholder="Phone Number" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                <div style="display:flex; gap:1rem;">
+                    <input id="wiGuests" type="number" placeholder="Guests" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                    <select id="wiOccasion" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
+                        <option value="walk_in">Walk-in</option>
+                        <option value="birthday">Birthday</option>
+                        <option value="anniversary">Anniversary</option>
+                        <option value="date_night">Date Night</option>
+                    </select>
+                </div>
+                <button onclick="submitWalkin()" style="background:var(--primary); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:1rem; margin-top:0.5rem;">Create Reservation</button>
+            </div>
+        </div>
+    </div>
 
-
+    <!-- Order View Modal (History) -->
+    <div id="orderViewModal" style="display:none; position:fixed; inset:0; z-index:4000; align-items:center; justify-content:center;">
+        <div id="orderViewModalBackdrop" onclick="closeOrderViewModal()" style="position:absolute; inset:0; background:rgba(0,0,0,0.75); cursor:pointer;" aria-hidden="true"></div>
+        <div role="dialog" aria-modal="true" onclick="event.stopPropagation()" style="position:relative; z-index:1; background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:450px; max-height:85vh; overflow-y:auto; margin:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Order Details</h3>
+                <button type="button" onclick="closeOrderViewModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="orderViewContent" style="display:flex; flex-direction:column; gap:0.8rem; color:white;">
+            </div>
+        </div>
+    </div>
     <div id="wheelModalOverlay" class="wheel-modal-overlay">
         <div class="wheel-modal-box">
             <h4>Select Date</h4>
@@ -1830,8 +1870,11 @@
             document.getElementById('tab-completed').style.background = tab === 'completed' ? 'linear-gradient(135deg, #2ecc71, #27ae60)' : 'transparent';
             document.getElementById('tab-cancelled').className = tab === 'cancelled' ? 'filter-btn-apply' : 'filter-btn-clear';
             document.getElementById('tab-cancelled').style.background = tab === 'cancelled' ? 'linear-gradient(135deg, #e74c3c, #c0392b)' : 'transparent';
-            document.getElementById('tab-orders').className = tab === 'orders' ? 'filter-btn-apply' : 'filter-btn-clear';
-            document.getElementById('tab-orders').style.background = tab === 'orders' ? 'linear-gradient(135deg, #3498db, #2980b9)' : 'transparent';
+            const tabOrders = document.getElementById('tab-orders');
+            if (tabOrders) {
+                tabOrders.className = tab === 'orders' ? 'filter-btn-apply' : 'filter-btn-clear';
+                tabOrders.style.background = tab === 'orders' ? 'linear-gradient(135deg, #3498db, #2980b9)' : 'transparent';
+            }
 
             if (tab === 'orders') {
                 renderOrdersHistory(allOrdersData);
@@ -1898,6 +1941,9 @@
                     <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                     <td>${res.phone}</td>
                     <td style="text-align: center; white-space: nowrap;">
+                        <button onclick="openReservationOrdersView(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s; margin-right: 6px;" onmouseover="this.style.color='#3498db'" onmouseout="this.style.color='var(--text-dim)'" title="View orders">
+                            <i class="fas fa-eye" style="font-size: 1.15rem;"></i>
+                        </button>
                         <button onclick="adminDeleteReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#ff4444'" onmouseout="this.style.color='var(--text-dim)'" title="Delete">
                             <i class="fas fa-trash-alt" style="font-size: 1.2rem;"></i>
                         </button>
@@ -1923,6 +1969,9 @@
                             <span style="color: ${statusColor}; font-weight: bold; font-size: 0.8rem; text-transform: uppercase;">
                                 <i class="fas ${icon}"></i> ${res.status}
                             </span>
+                            <button onclick="openReservationOrdersView(${res.id})" style="background: rgba(52,152,219,0.1); color: #3498db; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; margin-right: 4px;" title="View orders">
+                                <i class="fas fa-eye" style="font-size: 1rem;"></i>
+                            </button>
                             <button onclick="adminDeleteReservation(${res.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" title="Delete">
                                 <i class="fas fa-trash-alt" style="font-size: 1rem;"></i>
                             </button>
@@ -2599,7 +2648,11 @@
         function renderTables(tables) {
             const grid = document.getElementById('tablesGrid');
             const todayStr = getLocalDateString(0);
-            const todayRes = allReservationsData.filter(r => r.date === todayStr && r.status !== 'cancelled' && r.status !== 'completed');
+            const todayRes = allReservationsData.filter(r =>
+                r.date === todayStr &&
+                r.status !== 'cancelled' &&
+                r.status !== 'completed'
+            );
             grid.innerHTML = tables.map(t => {
                 const activeClass = t.is_active ? 'border-color: rgba(46,204,113,0.5); box-shadow: 0 0 16px rgba(46,204,113,0.08);' : '';
                 const guestInfo = t.reservation ? `<div style="margin-bottom:0.8rem; font-size:0.78rem; color:#2ecc71; background:rgba(46,204,113,0.08); border:1px solid rgba(46,204,113,0.2); border-radius:8px; padding:0.4rem 0.6rem; text-align:left;"><i class="fas fa-user"></i> ${t.reservation.name} &bull; ${t.reservation.guest_count} guests &bull; ${t.reservation.hour}:${t.reservation.minute} ${t.reservation.ampm}</div>` : '';
@@ -2636,10 +2689,10 @@
         }
 
         async function assignReservation(tableId, reservationId) {
-            const url = `/api/admin/tables/${tableId}/generate-code` + (reservationId ? `?reservation_id=${reservationId}` : '');
-            await fetch(url, { method: 'POST', headers: { 'Authorization': `Bearer ${token}` } });
+            const url = `/api/admin/tables/${tableId}/link-reservation` + (reservationId ? `?reservation_id=${reservationId}` : '');
+            await fetch(url, { method: 'PATCH', headers: { 'Authorization': `Bearer ${token}` } });
             fetchTables();
-            showToast('Reservation linked to table!');
+            showToast(reservationId ? 'Guest linked to table!' : 'Guest unlinked from table');
         }
 
         async function clearTable(id) {
@@ -2722,20 +2775,20 @@
             const grid = document.getElementById('menuGrid');
             if (!filtered.length) { grid.innerHTML = '<p style="color:var(--text-dim);">No items found.</p>'; return; }
             grid.innerHTML = filtered.map(item => `
-                <div style="background:rgba(255,255,255,0.03); border:1px solid ${item.is_available ? 'var(--border)' : 'rgba(231,76,60,0.3)'}; border-radius:14px; overflow:hidden; transition:0.3s; position:relative;">
-                    ${!item.is_available ? '<div style="position:absolute;top:8px;right:8px;background:rgba(231,76,60,0.9);color:white;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;">Unavailable</div>' : ''}
-                    ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%;height:140px;object-fit:cover;">` : '<div style="width:100%;height:100px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;"><i class="fas fa-utensils" style="font-size:2rem;color:var(--text-dim);"></i></div>'}
-                    <div style="padding:1rem;">
+                <div style="background:rgba(255,255,255,0.03); border:1px solid ${item.is_available ? 'var(--border)' : 'rgba(231,76,60,0.3)'}; border-radius:12px; overflow:hidden; transition:0.3s; position:relative;">
+                    ${!item.is_available ? '<div style="position:absolute;top:6px;right:6px;background:rgba(231,76,60,0.9);color:white;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:12px;text-transform:uppercase;">Unavailable</div>' : ''}
+                    ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%;height:100px;object-fit:cover;">` : '<div style="width:100%;height:80px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;"><i class="fas fa-utensils" style="font-size:1.5rem;color:var(--text-dim);"></i></div>'}
+                    <div style="padding:0.75rem;">
                         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.3rem;">
-                            <span style="font-weight:700;color:white;font-size:1rem;">${item.name}</span>
-                            <span style="color:var(--primary);font-weight:700;">₹${item.price}</span>
+                            <span style="font-weight:700;color:white;font-size:0.9rem;">${item.name}</span>
+                            <span style="color:var(--primary);font-weight:700;font-size:0.9rem;">₹${item.price}</span>
                         </div>
-                        <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;flex-wrap:wrap;">
-                            <span style="font-size:0.65rem;padding:2px 8px;border-radius:20px;background:${item.is_veg ? 'rgba(46,204,113,0.12)' : 'rgba(231,76,60,0.12)'};color:${item.is_veg ? '#2ecc71' : '#e74c3c'};border:1px solid ${item.is_veg ? 'rgba(46,204,113,0.3)' : 'rgba(231,76,60,0.3)'};">${item.is_veg ? '🟢 Veg' : '🔴 Non-Veg'}</span>
-                            <span style="font-size:0.65rem;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.05);color:var(--text-dim);">${item.category}</span>
+                        <div style="display:flex;gap:0.3rem;margin-bottom:0.4rem;flex-wrap:wrap;">
+                            <span style="font-size:0.6rem;padding:2px 6px;border-radius:12px;background:${item.is_veg ? 'rgba(46,204,113,0.12)' : 'rgba(231,76,60,0.12)'};color:${item.is_veg ? '#2ecc71' : '#e74c3c'};border:1px solid ${item.is_veg ? 'rgba(46,204,113,0.3)' : 'rgba(231,76,60,0.3)'};">${item.is_veg ? '🟢 Veg' : '🔴 Non'}</span>
+                            <span style="font-size:0.6rem;padding:2px 6px;border-radius:12px;background:rgba(255,255,255,0.05);color:var(--text-dim);">${item.category}</span>
                         </div>
-                        ${item.description ? `<p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.7rem;line-height:1.4;">${item.description}</p>` : ''}
-                        <div style="display:flex;gap:0.5rem;">
+                        ${item.description ? `<p style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.6rem;line-height:1.3;">${item.description}</p>` : ''}
+                        <div style="display:flex;gap:0.4rem;">
                             <button onclick="openMenuItemModal(${item.id})" style="flex:1;background:rgba(255,255,255,0.05);color:white;border:1px solid var(--border);padding:0.4rem;border-radius:8px;cursor:pointer;font-size:0.8rem;"><i class="fas fa-edit"></i> Edit</button>
                             <button onclick="toggleMenuAvailability(${item.id}, ${item.is_available})" style="flex:1;background:${item.is_available ? 'rgba(231,76,60,0.1)' : 'rgba(46,204,113,0.1)'};color:${item.is_available ? '#e74c3c' : '#2ecc71'};border:1px solid ${item.is_available ? 'rgba(231,76,60,0.3)' : 'rgba(46,204,113,0.3)'};padding:0.4rem;border-radius:8px;cursor:pointer;font-size:0.8rem;">${item.is_available ? 'Disable' : 'Enable'}</button>
                             <button onclick="deleteMenuItem(${item.id})" style="background:rgba(231,76,60,0.08);color:#e74c3c;border:1px solid rgba(231,76,60,0.2);width:34px;border-radius:8px;cursor:pointer;"><i class="fas fa-trash"></i></button>
@@ -2762,7 +2815,7 @@
                 }
             } else {
                 document.getElementById('menuItemName').value = '';
-                document.getElementById('menuItemCategory').value = 'Veg';
+                document.getElementById('menuItemCategory').value = 'Starters';
                 document.getElementById('menuItemPrice').value = '';
                 document.getElementById('menuItemDesc').value = '';
                 document.getElementById('menuItemImage').value = '';
@@ -2770,6 +2823,30 @@
                 document.getElementById('menuItemAvailable').checked = true;
             }
             modal.style.display = 'flex';
+        }
+
+        async function handleMenuImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                const response = await fetch('/api/admin/menu/upload-image', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('menuItemImage').value = data.image_url;
+                    showToast('Image uploaded successfully');
+                } else {
+                    showToast('Failed to upload image');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Upload error');
+            }
         }
 
         function closeMenuItemModal() {
@@ -2888,11 +2965,11 @@
                     <td></td>
                     <td style="font-weight:500;">Table ${o.table_number}</td>
                     <td>${new Date(o.created_at).toLocaleDateString()} ${new Date(o.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
-                    <td style="color:var(--text-dim);font-size:0.85rem;">${o.items.map(i=>i.quantity+'x '+i.item_name).join(', ')}</td>
+                    <td style="color:var(--text-dim);font-size:0.85rem;">${o.items.length} Items</td>
                     <td style="color:#2ecc71;font-weight:600;text-transform:uppercase;font-size:0.8rem;">Completed</td>
                     <td>${guest}</td>
                     <td style="color:var(--primary);font-weight:700;">₹${o.total_amount}</td>
-                    <td></td>
+                    <td><button onclick="openOrderViewModal(${o.id})" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:white;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem;"><i class="fas fa-eye"></i> Order</button></td>
                 </tr>`;
             }).join('');
             histCards.innerHTML = completedOrders.map(o => {
@@ -2906,8 +2983,137 @@
                         <div><div class="res-card-label">Items</div><div style="font-size:0.82rem;color:var(--text-dim);">${o.items.map(i=>i.quantity+'x '+i.item_name).join(', ')}</div></div>
                         <div><div class="res-card-label">Time</div><div>${new Date(o.created_at).toLocaleString()}</div></div>
                     </div>
+                    <div style="margin-top:0.5rem; text-align:right;">
+                        <button onclick="openOrderViewModal(${o.id})" style="background:transparent;border:1px solid var(--border);color:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;">View Details</button>
+                    </div>
                 </div>`;
             }).join('');
+        }
+
+        function buildOrderDetailsHtml(order) {
+            const guest = order.reservation ? order.reservation.name : 'Walk-in';
+            return `
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:1rem; border-radius:12px; margin-bottom:1rem;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:var(--text-dim);">Guest</span>
+                        <span style="font-weight:600;">${guest}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:var(--text-dim);">Table</span>
+                        <span style="font-weight:600;">${order.table_number}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:var(--text-dim);">Status</span>
+                        <span style="font-weight:600; text-transform:uppercase;">${order.status}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--text-dim);">Time</span>
+                        <span style="font-weight:600;">${new Date(order.created_at).toLocaleString()}</span>
+                    </div>
+                </div>
+                <h4 style="color:var(--primary); margin-bottom:0.5rem; font-size:1rem;">Items Ordered</h4>
+                <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:1rem; border-radius:12px;">
+                    <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem;">
+                        ${order.items.map(i => `<li style="display:flex; justify-content:space-between;">
+                            <span>${i.quantity}x ${i.item_name}</span>
+                            <span>₹${i.price_per_item * i.quantity}</span>
+                        </li>`).join('')}
+                    </ul>
+                    <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:1rem; padding-top:1rem; display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem; color:var(--primary);">
+                        <span>Total</span>
+                        <span>₹${order.total_amount}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openReservationOrdersView(reservationId) {
+            const res = allReservationsData.find(r => r.id === reservationId);
+            const orders = allOrdersData.filter(o => o.reservation_id === reservationId);
+            const modalTitle = document.querySelector('#orderViewModal h3');
+            if (modalTitle) modalTitle.textContent = res ? `Orders — ${res.name}` : 'Order Details';
+
+            let html = '';
+            if (orders.length === 0) {
+                html = `<p style="color:var(--text-dim); text-align:center; padding:1.5rem 0;">No orders recorded for this guest yet.</p>`;
+            } else {
+                const grandTotal = orders.reduce((s, o) => s + o.total_amount, 0);
+                html = orders.map((o, idx) => `
+                    <div style="margin-bottom:${idx < orders.length - 1 ? '1.25rem' : '0'}; padding-bottom:${idx < orders.length - 1 ? '1.25rem' : '0'}; border-bottom:${idx < orders.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none'};">
+                        <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.6rem; text-transform:uppercase; letter-spacing:0.05em;">Order #${o.id}</p>
+                        ${buildOrderDetailsHtml(o)}
+                    </div>
+                `).join('');
+                if (orders.length > 1) {
+                    html += `<div style="display:flex; justify-content:space-between; font-weight:700; font-size:1.15rem; color:#2ecc71; margin-top:0.5rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.12);"><span>Grand Total (${orders.length} orders)</span><span>₹${grandTotal}</span></div>`;
+                }
+            }
+            document.getElementById('orderViewContent').innerHTML = html;
+            document.getElementById('orderViewModal').style.display = 'flex';
+        }
+
+        function openOrderViewModal(orderId) {
+            const order = allOrdersData.find(o => o.id === orderId);
+            if(!order) return;
+            const modalTitle = document.querySelector('#orderViewModal h3');
+            if (modalTitle) modalTitle.textContent = 'Order Details';
+            document.getElementById('orderViewContent').innerHTML = buildOrderDetailsHtml(order);
+            document.getElementById('orderViewModal').style.display = 'flex';
+        }
+
+        function closeOrderViewModal() {
+            document.getElementById('orderViewModal').style.display = 'none';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('orderViewModal').style.display === 'flex') {
+                closeOrderViewModal();
+            }
+        });
+
+        function openWalkinModal() {
+            document.getElementById('wiName').value = '';
+            document.getElementById('wiPhone').value = '';
+            document.getElementById('wiGuests').value = '';
+            document.getElementById('wiOccasion').value = 'walk_in';
+            document.getElementById('walkinModal').style.display = 'flex';
+        }
+
+        function closeWalkinModal() {
+            document.getElementById('walkinModal').style.display = 'none';
+        }
+
+        async function submitWalkin() {
+            const name = document.getElementById('wiName').value.trim();
+            const phone = document.getElementById('wiPhone').value.trim();
+            const guests = parseInt(document.getElementById('wiGuests').value);
+            const occasion = document.getElementById('wiOccasion').value;
+
+            if(!name || !guests) {
+                showToast("Name and Guest Count are required.");
+                return;
+            }
+
+            const now = new Date();
+            const payload = {
+                name,
+                phone: phone || "Walk-in",
+                occasion,
+                date: getLocalDateString(0),
+                hour: String(now.getHours() % 12 || 12).padStart(2, '0'),
+                minute: String(now.getMinutes()).padStart(2, '0'),
+                ampm: now.getHours() >= 12 ? 'PM' : 'AM',
+                guest_count: guests,
+                status: 'confirmed',
+                arriving_confirmed: 1
+            };
+
+            const result = await apiFetch('/api/reservations', 'POST', payload);
+            if(result && result.id) {
+                showToast("Walk-in added!");
+                closeWalkinModal();
+                loadData(); 
+            }
         }
 
         function logout() {
