@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, sta
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
@@ -217,9 +217,16 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+def _reservation_with_orders_query(db: Session):
+    return db.query(models.Reservation).options(
+        joinedload(models.Reservation.orders).joinedload(models.Order.items)
+    )
+
 @app.get("/api/admin/reservations", response_model=List[schemas.ReservationResponse])
 def admin_get_reservations(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    return db.query(models.Reservation).filter(models.Reservation.deleted_by_admin == 0).order_by(models.Reservation.created_at.desc()).all()
+    return _reservation_with_orders_query(db).filter(
+        models.Reservation.deleted_by_admin == 0
+    ).order_by(models.Reservation.created_at.desc()).all()
 
 @app.get("/api/admin/reviews", response_model=List[schemas.ReviewResponse])
 def admin_get_reviews(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
@@ -313,7 +320,7 @@ def cancel_reservation(reservation_id: int, db: Session = Depends(get_db)):
 
 @app.post("/api/reservations/sync", response_model=List[schemas.ReservationResponse])
 def sync_reservations(data: schemas.BulkDelete, db: Session = Depends(get_db)):
-    return db.query(models.Reservation).filter(
+    return _reservation_with_orders_query(db).filter(
         models.Reservation.id.in_(data.ids),
         models.Reservation.deleted_by_user == 0
     ).all()
@@ -327,12 +334,25 @@ def user_delete_reservation(reservation_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"detail": "Reservation deleted by user"}
 
-@app.post("/api/table/auth")
+@app.post("/api/table/auth", response_model=schemas.TableAuthResponse)
 def table_auth(req: schemas.TableAuthRequest, db: Session = Depends(get_db)):
     table = db.query(models.ActiveTable).filter(models.ActiveTable.table_number == req.table_number).first()
     if not table or not table.is_active or table.auth_code != req.auth_code:
         raise HTTPException(status_code=401, detail="Invalid table number or code")
-    return {"message": "Authenticated successfully", "table_number": table.table_number}
+
+    linked_reservation = None
+    if table.reservation_id:
+        linked_reservation = _reservation_with_orders_query(db).filter(
+            models.Reservation.id == table.reservation_id,
+            models.Reservation.deleted_by_user == 0
+        ).first()
+
+    return {
+        "message": "Authenticated successfully",
+        "table_number": table.table_number,
+        "reservation_id": table.reservation_id,
+        "reservation": linked_reservation,
+    }
 
 @app.get("/api/menu", response_model=List[schemas.MenuItemResponse])
 def get_menu(db: Session = Depends(get_db)):
@@ -360,7 +380,9 @@ def create_order(req: schemas.OrderCreate, db: Session = Depends(get_db)):
 
 @app.get("/api/admin/tables", response_model=List[schemas.ActiveTableResponse])
 def get_tables(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    return db.query(models.ActiveTable).order_by(models.ActiveTable.table_number).all()
+    return db.query(models.ActiveTable).options(
+        joinedload(models.ActiveTable.reservation)
+    ).order_by(models.ActiveTable.table_number).all()
 
 import random
 import string
@@ -370,6 +392,11 @@ def generate_table_code(table_id: int, reservation_id: int | None = None, curren
     table = db.query(models.ActiveTable).filter(models.ActiveTable.id == table_id).first()
     if not table:
         raise HTTPException(status_code=404, detail="Table not found")
+
+    if reservation_id is not None:
+        res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+        if not res:
+            raise HTTPException(status_code=404, detail="Reservation not found")
     
     code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
     table.auth_code = code
@@ -377,6 +404,27 @@ def generate_table_code(table_id: int, reservation_id: int | None = None, curren
     table.reservation_id = reservation_id
     db.commit()
     db.refresh(table)
+    table = db.query(models.ActiveTable).options(joinedload(models.ActiveTable.reservation)).filter(models.ActiveTable.id == table_id).first()
+    return table
+
+@app.patch("/api/admin/tables/{table_id}/link-reservation", response_model=schemas.ActiveTableResponse)
+def link_table_reservation(table_id: int, reservation_id: int | None = None, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    table = db.query(models.ActiveTable).filter(models.ActiveTable.id == table_id).first()
+    if not table:
+        raise HTTPException(status_code=404, detail="Table not found")
+    if not table.is_active:
+        raise HTTPException(status_code=400, detail="Activate table first")
+
+    if reservation_id is not None:
+        res = db.query(models.Reservation).filter(models.Reservation.id == reservation_id).first()
+        if not res:
+            raise HTTPException(status_code=404, detail="Reservation not found")
+        table.reservation_id = reservation_id
+    else:
+        table.reservation_id = None
+
+    db.commit()
+    table = db.query(models.ActiveTable).options(joinedload(models.ActiveTable.reservation)).filter(models.ActiveTable.id == table_id).first()
     return table
 
 @app.post("/api/admin/tables/{table_id}/clear", response_model=schemas.ActiveTableResponse)
@@ -393,7 +441,10 @@ def clear_table(table_id: int, current_member: models.Member = Depends(get_curre
 
 @app.get("/api/admin/orders", response_model=List[schemas.OrderResponse])
 def get_orders(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    return db.query(models.Order).order_by(models.Order.created_at.desc()).all()
+    return db.query(models.Order).options(
+        joinedload(models.Order.items),
+        joinedload(models.Order.reservation),
+    ).order_by(models.Order.created_at.desc()).all()
 
 @app.patch("/api/admin/orders/{order_id}/status", response_model=schemas.OrderResponse)
 def update_order_status(order_id: int, status: str, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
