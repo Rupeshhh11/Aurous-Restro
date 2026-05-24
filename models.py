@@ -31,6 +31,7 @@ class Reservation(Base):
     cancelled_at: Mapped[str | None] = mapped_column(String, nullable=True)
     arriving_confirmed: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
+    orders: Mapped[List["Order"]] = relationship("Order", back_populates="reservation", cascade="all, delete-orphan")
 
 class Review(Base):
     __tablename__ = "reviews"
@@ -79,7 +80,7 @@ class Order(Base):
     reservation_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("reservations.id"), nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
     
-    reservation: Mapped["Reservation"] = relationship("Reservation")
+    reservation: Mapped["Reservation"] = relationship("Reservation", back_populates="orders")
     items: Mapped[List["OrderItem"]] = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
 
 class OrderItem(Base):
