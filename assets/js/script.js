@@ -239,14 +239,17 @@ document.addEventListener('DOMContentLoaded', () => {
         now.setHours(0,0,0,0);
         resList = resList.filter(r => {
             if(!r.date) return false;
-            const rDate = new Date(r.date);
+            const [y, m, d] = r.date.split('-').map(Number);
+            const rDate = new Date(y, m - 1, d);
             return rDate >= now;
         });
 
 
         resList.sort((a, b) => {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
+            const [yA, mA, dA] = a.date.split('-').map(Number);
+            const dateA = new Date(yA, mA - 1, dA);
+            const [yB, mB, dB] = b.date.split('-').map(Number);
+            const dateB = new Date(yB, mB - 1, dB);
             if (dateA < dateB) return -1;
             if (dateA > dateB) return 1;
 
@@ -272,153 +275,164 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     checkResStatus();
 
+    function buildBookingOrderList(resData) {
+        if (!resData.orders || resData.orders.length === 0) return '';
+        const total = resData.orders.reduce((sum, o) => sum + o.total_amount, 0);
+        const itemCount = resData.orders.reduce((sum, o) => sum + o.items.reduce((n, i) => n + i.quantity, 0), 0);
+        const itemsHtml = resData.orders.flatMap(o => o.items.map(i => `
+            <div class="flex justify-between gap-1.5 text-[7px] leading-tight text-white/75 py-0.5">
+                <span class="truncate">${i.quantity}× ${i.item_name}</span>
+                <span class="shrink-0 font-medium text-white/90">₹${i.price_per_item * i.quantity}</span>
+            </div>
+        `)).join('');
+        return `
+            <details class="mt-2 group">
+                <summary class="list-none flex items-center justify-between gap-1.5 cursor-pointer bg-white/5 hover:bg-white/[0.08] border border-white/10 rounded-lg px-2 py-1.5 text-left [&::-webkit-details-marker]:hidden">
+                    <span class="flex items-center gap-1 text-[7.5px] font-semibold uppercase tracking-wide text-white/70">
+                        <i class="fas fa-list text-[#E0115F] text-[7px]"></i> Order list
+                    </span>
+                    <span class="text-[7px] text-white/40">${itemCount} · <span class="text-[#E0115F] font-semibold text-[7px]">₹${total}</span></span>
+                    <i class="fas fa-chevron-down text-[6px] text-white/30 shrink-0 group-open:rotate-180 transition-transform"></i>
+                </summary>
+                <div class="mt-1 px-1.5 pb-1.5 pt-0.5 border border-white/5 rounded-lg bg-black/25 max-h-[88px] overflow-y-auto">
+                    ${itemsHtml}
+                    <div class="flex justify-between text-[7px] font-semibold text-white/90 pt-1 mt-0.5 border-t border-white/10">
+                        <span>Total</span>
+                        <span class="text-[#E0115F] text-[7px]">₹${total}</span>
+                    </div>
+                </div>
+            </details>
+        `;
+    }
+
     window.openResDetail = function(index) {
         const resList = getReservations();
         const resData = resList[index];
         if (!resData) return openMyRes();
 
-        const dateObj = new Date(resData.date);
-        const dateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
-        const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
+        const [y, m_val, d_val] = resData.date.split('-').map(Number);
+        const dateObj = new Date(y, m_val - 1, d_val);
+        const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
         const formattedTime = `${resData.hour}:${resData.minute} ${resData.ampm}`;
 
         let headerBadgeHtml = '';
         let actionBtnHtml = '';
         let statusMessageHtml = '';
         let ticketStatusClass = '';
-        let ticketGlowClass = '';
 
         if (resData.status === 'completed') {
             headerBadgeHtml = `
-                <div class="w-11 h-11 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-green-500/20 shadow-[0_0_12px_rgba(46,204,113,0.15)]">
-                    <i class="fa-solid fa-circle-check text-green-500 text-lg"></i>
+                <div class="w-8 h-8 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-1 border border-green-500/20">
+                    <i class="fa-solid fa-circle-check text-green-500 text-sm"></i>
                 </div>
-                <h3 class="text-base font-bold text-white uppercase tracking-tight">Done</h3>
-                <p class="text-[8px] text-green-500 font-bold uppercase tracking-widest mt-0.5">Please visit us again</p>
+                <h3 class="text-sm font-bold text-white">All done</h3>
+                <p class="text-[7px] text-green-500/90 font-semibold uppercase tracking-wider mt-0.5">Thanks for visiting</p>
             `;
-            statusMessageHtml = `<p class="text-[9.5px] text-green-400/80 font-medium mt-3.5 leading-relaxed bg-green-500/5 border border-green-500/10 rounded-xl p-2.5"><i class="fas fa-sparkles text-green-400 mr-1"></i> Dining complete! Please visit us again.</p>`;
+            statusMessageHtml = `<p class="text-[9px] text-green-400/75 mt-2 leading-snug px-1">Hope you had a great time at Aurous. See you again soon!</p>`;
             actionBtnHtml = `
-                <button onclick="window.deleteFromList(${index})" class="px-4.5 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
-                    Delete Record
+                <button onclick="window.deleteFromList(${index})" class="px-4 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8px] uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all font-bold">
+                    Delete record
                 </button>
             `;
-            ticketStatusClass = 'border-l-4 border-l-green-500';
-            ticketGlowClass = 'shadow-[0_0_15px_rgba(46,204,113,0.05)]';
+            ticketStatusClass = 'border-l-[3px] border-l-green-500';
         } else if (resData.status === 'cancelled') {
             headerBadgeHtml = `
-                <div class="w-11 h-11 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-rose-500/20">
-                    <i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>
+                <div class="w-8 h-8 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-1 border border-rose-500/20">
+                    <i class="fa-solid fa-circle-xmark text-rose-500 text-sm"></i>
                 </div>
-                <h3 class="text-base font-bold text-white uppercase tracking-tight">Cancelled</h3>
-                <p class="text-[8px] text-rose-500 font-bold uppercase tracking-widest mt-0.5">Reservation Cancelled</p>
+                <h3 class="text-sm font-bold text-white">Cancelled</h3>
+                <p class="text-[7px] text-rose-500/90 font-semibold uppercase tracking-wider mt-0.5">Visit cancelled</p>
             `;
-            statusMessageHtml = `<p class="text-[9.5px] text-white/50 mt-3.5 leading-relaxed">This reservation has been cancelled. If this was a mistake, feel free to book a new table.</p>`;
+            statusMessageHtml = `<p class="text-[9px] text-white/45 mt-2 leading-snug px-1">This visit was cancelled. You can plan a new table anytime.</p>`;
             actionBtnHtml = `
-                <button onclick="window.deleteFromList(${index})" class="px-4.5 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-600 hover:text-white hover:border-rose-600 transition-all font-bold">
-                    Delete Record
+                <button onclick="window.deleteFromList(${index})" class="px-4 py-1.5 border border-white/10 bg-white/5 text-white/60 rounded-full text-[8px] uppercase tracking-widest hover:bg-rose-600 hover:text-white transition-all font-bold">
+                    Delete record
                 </button>
             `;
-            ticketStatusClass = 'border-l-4 border-l-rose-500/50';
+            ticketStatusClass = 'border-l-[3px] border-l-rose-500/50';
         } else if (resData.status === 'confirmed') {
             headerBadgeHtml = `
-                <div class="w-11 h-11 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-green-500/30 shadow-[0_0_12px_rgba(46,204,113,0.15)]">
-                    <i class="fa-solid fa-check text-green-400 text-lg animate-pulse"></i>
+                <div class="w-8 h-8 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-1 border border-green-500/25">
+                    <i class="fa-solid fa-check text-green-400 text-sm"></i>
                 </div>
-                <h3 class="text-base font-black text-white uppercase tracking-tighter">VIP Confirmed</h3>
-                <p class="text-[8px] text-green-400 font-bold uppercase tracking-widest mt-0.5 animate-pulse">Ready For You</p>
+                <h3 class="text-sm font-bold text-white">You're all set</h3>
+                <p class="text-[7px] text-green-400/90 font-semibold uppercase tracking-wider mt-0.5">Table confirmed</p>
             `;
-            statusMessageHtml = `<p class="text-[9.5px] text-green-400/80 font-medium mt-3.5 leading-relaxed bg-green-500/5 border border-green-500/10 rounded-xl p-2.5"><i class="fas fa-sparkles text-green-400 mr-1"></i> Your VIP Table is fully confirmed! We look forward to welcoming you at Aurous.</p>`;
+            statusMessageHtml = `<p class="text-[9px] text-green-400/75 mt-2 leading-snug px-1">Table confirmed — we can't wait to welcome you at Aurous.</p>`;
             actionBtnHtml = `
-                <button id="cancel-res-btn" data-index="${index}" class="px-4.5 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
-                    Cancel Reservation
+                <button id="cancel-res-btn" data-index="${index}" class="px-4 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
+                    Cancel visit
                 </button>
             `;
-            ticketStatusClass = 'border-l-4 border-l-green-500';
-            ticketGlowClass = 'shadow-[0_0_20px_rgba(46,204,113,0.1)]';
+            ticketStatusClass = 'border-l-[3px] border-l-green-500';
         } else {
             headerBadgeHtml = `
-                <div class="w-11 h-11 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-2.5 border border-amber-500/20">
-                    <i class="fa-solid fa-clock text-amber-500 text-lg animate-pulse"></i>
+                <div class="w-8 h-8 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-1 border border-amber-500/20">
+                    <i class="fa-solid fa-clock text-amber-500 text-sm"></i>
                 </div>
-                <h3 class="text-base font-bold text-white uppercase tracking-tight">Pending</h3>
-                <p class="text-[8px] text-amber-500 font-bold uppercase tracking-widest mt-0.5">Awaiting Host</p>
+                <h3 class="text-sm font-bold text-white">Pending</h3>
+                <p class="text-[7px] text-amber-500/90 font-semibold uppercase tracking-wider mt-0.5">We'll confirm soon</p>
             `;
-            statusMessageHtml = `<p class="text-[9.5px] text-white/40 mt-3.5 leading-relaxed">Our host will call you shortly to confirm your table. Keep your phone handy!</p>`;
+            statusMessageHtml = `<p class="text-[9px] text-white/40 mt-2 leading-snug px-1">Our team will reach out shortly. Keep your phone handy.</p>`;
             actionBtnHtml = `
-                <button id="cancel-res-btn" data-index="${index}" class="px-4.5 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8.5px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
-                    Cancel Reservation
+                <button id="cancel-res-btn" data-index="${index}" class="px-4 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
+                    Cancel visit
                 </button>
             `;
-            ticketStatusClass = 'border-l-4 border-l-amber-500';
-            ticketGlowClass = 'shadow-[0_0_15px_rgba(243,156,18,0.05)]';
+            ticketStatusClass = 'border-l-[3px] border-l-amber-500';
         }
 
         myResContent.innerHTML = `
-            <button onclick="openMyRes()" class="text-white/40 hover:text-white absolute top-4 left-4 text-[9px] tracking-widest uppercase font-bold transition-all flex items-center gap-1.5 active:scale-95">
-                <i class="fas fa-arrow-left text-xs"></i> Back
+            <button onclick="openMyRes()" class="text-white/40 hover:text-white sticky top-0 left-0 z-10 mb-2 text-[8px] tracking-widest uppercase font-bold transition-all flex items-center gap-1 active:scale-95 bg-[#0a0a0a]/90 py-1">
+                <i class="fas fa-arrow-left text-[10px]"></i> Back
             </button>
 
-            <div class="mt-2.5">
+            <div class="pt-1 pb-1">
                 ${headerBadgeHtml}
             </div>
 
-            <!-- VIP PASS TICKET CARD -->
-            <div class="relative bg-white/[0.01] border border-white/10 rounded-2xl p-4 mt-4 overflow-hidden text-left ${ticketStatusClass} ${ticketGlowClass}">
-                <!-- Ticket notches -->
-                <div class="absolute -left-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-r border-white/10 z-10"></div>
-                <div class="absolute -right-3 top-[54%] -translate-y-1/2 w-5 h-5 rounded-full bg-[#0a0a0a] border-l border-white/10 z-10"></div>
-
-                <!-- Ticket Header/Stub -->
-                <div class="flex justify-between items-center mb-2.5">
-                    <span class="text-[7.5px] uppercase tracking-[0.25em] text-[#E0115F] font-black">Aurous Restro Lounge</span>
-                    <span class="text-[8.5px] uppercase font-bold text-white/30 tracking-wider">Pass #${resData.id || index + 100}</span>
+            <div class="relative bg-white/[0.02] border border-white/10 rounded-xl p-3 mt-2 overflow-hidden text-left ${ticketStatusClass}">
+                <div class="flex justify-between items-center gap-2 mb-1.5">
+                    <span class="text-[7px] uppercase tracking-[0.2em] text-[#E0115F] font-bold">Aurous Restro</span>
+                    <span class="text-[7px] uppercase font-semibold text-white/25">#${resData.id || index + 1}</span>
                 </div>
-                <h4 class="text-sm font-black text-white tracking-tight uppercase mb-3">${resData.name}</h4>
+                <h4 class="text-xs font-bold text-white uppercase mb-2">${resData.name}</h4>
 
-                <!-- Dotted divider line -->
-                <div class="border-t border-dashed border-white/10 my-2.5"></div>
+                <div class="border-t border-dashed border-white/10 my-2"></div>
 
-                <!-- Ticket Body/Details -->
-                <div class="grid grid-cols-2 gap-3 mt-1.5">
+                <div class="grid grid-cols-2 gap-x-2 gap-y-2">
                     <div>
-                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Date</span>
-                        <div class="text-[10px] font-bold text-white flex items-center">
-                            <i class="fa-regular fa-calendar-days text-[#E0115F] mr-1.2 text-[10px]"></i> ${formattedDate}
+                        <span class="text-[6.5px] uppercase tracking-wider text-white/30 block">Date</span>
+                        <div class="text-[9px] font-semibold text-white leading-tight mt-0.5">
+                            <i class="fa-regular fa-calendar-days text-[#E0115F] mr-0.5 text-[8px]"></i>${formattedDate}
                         </div>
                     </div>
                     <div>
-                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Time</span>
-                        <div class="text-[10px] font-bold text-white flex items-center">
-                            <i class="fa-regular fa-clock text-[#E0115F] mr-1.2 text-[10px]"></i> ${formattedTime}
+                        <span class="text-[6.5px] uppercase tracking-wider text-white/30 block">Time</span>
+                        <div class="text-[9px] font-semibold text-white leading-tight mt-0.5">
+                            <i class="fa-regular fa-clock text-[#E0115F] mr-0.5 text-[8px]"></i>${formattedTime}
                         </div>
                     </div>
                     <div>
-                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Guests</span>
-                        <div class="text-[10px] font-bold text-white flex items-center">
-                            <i class="fa-solid fa-users text-[#E0115F] mr-1.2 text-[10px]"></i> ${resData.guest_count} Guests
+                        <span class="text-[6.5px] uppercase tracking-wider text-white/30 block">Guests</span>
+                        <div class="text-[9px] font-semibold text-white leading-tight mt-0.5">
+                            <i class="fa-solid fa-users text-[#E0115F] mr-0.5 text-[8px]"></i>${resData.guest_count}
                         </div>
                     </div>
                     <div>
-                        <span class="text-[7.5px] uppercase tracking-widest text-white/30 block mb-0.5">Occasion</span>
-                        <div class="text-[10px] font-bold text-white flex items-center capitalize">
-                            <i class="fa-solid fa-martini-glass text-[#E0115F] mr-1.2 text-[10px]"></i> ${resData.occasion.replace('_', ' ')}
+                        <span class="text-[6.5px] uppercase tracking-wider text-white/30 block">Occasion</span>
+                        <div class="text-[9px] font-semibold text-white capitalize leading-tight mt-0.5">
+                            <i class="fa-solid fa-martini-glass text-[#E0115F] mr-0.5 text-[8px]"></i>${resData.occasion.replace('_', ' ')}
                         </div>
                     </div>
                 </div>
 
-                <!-- Dotted divider line -->
-                <div class="border-t border-dashed border-white/10 my-3"></div>
-
-                <!-- Barcode simulation -->
-                <div class="flex flex-col items-center justify-center mt-0.5 select-none opacity-45">
-                    <div class="text-[10px] font-mono tracking-[0.22em] text-white/40">||||| | || ||| | ||| | ||</div>
-                    <div class="text-[6.5px] font-mono tracking-widest text-white/30 mt-0.5">AUR-${resData.id || 'CONFIRMED'}</div>
-                </div>
+                ${buildBookingOrderList(resData)}
             </div>
 
             ${statusMessageHtml}
 
-            <div class="mt-4.5 pt-3.5 border-t border-white/5">
+            <div class="mt-3 pt-2.5 border-t border-white/5">
                 ${actionBtnHtml}
             </div>
         `;
@@ -459,14 +473,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (resList.length > 0) {
             myResContent.innerHTML = `
-                <div class="mb-4">
-                    <h3 class="text-lg font-black text-white uppercase tracking-tight">Your Reservations</h3>
-                    <div class="w-6 h-[2px] bg-[#E0115F] mx-auto mt-1 rounded-full"></div>
-                    <p class="text-[7.5px] text-white/40 font-bold uppercase tracking-[0.2em] mt-2">${resList.length} Active Bookings</p>
+                <div class="mb-3">
+                    <h3 class="text-base font-black text-white tracking-tight">At Aurous</h3>
+                    <div class="w-5 h-[2px] bg-[#E0115F] mx-auto mt-1 rounded-full"></div>
+                    <p class="text-[7px] text-white/35 font-medium mt-1.5">${resList.length} upcoming visit${resList.length > 1 ? 's' : ''}</p>
                 </div>
                 <div class="space-y-2 max-h-[300px] overflow-y-auto pr-0.5 custom-scroll text-left">
                     ${resList.map((res, i) => {
-                        const d = new Date(res.date);
+                        const [y, m_idx, d_idx] = res.date.split('-').map(Number);
+                        const d = new Date(y, m_idx - 1, d_idx);
                         const day = d.getDate();
                         const month = d.toLocaleDateString('en-US', {month: 'short'});
 
@@ -494,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else if (res.status === 'confirmed') {
                             statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.1); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.25); box-shadow: 0 0 6px rgba(46,204,113,0.12);"><i class="fas fa-circle-check animate-pulse text-green-400"></i> Confirmed</span>`;
                             actionHtml = `
-                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel Reservation">
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel visit">
                                     <i class="fas fa-ban text-[9px]"></i>
                                 </button>
                             `;
@@ -503,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(243,156,18,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(243,156,18,0.15);"><i class="fas fa-clock animate-pulse"></i> Pending</span>`;
                             actionHtml = `
-                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel Reservation">
+                                <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel visit">
                                     <i class="fas fa-ban text-[9px]"></i>
                                 </button>
                             `;
@@ -539,8 +554,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="w-16 h-16 bg-white/[0.02] rounded-full flex items-center justify-center mx-auto mb-5 border border-white/5">
                         <i class="fa-solid fa-calendar-xmark text-white/10 text-2xl"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-white uppercase tracking-tight">No Active Bookings</h3>
-                    <p class="text-[10px] text-white/40 mt-2 max-w-[190px] mx-auto leading-relaxed">You haven't made any reservations yet. Ready to experience Aurous?</p>
+                    <h3 class="text-base font-bold text-white tracking-tight">No visits yet</h3>
+                    <p class="text-[9px] text-white/40 mt-2 max-w-[190px] mx-auto leading-relaxed">Plan a table at Aurous — we'd love to host you.</p>
                 </div>
             `;
         }
@@ -552,7 +567,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.cancelFromList = async function(index) {
-        if (confirm('Are you sure you want to cancel this reservation?')) {
+        if (confirm('Cancel this visit at Aurous?')) {
             let resList = getReservations();
             const resData = resList[index];
 
@@ -580,7 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.deleteFromList = async function(index) {
-        if (confirm('Are you sure you want to delete this booking from your list?')) {
+        if (confirm('Remove this visit from your list?')) {
             let resList = getReservations();
             const resData = resList[index];
 
@@ -622,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target && e.target.closest('#cancel-res-btn')) {
             const btn = e.target.closest('#cancel-res-btn');
             const index = parseInt(btn.dataset.index);
-            if (confirm('Are you sure you want to cancel your reservation?')) {
+            if (confirm('Cancel this visit at Aurous?')) {
                 let resList = getReservations();
                 const resData = resList[index];
 
@@ -645,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 checkResStatus();
-                if (window.showToast) window.showToast('Reservation Cancelled');
+                if (window.showToast) window.showToast('Visit cancelled');
                 openMyRes();
             }
         }
@@ -1459,7 +1474,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (successModal) {
                             if (successMessage) {
                                 const name = formData.name.split(' ')[0];
-                                const dateObj = new Date(formData.date);
+                                const [y, m_idx, d_idx] = formData.date.split('-').map(Number);
+                                const dateObj = new Date(y, m_idx - 1, d_idx);
                                 const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
                                 const formattedDate = dateObj.toLocaleDateString('en-US', dateOptions);
                                 const formattedTime = `${formData.hour}:${formData.minute} ${formData.ampm}`;
