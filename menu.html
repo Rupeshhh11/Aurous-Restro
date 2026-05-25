@@ -7,7 +7,7 @@
     <title>Aurous Restro | Live Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="assets/css/style.css?v=2.1">
-<link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .menu-card {
@@ -79,7 +79,7 @@
             min-height: 0;
         }
 
-        .menu-card-back-content > .price-badge {
+        .menu-card-back-content>.price-badge {
             top: 0.4rem;
             right: 0.4rem;
         }
@@ -368,11 +368,7 @@
 
             <div class="max-w-7xl mx-auto">
                 <div id="category-filters" class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 snap-x">
-                    <div class="category-chip active snap-start" data-cat="all">All</div>
-                    <div class="category-chip snap-start" data-cat="Veg">Veg 🟢</div>
-                    <div class="category-chip snap-start" data-cat="Non-Veg">Non-Veg 🔴</div>
-                    <div class="category-chip snap-start" data-cat="Roti">Breads</div>
-                    <div class="category-chip snap-start" data-cat="Drinks">Drinks 🍹</div>
+                    <!-- Chips generated dynamically -->
                 </div>
             </div>
         </header>
@@ -505,40 +501,68 @@
             }
         }
 
+        let currentFilter = 'all';
+
         function generateCategoryChips() {
             const container = document.getElementById('category-filters');
             container.innerHTML = '';
+
+            // Add All chip
             const allChip = document.createElement('div');
             allChip.className = 'category-chip active snap-start';
-            allChip.dataset.cat = 'all';
+            allChip.dataset.filter = 'all';
             allChip.textContent = 'All';
             container.appendChild(allChip);
+
+            // Add Veg/Non-Veg chips
+            const vegChip = document.createElement('div');
+            vegChip.className = 'category-chip snap-start';
+            vegChip.dataset.filter = 'veg';
+            vegChip.textContent = '🟢 Vegetarian';
+            container.appendChild(vegChip);
+
+            const nonVegChip = document.createElement('div');
+            nonVegChip.className = 'category-chip snap-start';
+            nonVegChip.dataset.filter = 'non-veg';
+            nonVegChip.textContent = '🔴 Non-Veg';
+            container.appendChild(nonVegChip);
+
+            // Add category chips
             const categories = [...new Set(menuData.map(item => item.category))];
             categories.forEach(cat => {
                 const chip = document.createElement('div');
                 chip.className = 'category-chip snap-start';
-                chip.dataset.cat = cat;
+                chip.dataset.filter = 'cat:' + cat;
                 chip.textContent = cat;
                 container.appendChild(chip);
             });
+
             // Attach click listeners
             document.querySelectorAll('.category-chip').forEach(chip => {
                 chip.addEventListener('click', (e) => {
                     document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
                     e.target.classList.add('active');
-                    renderMenu(e.target.dataset.cat);
+                    currentFilter = e.target.dataset.filter;
+                    renderMenu();
                 });
             });
         }
 
-        function renderMenu(category) {
+        function renderMenu() {
             const grid = document.getElementById('menu-grid');
             grid.innerHTML = '';
 
             let filtered = menuData;
-            if (category !== 'all') {
+
+            if (currentFilter === 'veg') {
+                filtered = menuData.filter(item => item.is_veg === true);
+            } else if (currentFilter === 'non-veg') {
+                filtered = menuData.filter(item => item.is_veg === false);
+            } else if (currentFilter.startsWith('cat:')) {
+                const category = currentFilter.substring(4);
                 filtered = menuData.filter(item => item.category === category);
             }
+            // If currentFilter === 'all', use all items
 
 
             filtered.forEach(item => {
