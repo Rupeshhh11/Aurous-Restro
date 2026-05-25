@@ -10,8 +10,7 @@ from passlib.context import CryptContext
 import os
 import shutil
 import uuid
-from typing import List
-
+from typing import List, Optional
 import models
 import schemas
 from database import engine, get_db
@@ -87,69 +86,49 @@ os.makedirs("assets/images/uploads", exist_ok=True)
 @app.on_event("startup")
 async def startup_event():
     db = next(get_db())
-    
     try:
-        db.execute(text("ALTER TABLE active_tables ADD COLUMN reservation_id INTEGER REFERENCES reservations(id)"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
+        for stmt in [
+            "ALTER TABLE active_tables ADD COLUMN reservation_id INTEGER REFERENCES reservations(id)",
+            "ALTER TABLE orders ADD COLUMN reservation_id INTEGER REFERENCES reservations(id)",
+            "ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'",
+            "ALTER TABLE reservations ADD COLUMN deleted_by_admin INTEGER DEFAULT 0",
+            "ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0",
+            "ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"
+        ]:
+            try:
+                db.execute(text(stmt))
+                db.commit()
+            except Exception:
+                db.rollback()
 
-    try:
-        db.execute(text("ALTER TABLE orders ADD COLUMN reservation_id INTEGER REFERENCES reservations(id)"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
+        admin = db.query(models.Member).filter(models.Member.username == "admin").first()
+        if not admin:
+            hashed_pw = get_password_hash("aurous123")
+            admin_member = models.Member(username="admin", hashed_password=hashed_pw, full_name="Aurous Admin")
+            db.add(admin_member)
+            db.commit()
 
-    try:
-        db.execute(text("ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
+        # Seed Tables
+        if db.query(models.ActiveTable).count() == 0:
+            for i in range(1, 11):
+                db.add(models.ActiveTable(table_number=i))
+            db.commit()
 
-    try:
-        db.execute(text("ALTER TABLE reservations ADD COLUMN deleted_by_admin INTEGER DEFAULT 0"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
-
-    try:
-        db.execute(text("ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
-
-    try:
-        db.execute(text("ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"))
-        db.commit()
-    except Exception as e:
-        db.rollback()
-
-    admin = db.query(models.Member).filter(models.Member.username == "admin").first()
-    if not admin:
-        hashed_pw = get_password_hash("aurous123")
-        admin_member = models.Member(username="admin", hashed_password=hashed_pw, full_name="Aurous Admin")
-        db.add(admin_member)
-        db.commit()
-
-    # Seed Tables
-    if db.query(models.ActiveTable).count() == 0:
-        for i in range(1, 11):
-            db.add(models.ActiveTable(table_number=i))
-        db.commit()
-
-    # Seed Menu Items
-    if db.query(models.MenuItem).count() == 0:
-        dummy_menu = [
-            {"name": "Roasted Chicken Chilli", "category": "Non-Veg", "price": 450, "is_veg": False, "description": "Spicy roasted chicken tossed in Asian sauces.", "image_url": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013"},
-            {"name": "Chef's Special Sizzler", "category": "Non-Veg", "price": 650, "is_veg": False, "description": "Smoked directly at your table. Rich and flavorful.", "image_url": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469"},
-            {"name": "Golden Fish Fingers", "category": "Non-Veg", "price": 380, "is_veg": False, "description": "Crispy on the outside, tender inside. Served with tartar sauce.", "image_url": "https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=1374"},
-            {"name": "Paneer Tikka Masala", "category": "Veg", "price": 350, "is_veg": True, "description": "Grilled cottage cheese in rich tomato gravy.", "image_url": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=1000"},
-            {"name": "Aurous Signature Mix", "category": "Drinks", "price": 400, "is_veg": True, "description": "Crafted by mixologists to perfectly accompany your evening.", "image_url": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"},
-            {"name": "Butter Naan", "category": "Roti", "price": 60, "is_veg": True, "description": "Soft and fluffy Indian flatbread brushed with butter.", "image_url": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80&w=1000"}
-        ]
-        for item in dummy_menu:
-            db.add(models.MenuItem(**item))
-        db.commit()
+        # Seed Menu Items
+        if db.query(models.MenuItem).count() == 0:
+            dummy_menu = [
+                {"name": "Roasted Chicken Chilli", "category": "Starters", "price": 450, "is_veg": False, "description": "Spicy roasted chicken tossed in Asian sauces.", "image_url": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013"},
+                {"name": "Chef's Special Sizzler", "category": "Main Course", "price": 650, "is_veg": False, "description": "Smoked directly at your table. Rich and flavorful.", "image_url": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469"},
+                {"name": "Golden Fish Fingers", "category": "Starters", "price": 380, "is_veg": False, "description": "Crispy on the outside, tender inside. Served with tartar sauce.", "image_url": "https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=1374"},
+                {"name": "Paneer Tikka Masala", "category": "Main Course", "price": 350, "is_veg": True, "description": "Grilled cottage cheese in rich tomato gravy.", "image_url": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&q=80&w=1000"},
+                {"name": "Aurous Signature Mix", "category": "Drinks", "price": 400, "is_veg": True, "description": "Crafted by mixologists to perfectly accompany your evening.", "image_url": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"},
+                {"name": "Butter Naan", "category": "Roti", "price": 60, "is_veg": True, "description": "Soft and fluffy Indian flatbread brushed with butter.", "image_url": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&q=80&w=1000"}
+            ]
+            for item in dummy_menu:
+                db.add(models.MenuItem(**item))
+            db.commit()
+    finally:
+        db.close()
 
 
 
@@ -172,7 +151,7 @@ async def create_review(
     location: str = Form(...),
     rating: int = Form(...),
     review_text: str = Form(...),
-    images: List[UploadFile] = File(None),
+    images: Optional[List[UploadFile]] = File(None),
     db: Session = Depends(get_db)
 ):
     image_urls = []
