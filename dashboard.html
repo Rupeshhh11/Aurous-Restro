@@ -126,7 +126,7 @@
             left: -100%;
             width: 50%;
             height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
             transform: skewX(-25deg);
             transition: all 0.7s ease;
             z-index: -1;
@@ -448,16 +448,19 @@
             position: relative;
             overflow: hidden;
         }
+
         .clickable-stat:hover {
             transform: translateY(-4px);
             border-color: var(--primary);
             box-shadow: 0 8px 24px rgba(224, 17, 95, 0.15);
         }
+
         .clickable-stat.active-filter {
             background: linear-gradient(135deg, rgba(224, 17, 95, 0.15), rgba(20, 20, 20, 0.95)) !important;
             border-color: var(--primary) !important;
             box-shadow: 0 0 15px rgba(224, 17, 95, 0.3) !important;
         }
+
         .clickable-stat.active-filter::after {
             content: '\f058';
             font-family: 'Font Awesome 5 Free';
@@ -468,6 +471,7 @@
             color: var(--primary);
             font-size: 1.1rem;
         }
+
         .stat-indicator {
             font-size: 0.75rem;
             color: white;
@@ -480,28 +484,35 @@
             letter-spacing: 1px;
             opacity: 0.8;
         }
+
         .date-divider-row td {
             padding: 1.5rem 0 !important;
             background: transparent !important;
             border: none !important;
         }
+
         .date-divider {
             display: flex;
             align-items: center;
             text-align: center;
             width: 100%;
         }
-        .date-divider::before, .date-divider::after {
+
+        .date-divider::before,
+        .date-divider::after {
             content: '';
             flex: 1;
             border-bottom: 1px dashed rgba(224, 17, 95, 0.4);
         }
+
         .date-divider:not(:empty)::before {
             margin-right: 1.5rem;
         }
+
         .date-divider:not(:empty)::after {
             margin-left: 1.5rem;
         }
+
         .date-divider span {
             background: rgba(224, 17, 95, 0.1);
             color: var(--primary);
@@ -513,14 +524,26 @@
             letter-spacing: 2px;
             border: 1px solid rgba(224, 17, 95, 0.2);
         }
+
         .mobile-date-divider {
             width: 100%;
             padding: 1rem 0;
         }
+
         @keyframes pulse-fast {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.45; transform: scale(0.9); }
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.45;
+                transform: scale(0.9);
+            }
         }
+
         .animate-pulse-fast {
             animation: pulse-fast 1s infinite;
         }
@@ -823,7 +846,8 @@
                 display: none;
             }
 
-            .mobile-header, .mobile-nav {
+            .mobile-header,
+            .mobile-nav {
                 display: flex;
             }
 
@@ -851,7 +875,9 @@
                 justify-content: space-between;
             }
 
-            .filter-group input, .filter-group select, .date-picker-btn {
+            .filter-group input,
+            .filter-group select,
+            .date-picker-btn {
                 min-width: unset;
                 flex-grow: 1;
                 text-align: right;
@@ -886,8 +912,9 @@
                 font-size: 1.5rem;
             }
         }
+
         .menu-cat-btn {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-dim);
             border: 1px solid var(--border);
             padding: 0.4rem 1rem;
@@ -897,17 +924,19 @@
             font-weight: 600;
             transition: all 0.3s;
         }
+
         .menu-cat-btn:hover {
             background: rgba(224, 17, 95, 0.1);
             color: var(--primary);
             border-color: rgba(224, 17, 95, 0.3);
         }
+
         .menu-cat-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
-</style>
+    </style>
 </head>
 
 <body>
@@ -916,7 +945,8 @@
     </div>
 
     <header class="mobile-header">
-        <h1 class="logo" style="margin-bottom: 0; font-size: 1.2rem;">AUROUS <span style="font-size: 0.7rem; letter-spacing: 2px;">ADMIN</span></h1>
+        <h1 class="logo" style="margin-bottom: 0; font-size: 1.2rem;">AUROUS <span
+                style="font-size: 0.7rem; letter-spacing: 2px;">ADMIN</span></h1>
         <div onclick="logout()" style="color: #ff4444; font-size: 1.2rem;"><i class="fas fa-power-off"></i></div>
     </header>
 
@@ -1001,20 +1031,29 @@
 
         <div class="stats-grid" id="statsGrid">
 
-            <div class="stat-card clickable-stat" id="statResToday" onclick="toggleStatsFilter('today')" title="Filter: All Reservations Today">
+            <div class="stat-card clickable-stat" id="statResToday" onclick="toggleStatsFilter('today')"
+                title="Filter: All Reservations Today">
                 <h3>Today's Reservations</h3>
                 <div class="value" id="todayResVal">0</div>
-                <div class="stat-indicator" style="background: rgba(224, 17, 95, 0.2); color: var(--primary); border: 1px solid rgba(224, 17, 95, 0.3);">Active Today</div>
+                <div class="stat-indicator"
+                    style="background: rgba(224, 17, 95, 0.2); color: var(--primary); border: 1px solid rgba(224, 17, 95, 0.3);">
+                    Active Today</div>
             </div>
-            <div class="stat-card clickable-stat" id="statCompletedToday" onclick="toggleStatsFilter('completed')" title="Filter: Completed Reservations Today">
+            <div class="stat-card clickable-stat" id="statCompletedToday" onclick="toggleStatsFilter('completed')"
+                title="Filter: Completed Reservations Today">
                 <h3>Completed Today</h3>
                 <div class="value" id="todayCompletedVal" style="color: #2ecc71;">0</div>
-                <div class="stat-indicator" style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2);">Done Today</div>
+                <div class="stat-indicator"
+                    style="background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2);">
+                    Done Today</div>
             </div>
-            <div class="stat-card clickable-stat" id="statCancelledToday" onclick="toggleStatsFilter('cancelled')" title="Filter: Cancelled Reservations Today">
+            <div class="stat-card clickable-stat" id="statCancelledToday" onclick="toggleStatsFilter('cancelled')"
+                title="Filter: Cancelled Reservations Today">
                 <h3>Cancelled Today</h3>
                 <div class="value" id="todayCancelledVal" style="color: #e74c3c;">0</div>
-                <div class="stat-indicator" style="background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2);">Cancelled Today</div>
+                <div class="stat-indicator"
+                    style="background: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.2);">
+                    Cancelled Today</div>
             </div>
 
 
@@ -1038,7 +1077,9 @@
         <section id="reservationsSection" class="content-section active">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
                 <h3 style="color:#E0115F; font-size:1.4rem; font-weight:700;">Reservations</h3>
-                <button onclick="openWalkinModal()" style="background:var(--primary); color:white; border:none; padding:0.6rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-plus"></i> Add Walk-in</button>
+                <button onclick="openWalkinModal()"
+                    style="background:var(--primary); color:white; border:none; padding:0.6rem 1.2rem; border-radius:8px; cursor:pointer; font-weight:700;"><i
+                        class="fas fa-plus"></i> Add Walk-in</button>
             </div>
             <div class="filter-bar">
                 <div class="filter-group">
@@ -1062,10 +1103,13 @@
                     <i class="fas fa-filter"></i> Filter
                 </button>
                 <button class="filter-btn-clear" onclick="clearResFilters()">Clear</button>
-                <button id="mobileSelectBtn" class="filter-btn-clear" style="display: none; margin-left: auto;" onclick="toggleMobileSelectMode()">
+                <button id="mobileSelectBtn" class="filter-btn-clear" style="display: none; margin-left: auto;"
+                    onclick="toggleMobileSelectMode()">
                     <i class="fas fa-check-square"></i> Select
                 </button>
-                <button id="bulkDeleteBtn" class="filter-btn-apply" style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;" onclick="deleteSelectedReservations()">
+                <button id="bulkDeleteBtn" class="filter-btn-apply"
+                    style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;"
+                    onclick="deleteSelectedReservations()">
                     <i class="fas fa-trash-alt"></i> Delete Selected (<span id="selectedCount">0</span>)
                 </button>
             </div>
@@ -1095,7 +1139,9 @@
         <section id="historySection" class="content-section">
             <div class="filter-bar">
                 <div style="display: flex; gap: 0.5rem; align-items: center; margin-right: auto; flex-wrap: wrap;">
-                    <button id="tab-completed" class="filter-btn-apply" style="background: linear-gradient(135deg, #2ecc71, #27ae60);" onclick="switchHistoryTab('completed')">
+                    <button id="tab-completed" class="filter-btn-apply"
+                        style="background: linear-gradient(135deg, #2ecc71, #27ae60);"
+                        onclick="switchHistoryTab('completed')">
                         <i class="fas fa-check-circle"></i> Completed Res.
                     </button>
                     <button id="tab-cancelled" class="filter-btn-clear" onclick="switchHistoryTab('cancelled')">
@@ -1107,7 +1153,8 @@
                 <div class="filter-group">
                     <i class="fas fa-calendar-day" style="color: var(--primary); font-size: 0.85rem;"></i>
                     <label>From</label>
-                    <button class="date-picker-btn" id="historyFilterFromBtn" onclick="openWheelPicker('historyFilterFrom')">
+                    <button class="date-picker-btn" id="historyFilterFromBtn"
+                        onclick="openWheelPicker('historyFilterFrom')">
                         <span>Select Date</span>
                         <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                     </button>
@@ -1115,7 +1162,8 @@
                 </div>
                 <div class="filter-group">
                     <label>To</label>
-                    <button class="date-picker-btn" id="historyFilterToBtn" onclick="openWheelPicker('historyFilterTo')">
+                    <button class="date-picker-btn" id="historyFilterToBtn"
+                        onclick="openWheelPicker('historyFilterTo')">
                         <span>Select Date</span>
                         <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                     </button>
@@ -1126,7 +1174,9 @@
                 </button>
                 <button class="filter-btn-clear" onclick="clearHistoryFilters()">Clear</button>
 
-                <button id="bulkDeleteHistoryBtn" class="filter-btn-apply" style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;" onclick="deleteSelectedHistory()">
+                <button id="bulkDeleteHistoryBtn" class="filter-btn-apply"
+                    style="background: linear-gradient(135deg, #ff4444, #cc0000); display: none; margin-left: auto;"
+                    onclick="deleteSelectedHistory()">
                     <i class="fas fa-trash-alt"></i> Delete Selected (<span id="historySelectedCount">0</span>)
                 </button>
             </div>
@@ -1134,7 +1184,10 @@
                 <table id="historyTable">
                     <thead>
                         <tr>
-                            <th style="width: 40px;"><input type="checkbox" id="selectAllHistory" onclick="toggleAllHistory(this)" style="cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary);"></th>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllHistory"
+                                    onclick="toggleAllHistory(this)"
+                                    style="cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary);">
+                            </th>
                             <th>Guest</th>
                             <th>Date &amp; Time</th>
                             <th>Occasion</th>
@@ -1156,10 +1209,16 @@
 
         <section id="live-ordersSection" class="content-section">
             <div class="data-card" style="padding: 1.5rem;">
-                <h3 style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">Live Kitchen Orders</h3>
+                <h3
+                    style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">
+                    Live Kitchen Orders</h3>
                 <div style="display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;">
-                    <button onclick="fetchOrders()" style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-sync"></i> Refresh</button>
-                    <button onclick="openManualOrderModal()" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-plus"></i> Manual Order Entry</button>
+                    <button onclick="fetchOrders()"
+                        style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i
+                            class="fas fa-sync"></i> Refresh</button>
+                    <button onclick="openManualOrderModal()"
+                        style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i
+                            class="fas fa-plus"></i> Manual Order Entry</button>
                 </div>
                 <div id="liveOrdersContainer" style="display: flex; flex-direction: column; gap: 1rem;">
                 </div>
@@ -1168,21 +1227,31 @@
 
         <section id="tablesSection" class="content-section">
             <div class="data-card" style="padding: 1.5rem;">
-                <h3 style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">Table Management</h3>
-                <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem;">Activate tables. Optionally link to a today's reservation so guest info shows in orders.</p>
+                <h3
+                    style="margin-bottom: 1rem; color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem;">
+                    Table Management</h3>
+                <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-size: 0.9rem;">Activate tables. Optionally
+                    link to a today's reservation so guest info shows in orders.</p>
                 <div style="display:flex; gap:0.75rem; margin-bottom:1rem;">
-                    <button onclick="fetchTables()" style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i class="fas fa-sync"></i> Refresh Tables</button>
+                    <button onclick="fetchTables()"
+                        style="background: var(--glass); color: white; border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;"><i
+                            class="fas fa-sync"></i> Refresh Tables</button>
                 </div>
-                <div id="tablesGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+                <div id="tablesGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
                 </div>
             </div>
         </section>
 
         <section id="menuSection" class="content-section">
             <div class="data-card" style="padding: 1.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
-                    <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">Menu Management</h3>
-                    <button onclick="openMenuItemModal()" style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i class="fas fa-plus"></i> Add Item</button>
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                    <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">
+                        Menu Management</h3>
+                    <button onclick="openMenuItemModal()"
+                        style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i
+                            class="fas fa-plus"></i> Add Item</button>
                 </div>
                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;" id="menuCategoryFilter">
                     <button class="menu-cat-btn active" onclick="filterMenuByCategory('all')">All</button>
@@ -1192,7 +1261,9 @@
                     <button class="menu-cat-btn" onclick="filterMenuByCategory('Roti')">Roti</button>
                     <button class="menu-cat-btn" onclick="filterMenuByCategory('Desserts')">Desserts</button>
                 </div>
-                <div id="menuGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;"></div>
+                <div id="menuGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem;">
+                </div>
             </div>
         </section>
 
@@ -1240,90 +1311,344 @@
     </main>
 
     <!-- Menu Item Modal -->
-    <div id="menuItemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; display:none; align-items:center; justify-content:center;">
-        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:500px; max-height:90vh; overflow-y:auto;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                <h3 style="color:white; font-size:1.3rem; font-weight:700;" id="menuModalTitle">Add Menu Item</h3>
-                <button onclick="closeMenuItemModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+    <div id="menuItemModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:4000; align-items:center; justify-content:center;">
+        
+        <style>
+            /* Premium CSS Toggle Switch (Compact) */
+            .switch-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.45rem 0.6rem;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.06);
+                border-radius: 10px;
+                cursor: pointer;
+                user-select: none;
+                transition: 0.2s;
+            }
+            .switch-container:hover {
+                background: rgba(255, 255, 255, 0.04);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            .switch-label {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.88rem;
+                font-weight: 500;
+                font-family: 'Outfit', sans-serif;
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            .switch-input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+                position: absolute;
+            }
+            .switch-slider {
+                position: relative;
+                display: inline-block;
+                width: 38px;
+                height: 20px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                border-radius: 30px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .switch-slider::before {
+                content: "";
+                position: absolute;
+                height: 14px;
+                width: 14px;
+                left: 2px;
+                bottom: 2px;
+                background-color: #fff;
+                border-radius: 50%;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .switch-input:checked + .switch-slider {
+                background-color: #E0115F;
+                border-color: rgba(224, 17, 95, 0.2);
+                box-shadow: 0 0 8px rgba(224, 17, 95, 0.4);
+            }
+            .switch-input:checked + .switch-slider::before {
+                transform: translateX(18px);
+            }
+
+            /* Input Focus Glowing Effects */
+            .premium-input:focus, .premium-select:focus, .premium-textarea:focus {
+                border-color: #E0115F !important;
+                box-shadow: 0 0 10px rgba(224, 17, 95, 0.25) !important;
+                background: rgba(255, 255, 255, 0.05) !important;
+                outline: none;
+            }
+            .premium-input, .premium-select, .premium-textarea {
+                transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            
+            /* Custom Scrollbar for Modal content if overflow */
+            .premium-modal-content::-webkit-scrollbar {
+                width: 5px;
+            }
+            .premium-modal-content::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .premium-modal-content::-webkit-scrollbar-thumb {
+                background: rgba(255, 255, 255, 0.08);
+                border-radius: 3px;
+            }
+            .premium-modal-content::-webkit-scrollbar-thumb:hover {
+                background: rgba(255, 255, 255, 0.15);
+            }
+        </style>
+
+        <div class="premium-modal-content"
+            style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 16px; padding: 1.2rem 1.6rem; width: 92%; max-width: 440px; max-height: 95vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 17, 95, 0.1); font-family: 'Outfit', sans-serif;">
+            
+            <!-- Modal Header -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.6rem;">
+                <h3 style="color:white; font-size:1.2rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.5rem;" id="menuModalTitle">
+                    <i class="fas fa-hamburger" style="color:#E0115F; font-size: 1.1rem;"></i> Add Menu Item
+                </h3>
+                <button onclick="closeMenuItemModal()"
+                    style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.25s; font-size: 0.85rem;"
+                    onmouseover="this.style.background='rgba(231,76,60,0.15)'; this.style.borderColor='rgba(231,76,60,0.3)'; this.style.color='#ff4d4d'; this.style.transform='rotate(90deg)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.04)'; this.style.borderColor='rgba(255,255,255,0.06)'; this.style.color='rgba(255,255,255,0.6)'; this.style.transform='none'">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-                <input id="menuItemName" placeholder="Item Name" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                <select id="menuItemCategory" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                    <option value="Starters">Starters</option>
-                    <option value="Main Course">Main Course</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Roti">Roti</option>
-                    <option value="Desserts">Desserts</option>
-                </select>
-                <input id="menuItemPrice" type="number" placeholder="Price (₹)" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box; resize:vertical;"></textarea>
-                <div style="display:flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem;">
-                    <input type="file" id="menuItemImageFile" accept="image/*" style="display:none;" onchange="handleMenuImageUpload(event)">
-                    <button type="button" onclick="document.getElementById('menuItemImageFile').click()" style="background:rgba(255,255,255,0.1); border:none; padding:0.4rem 0.8rem; border-radius:6px; color:white; cursor:pointer;"><i class="fas fa-upload"></i> Upload Photo</button>
-                    <input id="menuItemImage" placeholder="Or enter Image URL" style="background:transparent; border:none; color:white; width:100%; box-sizing:border-box; outline:none; margin-left:0.5rem;">
+            
+            <!-- Modal Body -->
+            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                
+                <!-- Item Name Input -->
+                <div style="position:relative; display:flex; align-items:center;">
+                    <i class="fas fa-signature" style="position:absolute; left:0.85rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
+                    <input id="menuItemName" placeholder="Item Name" class="premium-input"
+                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
                 </div>
-                <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-dim); cursor:pointer;">
-                    <input type="checkbox" id="menuItemVeg" checked style="width:16px; height:16px; accent-color:var(--primary);"> Vegetarian
+                
+                <!-- Category Select -->
+                <div style="position: relative; width: 100%;">
+                    <i class="fas fa-tags" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
+                    <select id="menuItemCategory" class="premium-select"
+                        style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 0.55rem 2.2rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
+                        <option value="Starters" style="background:#111; color:white;">Starters</option>
+                        <option value="Main Course" style="background:#111; color:white;">Main Course</option>
+                        <option value="Drinks" style="background:#111; color:white;">Drinks</option>
+                        <option value="Roti" style="background:#111; color:white;">Roti</option>
+                        <option value="Desserts" style="background:#111; color:white;">Desserts</option>
+                    </select>
+                    <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
+                </div>
+                
+                <!-- Price Input -->
+                <div style="position:relative; display:flex; align-items:center;">
+                    <i class="fas fa-rupee-sign" style="position:absolute; left:0.95rem; color:rgba(255,255,255,0.3); font-size:0.88rem; pointer-events:none;"></i>
+                    <input id="menuItemPrice" type="number" placeholder="Price (₹)" class="premium-input"
+                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
+                </div>
+                
+                <!-- Description Textarea -->
+                <div style="position:relative; display:flex;">
+                    <i class="fas fa-align-left" style="position:absolute; left:0.85rem; top:0.75rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
+                    <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" class="premium-textarea"
+                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; resize:vertical; font-size:0.88rem; outline:none; min-height:55px;"></textarea>
+                </div>
+                
+                <!-- Image Upload & URL input -->
+                <div style="display:flex; align-items:center; gap:0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:0.4rem; position:relative;">
+                    <input type="file" id="menuItemImageFile" accept="image/*" style="display:none;"
+                        onchange="handleMenuImageUpload(event)">
+                    
+                    <button type="button" onclick="document.getElementById('menuItemImageFile').click()"
+                        style="background:linear-gradient(135deg, rgba(224, 17, 95, 0.12), rgba(224, 17, 95, 0.04)); border:1px solid rgba(224, 17, 95, 0.25); padding:0.45rem 0.8rem; border-radius:8px; color:white; cursor:pointer; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; white-space:nowrap;"
+                        onmouseover="this.style.background='rgba(224, 17, 95, 0.2)'; this.style.borderColor='rgba(224, 17, 95, 0.45)'; this.style.transform='translateY(-1px)'"
+                        onmouseout="this.style.background='rgba(224, 17, 95, 0.12)'; this.style.borderColor='rgba(224, 17, 95, 0.25)'; this.style.transform='none'">
+                        <i class="fas fa-cloud-upload-alt" style="color:#E0115F; font-size: 0.85rem;"></i> Upload Photo
+                    </button>
+                    
+                    <input id="menuItemImage" placeholder="Or enter Image URL" class="premium-input"
+                        style="background:transparent; border:none; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.85rem; padding:0.3rem 0.4rem;">
+                </div>
+                
+                <!-- Veg/Non-Veg Dropdown Select -->
+                <div style="position: relative; width: 100%;">
+                    <i class="fas fa-leaf" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
+                    <select id="menuItemVeg" class="premium-select"
+                        style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 0.55rem 2.2rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
+                        <option value="true" style="background:#111; color:white;">🟢 Vegetarian</option>
+                        <option value="false" style="background:#111; color:white;">🔴 Non-Vegetarian</option>
+                    </select>
+                    <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
+                </div>
+                
+                <!-- Available Premium Switch Toggle -->
+                <label class="switch-container">
+                    <span class="switch-label">
+                        <i class="fas fa-eye" style="color:rgba(255, 255, 255, 0.4); font-size: 0.85rem;"></i> Available in Menu
+                    </span>
+                    <div style="position: relative; display: inline-block; width: 38px; height: 20px;">
+                        <input type="checkbox" id="menuItemAvailable" class="switch-input" checked>
+                        <span class="switch-slider"></span>
+                    </div>
                 </label>
-                <label style="display:flex; align-items:center; gap:0.5rem; color:var(--text-dim); cursor:pointer;">
-                    <input type="checkbox" id="menuItemAvailable" checked style="width:16px; height:16px; accent-color:var(--primary);"> Available
-                </label>
-                <button id="menuItemSaveBtn" onclick="saveMenuItem()" style="background:var(--primary); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:1rem;">Save Item</button>
+                
+                <!-- Save Button -->
+                <button id="menuItemSaveBtn" onclick="saveMenuItem()"
+                    style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.65rem; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92rem; letter-spacing:0.3px; box-shadow: 0 4px 12px rgba(224, 17, 95, 0.25); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; justify-content:center; gap:0.4rem; margin-top:0.2rem;"
+                    onmouseover="this.style.boxShadow='0 5px 15px rgba(224, 17, 95, 0.4)'; this.style.transform='translateY(-1px)'; this.style.filter='brightness(1.1)'"
+                    onmouseout="this.style.boxShadow='0 4px 12px rgba(224, 17, 95, 0.25)'; this.style.transform='none'; this.style.filter='none'"
+                    onmousedown="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 8px rgba(224, 17, 95, 0.25)'">
+                    <i class="fas fa-check-circle"></i> Save Item
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Manual Order Modal -->
-    <div id="manualOrderModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; align-items:center; justify-content:center;">
-        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:520px; max-height:90vh; overflow-y:auto;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Manual Order Entry</h3>
-                <button onclick="closeManualOrderModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+    <div id="manualOrderModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:4000; align-items:center; justify-content:center;">
+        <div class="premium-modal-content"
+            style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 20px; padding: 2rem; width: 92%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+                    <i class="fas fa-file-invoice-dollar" style="color:#E0115F;"></i> Manual Order Entry
+                </h3>
+                <button onclick="closeManualOrderModal()"
+                    style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.25s;"
+                    onmouseover="this.style.background='rgba(231,76,60,0.15)'; this.style.borderColor='rgba(231,76,60,0.3)'; this.style.color='#ff4d4d'; this.style.transform='rotate(90deg)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'; this.style.transform='none'">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-                <select id="moTableNumber" style="background:#1a1a1a; border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                    <option value="">Select Active Table...</option>
-                </select>
+            
+            <div style="display:flex; flex-direction:column; gap:1.2rem;">
+                <!-- Table Select -->
+                <div style="position: relative; width: 100%;">
+                    <i class="fas fa-chair" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
+                    <select id="moTableNumber" class="premium-select"
+                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.8rem 2.5rem 0.8rem 2.5rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.95rem;">
+                        <option value="" style="background:#111; color:white;">Select Active Table...</option>
+                    </select>
+                    <i class="fas fa-chevron-down" style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
+                </div>
+                
+                <!-- Items list -->
                 <div id="moItemsList" style="display:flex; flex-direction:column; gap:0.6rem;"></div>
-                <button onclick="addManualOrderItem()" style="background:rgba(255,255,255,0.05); border:1px dashed var(--border); color:var(--text-dim); padding:0.6rem; border-radius:8px; cursor:pointer;"><i class="fas fa-plus"></i> Add Item</button>
-                <div style="border-top:1px solid var(--border); padding-top:1rem; display:flex; justify-content:space-between; align-items:center;">
-                    <span id="moTotal" style="font-size:1.2rem; font-weight:700; color:white;">Total: ₹0</span>
-                    <button onclick="submitManualOrder()" style="background:var(--primary); color:white; border:none; padding:0.7rem 1.5rem; border-radius:10px; font-weight:700; cursor:pointer;">Place Order</button>
+                
+                <!-- Add Item Button -->
+                <button onclick="addManualOrderItem()"
+                    style="background:rgba(255,255,255,0.02); border:1px dashed rgba(224, 17, 95, 0.4); color:rgba(255,255,255,0.7); padding:0.75rem; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.9rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition:all 0.25s;"
+                    onmouseover="this.style.background='rgba(224, 17, 95, 0.08)'; this.style.borderColor='#E0115F'; this.style.color='white';"
+                    onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'; this.style.borderColor='rgba(224, 17, 95, 0.4)'; this.style.color='rgba(255,255,255,0.7)';">
+                    <i class="fas fa-plus-circle" style="color:#E0115F;"></i> Add Item
+                </button>
+                
+                <!-- Bottom panel with total & submit -->
+                <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:1.2rem; margin-top:0.4rem; display:flex; justify-content:space-between; align-items:center;">
+                    <span id="moTotal" style="font-size:1.3rem; font-weight:700; color:white;">Total: ₹0</span>
+                    
+                    <button onclick="submitManualOrder()"
+                        style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.75rem 1.6rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.95rem; letter-spacing:0.5px; box-shadow: 0 4px 15px rgba(224, 17, 95, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; gap:0.5rem;"
+                        onmouseover="this.style.boxShadow='0 6px 20px rgba(224, 17, 95, 0.5)'; this.style.transform='translateY(-2px)'; this.style.filter='brightness(1.1)'"
+                        onmouseout="this.style.boxShadow='0 4px 15px rgba(224, 17, 95, 0.3)'; this.style.transform='none'; this.style.filter='none'"
+                        onmousedown="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(224, 17, 95, 0.3)'">
+                        <i class="fas fa-paper-plane"></i> Place Order
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Walk-in Modal -->
-    <div id="walkinModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:4000; align-items:center; justify-content:center;">
-        <div style="background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:400px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
-                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Add Walk-in</h3>
-                <button onclick="closeWalkinModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+    <div id="walkinModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:4000; align-items:center; justify-content:center;">
+        <div class="premium-modal-content"
+            style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 20px; padding: 2rem; width: 92%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+                    <i class="fas fa-walking" style="color:#E0115F;"></i> Add Walk-in
+                </h3>
+                <button onclick="closeWalkinModal()"
+                    style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.25s;"
+                    onmouseover="this.style.background='rgba(231,76,60,0.15)'; this.style.borderColor='rgba(231,76,60,0.3)'; this.style.color='#ff4d4d'; this.style.transform='rotate(90deg)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'; this.style.transform='none'">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div style="display:flex; flex-direction:column; gap:1rem;">
-                <input id="wiName" placeholder="Guest Name" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                <input id="wiPhone" placeholder="Phone Number" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                <div style="display:flex; gap:1rem;">
-                    <input id="wiGuests" type="number" placeholder="Guests" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                    <select id="wiOccasion" style="background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:8px; padding:0.7rem 1rem; color:white; width:100%; box-sizing:border-box;">
-                        <option value="walk_in">Walk-in</option>
-                        <option value="birthday">Birthday</option>
-                        <option value="anniversary">Anniversary</option>
-                        <option value="date_night">Date Night</option>
-                    </select>
+            
+            <div style="display:flex; flex-direction:column; gap:1.2rem;">
+                <!-- Guest Name -->
+                <div style="position:relative; display:flex; align-items:center;">
+                    <i class="fas fa-user-edit" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                    <input id="wiName" placeholder="Guest Name" class="premium-input"
+                        style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
                 </div>
-                <button onclick="submitWalkin()" style="background:var(--primary); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:1rem; margin-top:0.5rem;">Create Reservation</button>
+                
+                <!-- Phone Number -->
+                <div style="position:relative; display:flex; align-items:center;">
+                    <i class="fas fa-phone-alt" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                    <input id="wiPhone" placeholder="Phone Number" class="premium-input"
+                        style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
+                </div>
+                
+                <!-- Guests and Occasion row -->
+                <div style="display:flex; gap:1rem;">
+                    <div style="position:relative; display:flex; align-items:center; flex: 1;">
+                        <i class="fas fa-users" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                        <input id="wiGuests" type="number" placeholder="Guests" class="premium-input"
+                            style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
+                    </div>
+                    
+                    <div style="position: relative; flex: 1.3;">
+                        <i class="fas fa-glass-cheers" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
+                        <select id="wiOccasion" class="premium-select"
+                            style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.8rem 2.5rem 0.8rem 2.5rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.95rem;">
+                            <option value="walk_in" style="background:#111; color:white;">Walk-in</option>
+                            <option value="birthday" style="background:#111; color:white;">Birthday</option>
+                            <option value="anniversary" style="background:#111; color:white;">Anniversary</option>
+                            <option value="date_night" style="background:#111; color:white;">Date Night</option>
+                        </select>
+                        <i class="fas fa-chevron-down" style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
+                    </div>
+                </div>
+                
+                <!-- Submit -->
+                <button onclick="submitWalkin()"
+                    style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.85rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; letter-spacing:0.5px; box-shadow: 0 4px 15px rgba(224, 17, 95, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:0.4rem;"
+                    onmouseover="this.style.boxShadow='0 6px 20px rgba(224, 17, 95, 0.5)'; this.style.transform='translateY(-2px)'; this.style.filter='brightness(1.1)'"
+                    onmouseout="this.style.boxShadow='0 4px 15px rgba(224, 17, 95, 0.3)'; this.style.transform='none'; this.style.filter='none'"
+                    onmousedown="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 10px rgba(224, 17, 95, 0.3)'">
+                    <i class="fas fa-plus-circle"></i> Create Reservation
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Order View Modal (History) -->
-    <div id="orderViewModal" style="display:none; position:fixed; inset:0; z-index:4000; align-items:center; justify-content:center;">
-        <div id="orderViewModalBackdrop" onclick="closeOrderViewModal()" style="position:absolute; inset:0; background:rgba(0,0,0,0.75); cursor:pointer;" aria-hidden="true"></div>
-        <div role="dialog" aria-modal="true" onclick="event.stopPropagation()" style="position:relative; z-index:1; background:#111; border:1px solid var(--border); border-radius:16px; padding:2rem; width:92%; max-width:450px; max-height:85vh; overflow-y:auto; margin:1rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
-                <h3 style="color:white; font-size:1.3rem; font-weight:700;">Order Details</h3>
-                <button type="button" onclick="closeOrderViewModal()" style="background:transparent; border:none; color:white; font-size:1.4rem; cursor:pointer;" aria-label="Close"><i class="fas fa-times"></i></button>
+    <div id="orderViewModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:4000; align-items:center; justify-content:center;">
+        <div id="orderViewModalBackdrop" onclick="closeOrderViewModal()"
+            style="position:absolute; inset:0; background:transparent; cursor:pointer;" aria-hidden="true"></div>
+        <div role="dialog" aria-modal="true" onclick="event.stopPropagation()" class="premium-modal-content"
+            style="position:relative; z-index:1; background: linear-gradient(145deg, #121212, #080808); border:1px solid rgba(224, 17, 95, 0.2); border-radius:20px; padding:2rem; width:92%; max-width:450px; max-height:85vh; overflow-y:auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+                    <i class="fas fa-receipt" style="color:#E0115F;"></i> Order Details
+                </h3>
+                <button type="button" onclick="closeOrderViewModal()"
+                    style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer; transition:all 0.25s;"
+                    onmouseover="this.style.background='rgba(231,76,60,0.15)'; this.style.borderColor='rgba(231,76,60,0.3)'; this.style.color='#ff4d4d'; this.style.transform='rotate(90deg)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'; this.style.transform='none'">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div id="orderViewContent" style="display:flex; flex-direction:column; gap:0.8rem; color:white;">
             </div>
@@ -1346,7 +1671,9 @@
     </div>
 
 
-    <div id="alertContainer" style="position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px;"></div>
+    <div id="alertContainer"
+        style="position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px;">
+    </div>
 
     <script>
         const token = localStorage.getItem('aurous_token');
@@ -1467,7 +1794,7 @@
 
                 allReviewsData = reviews;
                 renderReviews(reviews);
-                
+
                 fetchTables();
                 fetchOrders();
                 fetchMenuAdmin();
@@ -1594,7 +1921,7 @@
             } else {
                 activeStatsFilter = filterType;
                 const cardId = filterType === 'today' ? 'statResToday' :
-                               filterType === 'completed' ? 'statCompletedToday' : 'statCancelledToday';
+                    filterType === 'completed' ? 'statCompletedToday' : 'statCancelledToday';
                 document.getElementById(cardId).classList.add('active-filter');
             }
 
@@ -1727,12 +2054,11 @@
                         <td><span class="guest-chip">${res.guest_count} Guests</span></td>
                         <td>${res.phone}</td>
                         <td style="text-align: center; white-space: nowrap;">
-                            ${
-                                res.status === 'completed'
-                                ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(46,204,113,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-check-circle"></i> Completed</span>`
-                                : res.status === 'cancelled'
-                                ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(231,76,60,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-times-circle"></i> Cancelled</span>`
-                                : `
+                            ${res.status === 'completed'
+                        ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(46,204,113,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-check-circle"></i> Completed</span>`
+                        : res.status === 'cancelled'
+                            ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; background: rgba(231,76,60,0.1); padding: 6px 12px; border-radius: 20px; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-times-circle"></i> Cancelled</span>`
+                            : `
                                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
                                     ${res.status === 'pending' ? `
                                     <button onclick="adminConfirmReservation(${res.id})" style="background: transparent; color: var(--text-dim); border: none; cursor: pointer; transition: 0.3s; padding: 0;" onmouseover="this.style.color='#2ecc71'" onmouseout="this.style.color='var(--text-dim)'" title="Confirm Booking Call">
@@ -1747,7 +2073,7 @@
                                     </button>
                                 </div>
                                 `
-                            }
+                    }
                         </td>
                     </tr>
                 `;
@@ -1802,12 +2128,11 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px; position: relative; z-index: 2;">
                                 <span class="guest-chip">${res.guest_count} PPL</span>
-                                ${
-                                    res.status === 'completed'
-                                    ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(46,204,113,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> Done</span>`
-                                    : res.status === 'cancelled'
-                                    ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(231,76,60,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Cancel</span>`
-                                    : `
+                                ${res.status === 'completed'
+                        ? `<span style="color: #2ecc71; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(46,204,113,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-check-circle"></i> Done</span>`
+                        : res.status === 'cancelled'
+                            ? `<span style="color: #e74c3c; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; background: rgba(231,76,60,0.15); padding: 4px 8px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-times-circle"></i> Cancel</span>`
+                            : `
                                     <div style="display: flex; align-items: center; gap: 6px;">
                                         ${res.status === 'pending' ? `
                                         <button onclick="adminConfirmReservation(${res.id})" style="background: rgba(255,255,255,0.05); color: var(--text-dim); border: none; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;" onmouseover="this.style.color='#2ecc71'; this.style.background='rgba(46,204,113,0.1)'" onmouseout="this.style.color='var(--text-dim)'; this.style.background='rgba(255,255,255,0.05)'" title="Confirm Booking Call">
@@ -1822,7 +2147,7 @@
                                         </button>
                                     </div>
                                     `
-                                }
+                    }
                             </div>
                         </div>
                         <div class="res-card-body">
@@ -2428,7 +2753,7 @@
                 }
             }, 1000);
 
-            alertBox.closeAlert = function() {
+            alertBox.closeAlert = function () {
                 clearInterval(timerInterval);
                 alertBox.style.transform = 'translateX(120%)';
                 setTimeout(() => {
@@ -2642,7 +2967,7 @@
             try {
                 const tables = await apiFetch('/api/admin/tables');
                 renderTables(tables);
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
         }
 
         function renderTables(tables) {
@@ -2705,7 +3030,7 @@
                 const orders = await apiFetch('/api/admin/orders');
                 allOrdersData = orders;
                 renderOrders(orders);
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
         }
 
         function renderOrders(orders) {
@@ -2727,7 +3052,7 @@
                             <h4 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 0.2rem;">Table ${o.table_number} ${guestName}</h4>
                             <p style="font-size: 0.78rem; color: var(--text-dim);">Order #${o.id} &bull; ${new Date(o.created_at).toLocaleString()}</p>
                         </div>
-                        <span style="display: inline-flex; align-items:center; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(${o.status==='pending'?'224,17,95':o.status==='preparing'?'243,156,18':'52,152,219'}, 0.18); color: ${statusColors[o.status] || 'white'}; border:1px solid ${borderColor};">${o.status}</span>
+                        <span style="display: inline-flex; align-items:center; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(${o.status === 'pending' ? '224,17,95' : o.status === 'preparing' ? '243,156,18' : '52,152,219'}, 0.18); color: ${statusColors[o.status] || 'white'}; border:1px solid ${borderColor};">${o.status}</span>
                     </div>
                     <ul style="list-style: none; margin-bottom: 1rem;">
                         ${o.items.map(i => `<li style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;"><span>${i.quantity}x ${i.item_name}</span><span style="color:var(--primary);">₹${i.price_per_item * i.quantity}</span></li>`).join('')}
@@ -2761,7 +3086,7 @@
                 const items = await apiFetch('/api/admin/menu');
                 allMenuData = items;
                 renderMenuGrid(items);
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
         }
 
         function filterMenuByCategory(cat) {
@@ -2810,7 +3135,7 @@
                     document.getElementById('menuItemPrice').value = item.price;
                     document.getElementById('menuItemDesc').value = item.description || '';
                     document.getElementById('menuItemImage').value = item.image_url || '';
-                    document.getElementById('menuItemVeg').checked = item.is_veg;
+                    document.getElementById('menuItemVeg').value = item.is_veg ? 'true' : 'false';
                     document.getElementById('menuItemAvailable').checked = item.is_available;
                 }
             } else {
@@ -2819,7 +3144,7 @@
                 document.getElementById('menuItemPrice').value = '';
                 document.getElementById('menuItemDesc').value = '';
                 document.getElementById('menuItemImage').value = '';
-                document.getElementById('menuItemVeg').checked = true;
+                document.getElementById('menuItemVeg').value = 'true';
                 document.getElementById('menuItemAvailable').checked = true;
             }
             modal.style.display = 'flex';
@@ -2861,7 +3186,7 @@
                 price: parseInt(document.getElementById('menuItemPrice').value),
                 description: document.getElementById('menuItemDesc').value.trim() || null,
                 image_url: document.getElementById('menuItemImage').value.trim() || null,
-                is_veg: document.getElementById('menuItemVeg').checked,
+                is_veg: document.getElementById('menuItemVeg').value === 'true',
                 is_available: document.getElementById('menuItemAvailable').checked
             };
             if (!payload.name || !payload.price) { showToast('Name and price are required'); return; }
@@ -2909,11 +3234,11 @@
         function renderManualOrderItems() {
             const list = document.getElementById('moItemsList');
             list.innerHTML = manualOrderItems.map((item, idx) => `
-                <div style="display:grid;grid-template-columns:1fr 60px 80px 30px;gap:0.4rem;align-items:center;">
-                    <input placeholder="Item name" value="${item.name}" oninput="manualOrderItems[${idx}].name=this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
-                    <input type="number" placeholder="Qty" value="${item.qty}" min="1" oninput="manualOrderItems[${idx}].qty=+this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
-                    <input type="number" placeholder="₹ Price" value="${item.price || ''}" min="0" oninput="manualOrderItems[${idx}].price=+this.value;calcManualTotal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;padding:0.5rem;color:white;">
-                    <button onclick="removeManualItem(${idx})" style="background:rgba(231,76,60,0.1);color:#e74c3c;border:none;border-radius:8px;padding:0.4rem;cursor:pointer;"><i class="fas fa-times"></i></button>
+                <div style="display:grid;grid-template-columns:1fr 70px 90px 36px;gap:0.6rem;align-items:center;margin-bottom:0.4rem;">
+                    <input placeholder="Item name" value="${item.name}" oninput="manualOrderItems[${idx}].name=this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;">
+                    <input type="number" placeholder="Qty" value="${item.qty}" min="1" oninput="manualOrderItems[${idx}].qty=+this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;text-align:center;">
+                    <input type="number" placeholder="₹ Price" value="${item.price || ''}" min="0" oninput="manualOrderItems[${idx}].price=+this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;text-align:center;">
+                    <button onclick="removeManualItem(${idx})" style="background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.25);border-radius:10px;height:36px;width:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(231,76,60,0.2)'" onmouseout="this.style.background='rgba(231,76,60,0.1)'"><i class="fas fa-times"></i></button>
                 </div>
             `).join('');
             calcManualTotal();
@@ -2964,7 +3289,7 @@
                 return `<tr style="background:rgba(46,204,113,0.04);border-left:3px solid #2ecc71;">
                     <td></td>
                     <td style="font-weight:500;">Table ${o.table_number}</td>
-                    <td>${new Date(o.created_at).toLocaleDateString()} ${new Date(o.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+                    <td>${new Date(o.created_at).toLocaleDateString()} ${new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                     <td style="color:var(--text-dim);font-size:0.85rem;">${o.items.length} Items</td>
                     <td style="color:#2ecc71;font-weight:600;text-transform:uppercase;font-size:0.8rem;">Completed</td>
                     <td>${guest}</td>
@@ -2980,7 +3305,7 @@
                         <span style="color:#2ecc71;font-weight:700;">₹${o.total_amount}</span>
                     </div>
                     <div class="res-card-body" style="grid-template-columns:1fr;">
-                        <div><div class="res-card-label">Items</div><div style="font-size:0.82rem;color:var(--text-dim);">${o.items.map(i=>i.quantity+'x '+i.item_name).join(', ')}</div></div>
+                        <div><div class="res-card-label">Items</div><div style="font-size:0.82rem;color:var(--text-dim);">${o.items.map(i => i.quantity + 'x ' + i.item_name).join(', ')}</div></div>
                         <div><div class="res-card-label">Time</div><div>${new Date(o.created_at).toLocaleString()}</div></div>
                     </div>
                     <div style="margin-top:0.5rem; text-align:right;">
@@ -3054,7 +3379,7 @@
 
         function openOrderViewModal(orderId) {
             const order = allOrdersData.find(o => o.id === orderId);
-            if(!order) return;
+            if (!order) return;
             const modalTitle = document.querySelector('#orderViewModal h3');
             if (modalTitle) modalTitle.textContent = 'Order Details';
             document.getElementById('orderViewContent').innerHTML = buildOrderDetailsHtml(order);
@@ -3089,7 +3414,7 @@
             const guests = parseInt(document.getElementById('wiGuests').value);
             const occasion = document.getElementById('wiOccasion').value;
 
-            if(!name || !guests) {
+            if (!name || !guests) {
                 showToast("Name and Guest Count are required.");
                 return;
             }
@@ -3109,10 +3434,10 @@
             };
 
             const result = await apiFetch('/api/reservations', 'POST', payload);
-            if(result && result.id) {
+            if (result && result.id) {
                 showToast("Walk-in added!");
                 closeWalkinModal();
-                loadData(); 
+                loadData();
             }
         }
 
@@ -3128,7 +3453,7 @@
                 fetchOrders();
             }
         }, 30000);
-</script>
+    </script>
 </body>
 
 </html>
