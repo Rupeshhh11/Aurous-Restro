@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Syne:wght@400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
     --primary: #E0115F;
@@ -29,6 +29,10 @@
     pointer-events: none;
 }
 
+body, button, input, select, textarea, .font-sans {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -56,8 +60,10 @@ body {
 }
 
 .bg-warm-gradient {
-    background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, #E0115F 0%, #FF2A7A 50%, #FF7E5F 100%) !important;
+    color: #ffffff !important;
+    background-size: 200% auto !important;
+    animation: shining-gradient 4s linear infinite !important;
 }
 
 
@@ -224,12 +230,55 @@ body {
 }
 
 .nav-scrolled {
-    background: rgba(10, 10, 10, 0.85) !important;
-    backdrop-filter: blur(20px) !important;
-    border-color: rgba(224, 17, 95, 0.3) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
+    background: rgba(5, 5, 5, 0.75) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border-color: rgba(224, 17, 95, 0.25) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.05) !important;
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+}
+
+@keyframes shining-gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.animate-shining-gradient {
+    background-size: 200% auto;
+    animation: shining-gradient 4s linear infinite;
+}
+
+.nav-link {
+    position: relative;
+    transition: color 0.3s ease;
+}
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #E0115F, transparent);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.nav-link:hover::after {
+    transform: scaleX(1);
+}
+.nav-link:hover {
+    color: #FAFAFA !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.font-syne {
+    font-family: 'Syne', sans-serif !important;
+}
+
+.font-playfair {
+    font-family: 'Playfair Display', serif !important;
 }
 
 .animate-marquee {
