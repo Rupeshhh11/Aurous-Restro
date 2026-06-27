@@ -2337,8 +2337,16 @@
                 const d = new Date();
                 d.setDate(today.getDate() + i);
 
-                const dateStr = d.toISOString().split('T')[0];
-                const displayStr = i === 0 ? 'Today' : `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+                // Force explicitly into Indian Time (Asia/Kolkata)
+                const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' };
+                const parts = new Intl.DateTimeFormat('en-IN', options).formatToParts(d);
+                const istYear = parts.find(p => p.type === 'year').value;
+                const istMonth = parts.find(p => p.type === 'month').value;
+                const istDay = parts.find(p => p.type === 'day').value;
+                
+                const dateStr = `${istYear}-${istMonth}-${istDay}`;
+                const istDateObj = new Date(istYear, parseInt(istMonth) - 1, parseInt(istDay));
+                const displayStr = i === 0 ? 'Today' : `${days[istDateObj.getDay()]}, ${months[istDateObj.getMonth()]} ${istDateObj.getDate()}`;
 
                 const item = document.createElement('div');
                 item.className = 'wheel-item';
