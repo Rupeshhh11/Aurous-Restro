@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 
-    window.showToast = function(message) {
+    window.showToast = function (message) {
         const container = document.getElementById('toast-container');
         if (!container) return;
 
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (preloader) {
         const loaderTL = gsap.timeline({
             delay: 0.2,
-            onUpdate: function() {
+            onUpdate: function () {
                 const progress = Math.floor(this.progress() * 100);
                 if (counter) counter.innerText = progress + "%";
 
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             resList = JSON.parse(localStorage.getItem('user_reservations') || '[]');
             if (!Array.isArray(resList)) resList = [];
-        } catch(e) { resList = []; }
+        } catch (e) { resList = []; }
 
 
         const oldRes = localStorage.getItem('user_reservation');
@@ -229,16 +229,16 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const p = JSON.parse(oldRes);
                 if (p) resList.push(p);
-            } catch(e){}
+            } catch (e) { }
             localStorage.removeItem('user_reservation');
             localStorage.setItem('user_reservations', JSON.stringify(resList));
         }
 
 
         const now = new Date();
-        now.setHours(0,0,0,0);
+        now.setHours(0, 0, 0, 0);
         resList = resList.filter(r => {
-            if(!r.date) return false;
+            if (!r.date) return false;
             const [y, m, d] = r.date.split('-').map(Number);
             const rDate = new Date(y, m - 1, d);
             return rDate >= now;
@@ -254,8 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (dateA > dateB) return 1;
 
 
-            let hA = parseInt(a.hour); if(a.ampm === 'PM' && hA !== 12) hA+=12; else if(a.ampm === 'AM' && hA === 12) hA=0;
-            let hB = parseInt(b.hour); if(b.ampm === 'PM' && hB !== 12) hB+=12; else if(b.ampm === 'AM' && hB === 12) hB=0;
+            let hA = parseInt(a.hour); if (a.ampm === 'PM' && hA !== 12) hA += 12; else if (a.ampm === 'AM' && hA === 12) hA = 0;
+            let hB = parseInt(b.hour); if (b.ampm === 'PM' && hB !== 12) hB += 12; else if (b.ampm === 'AM' && hB === 12) hB = 0;
 
             if (hA !== hB) return hA - hB;
             return parseInt(a.minute) - parseInt(b.minute);
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    window.openResDetail = function(index) {
+    window.openResDetail = function (index) {
         const resList = getReservations();
         const resData = resList[index];
         if (!resData) return openMyRes();
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     };
 
-    window.openMyRes = async function() {
+    window.openMyRes = async function () {
         const localList = getReservations();
 
 
@@ -480,52 +480,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="space-y-2 max-h-[300px] overflow-y-auto pr-0.5 custom-scroll text-left">
                     ${resList.map((res, i) => {
-                        const [y, m_idx, d_idx] = res.date.split('-').map(Number);
-                        const d = new Date(y, m_idx - 1, d_idx);
-                        const day = d.getDate();
-                        const month = d.toLocaleDateString('en-US', {month: 'short'});
+                const [y, m_idx, d_idx] = res.date.split('-').map(Number);
+                const d = new Date(y, m_idx - 1, d_idx);
+                const day = d.getDate();
+                const month = d.toLocaleDateString('en-US', { month: 'short' });
 
-                        let actionHtml = '';
-                        let statusBadgeHtml = '';
-                        let borderStyle = '';
-                        let glowStyle = '';
+                let actionHtml = '';
+                let statusBadgeHtml = '';
+                let borderStyle = '';
+                let glowStyle = '';
 
-                        if (res.status === 'completed') {
-                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.15);"><i class="fas fa-check-circle"></i> Done</span>`;
-                            actionHtml = `
+                if (res.status === 'completed') {
+                    statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.15);"><i class="fas fa-check-circle"></i> Done</span>`;
+                    actionHtml = `
                                 <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-white/5 text-white/40 hover:bg-[#ff4444]/20 hover:text-[#ff4444] hover:border-[#ff4444]/30 transition-all flex items-center justify-center border border-white/10 active:scale-90" title="Delete Record">
                                     <i class="fas fa-trash-alt text-[9px]"></i>
                                 </button>
                             `;
-                            borderStyle = 'border-l-4 border-l-green-500/50';
-                        } else if (res.status === 'cancelled') {
-                            statusBadgeHtml = `<span style="color: #e74c3c; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(231,76,60,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(231,76,60,0.15);"><i class="fas fa-times-circle"></i> Cancelled</span>`;
-                            actionHtml = `
+                    borderStyle = 'border-l-4 border-l-green-500/50';
+                } else if (res.status === 'cancelled') {
+                    statusBadgeHtml = `<span style="color: #e74c3c; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(231,76,60,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(231,76,60,0.15);"><i class="fas fa-times-circle"></i> Cancelled</span>`;
+                    actionHtml = `
                                 <button onclick="event.stopPropagation(); window.deleteFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-white/5 text-white/40 hover:bg-[#ff4444]/20 hover:text-[#ff4444] hover:border-[#ff4444]/30 transition-all flex items-center justify-center border border-white/10 active:scale-90" title="Delete Record">
                                     <i class="fas fa-trash-alt text-[9px]"></i>
                                 </button>
                             `;
-                            borderStyle = 'border-l-4 border-l-rose-500/30';
-                        } else if (res.status === 'confirmed') {
-                            statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.1); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.25); box-shadow: 0 0 6px rgba(46,204,113,0.12);"><i class="fas fa-circle-check animate-pulse text-green-400"></i> Confirmed</span>`;
-                            actionHtml = `
+                    borderStyle = 'border-l-4 border-l-rose-500/30';
+                } else if (res.status === 'confirmed') {
+                    statusBadgeHtml = `<span style="color: #2ecc71; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(46,204,113,0.1); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(46,204,113,0.25); box-shadow: 0 0 6px rgba(46,204,113,0.12);"><i class="fas fa-circle-check animate-pulse text-green-400"></i> Confirmed</span>`;
+                    actionHtml = `
                                 <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel visit">
                                     <i class="fas fa-ban text-[9px]"></i>
                                 </button>
                             `;
-                            borderStyle = 'border-l-4 border-l-green-500';
-                            glowStyle = 'box-shadow: 0 0 10px rgba(46, 204, 113, 0.06);';
-                        } else {
-                            statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(243,156,18,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(243,156,18,0.15);"><i class="fas fa-clock animate-pulse"></i> Pending</span>`;
-                            actionHtml = `
+                    borderStyle = 'border-l-4 border-l-green-500';
+                    glowStyle = 'box-shadow: 0 0 10px rgba(46, 204, 113, 0.06);';
+                } else {
+                    statusBadgeHtml = `<span style="color: #f39c12; font-weight: 700; text-transform: uppercase; font-size: 0.55rem; background: rgba(243,156,18,0.08); padding: 2px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 2px; border: 1px solid rgba(243,156,18,0.15);"><i class="fas fa-clock animate-pulse"></i> Pending</span>`;
+                    actionHtml = `
                                 <button onclick="event.stopPropagation(); window.cancelFromList(${i})" class="w-7.5 h-7.5 rounded-full bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white hover:border-rose-500/30 transition-all flex items-center justify-center border border-rose-500/20 active:scale-90" title="Cancel visit">
                                     <i class="fas fa-ban text-[9px]"></i>
                                 </button>
                             `;
-                            borderStyle = 'border-l-4 border-l-amber-500';
-                        }
+                    borderStyle = 'border-l-4 border-l-amber-500';
+                }
 
-                        return `
+                return `
                         <div class="bg-white/[0.015] border border-white/5 hover:border-white/10 p-2.5 rounded-xl transition-all flex items-center justify-between group active:scale-[0.99] ${borderStyle}" style="${glowStyle}">
                             <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="openResDetail(${i})">
                                 <div class="w-8.5 h-8.5 rounded-lg bg-white/[0.02] border border-white/10 flex flex-col items-center justify-center flex-shrink-0">
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         </div>
                         `;
-                    }).join('')}
+            }).join('')}
                 </div>
             `;
         } else {
@@ -566,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
     };
 
-    window.cancelFromList = async function(index) {
+    window.cancelFromList = async function (index) {
         if (confirm('Cancel this visit at Aurous?')) {
             let resList = getReservations();
             const resData = resList[index];
@@ -594,7 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.deleteFromList = async function(index) {
+    window.deleteFromList = async function (index) {
         if (confirm('Remove this visit from your list?')) {
             let resList = getReservations();
             const resData = resList[index];
@@ -1348,10 +1348,21 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 30; i++) {
             const d = new Date(today);
             d.setDate(today.getDate() + i);
-            const dateStr = d.toISOString().split('T')[0];
-            const dayName = days[d.getDay()];
-            const monthName = months[d.getMonth()];
-            const dateNum = d.getDate();
+
+
+            const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' };
+            const parts = new Intl.DateTimeFormat('en-IN', options).formatToParts(d);
+            const istYear = parts.find(p => p.type === 'year').value;
+            const istMonth = parts.find(p => p.type === 'month').value;
+            const istDay = parts.find(p => p.type === 'day').value;
+
+            const dateStr = `${istYear}-${istMonth}-${istDay}`;
+
+
+            const istDateObj = new Date(istYear, parseInt(istMonth) - 1, parseInt(istDay));
+            const dayName = days[istDateObj.getDay()];
+            const monthName = months[istDateObj.getMonth()];
+            const dateNum = istDateObj.getDate();
 
             const div = document.createElement('div');
             div.className = 'snap-center h-[37px] flex flex-col items-center justify-center text-white/50 cursor-pointer transition-all duration-300 wheel-item select-none';
@@ -1483,6 +1494,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const occasionText = formData.occasion !== 'casual' ? ` for your ${formData.occasion.replace('_', ' ')}` : '';
                                 successMessage.innerHTML = `See you soon, ${name}${occasionText}!<br>Meet you on ${formattedDate} at ${formattedTime}.`;
                             }
+
+
+                            formData.status = responseData.status || 'pending';
+                            formData.created_at = responseData.created_at || null;
 
 
                             const resList = getReservations();
@@ -1694,7 +1709,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.closeGallery = function() {
+    window.closeGallery = function () {
         const modal = document.getElementById('gallery-modal');
         if (modal) {
             modal.classList.add('opacity-0');
