@@ -44,7 +44,26 @@ class Review(Base):
     image_url: Mapped[str | None] = mapped_column(String, nullable=True)
     reply_text: Mapped[str | None] = mapped_column(String, nullable=True)
     replied_at: Mapped[datetime.datetime | None] = mapped_column(DateTime, nullable=True)
+    is_pinned: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
+
+class VibePhoto(Base):
+    __tablename__ = "vibe_photos"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    image_url: Mapped[str] = mapped_column(String)
+    likes: Mapped[int] = mapped_column(Integer, default=0)
+    approved: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
+
+class VibeBanner(Base):
+    __tablename__ = "vibe_banners"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    image_url: Mapped[str | None] = mapped_column(String, nullable=True)
+    description: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
 
 class ActiveTable(Base):
     __tablename__ = "active_tables"
@@ -69,6 +88,7 @@ class MenuItem(Base):
     image_url: Mapped[str | None] = mapped_column(String, nullable=True)
     is_veg: Mapped[bool] = mapped_column(Boolean, default=True)
     is_available: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_signature: Mapped[bool] = mapped_column(Boolean, default=False)
 
 class Order(Base):
     __tablename__ = "orders"
