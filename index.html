@@ -6,71 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurous Restro | Bistupur, Jamshedpur</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=2.0">
+    <link rel="stylesheet" href="assets/css/style.css?v=3.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @media (max-width: 768px) {
-            .social-icons {
-                gap: 28px !important;
-            }
-
-
-            #reservation-form input,
-            #reservation-form select {
-                font-size: 16px !important;
-                padding-top: 3px !important;
-                padding-bottom: 3px !important;
-            }
-
-            .social-icons a {
-                width: 44px !important;
-                height: 44px !important;
-                border-radius: 12px !important;
-            }
-
-            .social-icons a svg {
-                width: 100% !important;
-                height: 100% !important;
-                transform: scale(0.75) !important;
-            }
-
-            .social-icons .insta a svg {
-                transform: scale(1.0) !important;
-            }
-
-            .social-icons .tele a svg {
-                transform: scale(0.95) !important;
-            }
-
-            .nav-brand-text {
-                font-size: 1.24rem !important;
-                letter-spacing: 0.14em !important;
-            }
-
-            .footer-margin-fix {
-                margin-top: 1.5rem !important;
-                padding-top: 1.5rem !important;
-            }
-
-            .copyright-fix {
-                margin-bottom: 2.8rem !important;
-            }
-
-            #menu-scroll>div {
-                width: 85vw !important;
-            }
-
-            #menu-scroll .h-64 {
-                height: 12rem !important;
-
-            }
-
-            #menu-scroll .mb-6 {
-                margin-bottom: 1rem !important;
-
-            }
-        }
-    </style>
 </head>
 
 <body
@@ -86,22 +23,22 @@
         <div class="flex text-5xl md:text-7xl lg:text-[7rem] font-black tracking-tight text-white mb-16 select-none relative z-20"
             aria-label="AUROUS">
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">A</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">A</span>
             </div>
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">U</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">U</span>
             </div>
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">R</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">R</span>
             </div>
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">O</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">O</span>
             </div>
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">U</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">U</span>
             </div>
             <div class="overflow-hidden"><span
-                    class="block translate-y-full transition-transform duration-700 ease-out preloader-char">S</span>
+                    class="block translate-y-full transition-transform duration-[1500ms] ease-out preloader-char">S</span>
             </div>
         </div>
 
@@ -172,7 +109,7 @@
                     </span>
                 </h1>
                 <p
-                    class="text-[11px] md:text-lg text-white/50 max-w-xl mx-auto font-light leading-relaxed tracking-wider px-4 md:px-0 mt-2">
+                    class="text-[11px] md:text-lg text-white/80 md:text-white/50 max-w-xl mx-auto font-light leading-relaxed tracking-wider px-4 md:px-0 mt-2">
                     Elevate your evenings at Jamshedpur's premier Restro Lounge. Where exquisite global flavors meet
                     electrifying live music and unmatched modern ambiance.
                 </p>
@@ -189,44 +126,93 @@
             </div>
         </section>
 
-        <section id="vibe"
-            class="py-16 md:py-32 px-6 md:px-12 max-w-7xl mx-auto flex flex-col-reverse md:flex-row gap-16 items-center">
-            <div
-                class="liquid-glass-card w-[90%] mx-auto -mt-[180px] relative z-40 p-6 md:p-12 rounded-[2rem] md:w-1/2 md:mt-0 space-y-6 text-right md:text-left shadow-2xl">
-                <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-[10px] md:text-xs font-bold">Modern Dining
-                </h4>
-                <h2 class="text-3xl md:text-6xl font-bold tracking-tight leading-tight">More than a meal.<br>It's an
-                    <span class="italic font-light text-gray-400">experience.</span>
-                </h2>
-                <p class="text-white/60 leading-relaxed font-light">
-                    Located in the heart of Bistupur, Aurous brings a fresh perspective to Jamshedpur's culinary scene.
-                    With our meticulously crafted interiors, pulsating live bands, and a staff dedicated to making you
-                    feel like royalty—every night here is a celebration.
-                </p>
-                <div class="grid grid-cols-2 gap-8 pt-8 border-t border-white/10">
-                    <div>
-                        <h3 class="text-3xl font-bold">4.3<span class="text-[#E0115F]">★</span></h3>
-                        <p class="text-xs uppercase tracking-widest text-white/40 mt-1">Google Rating</p>
+        <section id="vibe" class="relative overflow-hidden py-12 md:py-24 px-4 md:px-12">
+            <div class="w-full max-w-7xl mx-auto" id="vibe-section-inner">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-stretch" id="vibe-top-cards">
+
+                    <!-- Left: Modern Dining - Compact -->
+                    <div class="liquid-glass-card rounded-[2rem] flex flex-col justify-between shadow-2xl w-full max-w-[450px] mx-auto"
+                        id="vibe-text-card" style="padding: 1rem;">
+                        <div>
+                            <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-[9px] md:text-xs font-bold mb-2">
+                                Modern Dining</h4>
+                            <p class="text-white/70 text-[11px] md:text-sm leading-relaxed font-light">
+                                Premium lounge in the heart of Bistupur. Crafted interiors, warm vibes &amp; a night to remember.
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-white/10 mt-3">
+                            <div>
+                                <h3 class="text-xl font-bold">4.3<span class="text-[#E0115F]">&#9733;</span></h3>
+                                <p class="text-[8px] uppercase tracking-widest text-white/40">Google Rating</p>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Live<span class="text-[#E0115F] font-bold">.</span></h3>
+                                <p class="text-[8px] uppercase tracking-widest text-white/40">Music Every Night</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-3xl font-bold">Live<span class="text-[#E0115F]">.</span></h3>
-                        <p class="text-xs uppercase tracking-widest text-white/40 mt-1">Music Every Night</p>
+
+
+                    <div class="flex flex-col justify-between w-full max-w-[450px] mx-auto" id="vibe-banner-container">
+                        <div class="relative rounded-[2rem] border border-white/10 bg-white/5 overflow-hidden aspect-square shadow-2xl flex items-center justify-center group"
+                            id="vibe-banner-card">
+                            <img id="vibe-banner-img"
+                                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600"
+                                class="w-full h-full object-cover select-none transition-transform duration-700 group-hover:scale-105"
+                                alt="What's New at Aurous">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40 flex flex-col justify-between p-6 md:p-8 text-left">
+                                <span class="text-[9px] uppercase tracking-[0.2em] text-[#E0115F] font-bold">Aurous
+                                    Update</span>
+                                <div class="mt-auto">
+                                    <h3
+                                        class="text-xl md:text-2xl text-white font-extrabold tracking-tight leading-tight uppercase font-syne">
+                                        What's New<br>at Aurous</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-center md:text-left px-2">
+                            <p id="vibe-banner-desc"
+                                class="text-sm font-outfit text-yellow-400/90 italic font-light tracking-wide">
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="w-full max-w-2xl mx-auto mt-16 text-center" id="vibe-gallery-section">
+                    <div class="mb-6">
+                        <h2
+                            class="text-3xl md:text-4xl font-extrabold tracking-tight text-yellow-400 font-syne uppercase">
+                            Aurous Memories Gallery</h2>
+                        <p class="text-white/60 text-xs md:text-sm mt-1.5 font-light tracking-wider">Tap pic to upload
+                            your memory with us</p>
+                    </div>
+
+                    <div class="relative flex items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl group/vibe cursor-pointer h-[320px] md:h-[450px]"
+                        id="vibe-gallery-container">
+                        <div class="absolute inset-0 z-0 select-none pointer-events-none">
+                            <img id="vibe-bg-blur"
+                                class="w-full h-full object-cover blur-3xl opacity-30 transition-all duration-700 scale-110"
+                                src="">
+                        </div>
+                        <div class="relative z-10 flex flex-col items-center justify-center text-white/80">
+                            <i class="fa-solid fa-camera-retro text-6xl mb-4 text-[#E0115F]"></i>
+                            <p class="text-lg font-semibold">Share Your Aurous Moment</p>
+                            <p class="text-xs uppercase tracking-widest mt-1">Click to Upload</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="w-full md:w-1/2 relative h-[500px]">
-                <img src="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470"
-                    class="absolute top-0 right-0 w-3/4 h-[350px] object-cover rounded-2xl shadow-2xl z-20"
-                    alt="Vibe 1">
-                <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"
-                    class="absolute bottom-0 left-0 w-2/3 h-[300px] object-cover rounded-2xl shadow-xl z-10"
-                    alt="Vibe 2">
-            </div>
+        </section>
         </section>
 
         <section id="menu" class="py-12 bg-[#0a0a0a]">
             <div
-                class="px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6">
+                class="px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 reveal-up">
                 <div>
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-3">Signatures</h4>
                     <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Taste the bold.</h2>
@@ -243,80 +229,49 @@
 
             <div id="menu-scroll"
                 class="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 md:px-12 pb-12 hide-scrollbar">
+            </div>
+        </section>
 
+        <section id="location" class="py-10 md:py-16 bg-[#0a0a0a] border-t border-white/5 relative z-10">
+            <div class="px-6 md:px-12 max-w-7xl mx-auto flex flex-col items-center mb-10 reveal-up">
+                <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4 text-center">Location</h4>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-center">Find your way.</h2>
+            </div>
+
+            <div class="px-6 md:px-12 max-w-7xl mx-auto">
                 <div
-                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
-                    <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1013"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Roasted Chicken Chilli">
-                        <div
-                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
-                            ₹450</div>
-                    </div>
-                    <div class="px-2 pb-2">
-                        <h3 class="text-2xl font-bold mb-2">Roasted Chicken Chilli</h3>
-                        <p class="text-white/50 text-sm font-light">Spicy, perfectly roasted chicken tossed in signature
-                            Asian sauces. A crowd favorite.</p>
-                    </div>
+                    class="w-full h-[320px] md:h-[550px] rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(224,17,95,0.1)] border border-white/10 relative bg-[#111]">
+
+                    <iframe
+                        src="https://maps.google.com/maps?q=Aurous%20Restro%20Lounge,%20Bistupur,%20Jamshedpur&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                        class="w-full h-full border-0 absolute top-0 left-0"
+                        style="filter: invert(90%) hue-rotate(180deg) brightness(85%) contrast(110%);"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
                 </div>
 
                 <div
-                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
-                    <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Premium Sizzler">
-                        <div
-                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
-                            ₹650</div>
+                    class="mt-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-white/5 p-6 md:px-10 md:py-6 rounded-2xl border border-white/5 backdrop-blur-sm">
+                    <div class="text-center md:text-left">
+                        <p class="text-white font-semibold text-lg md:text-xl mb-1"><i
+                                class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Aurous Restro Lounge</p>
+                        <p class="text-white/50 text-sm md:text-base">Near Bharat Cycle Store, Diagonal Rd, Bistupur,
+                            Jamshedpur 831001</p>
                     </div>
-                    <div class="px-2 pb-2">
-                        <h3 class="text-2xl font-bold mb-2">Chef's Special Sizzler</h3>
-                        <p class="text-white/50 text-sm font-light">Smoked directly at your table. Rich, flavorful, and
-                            incredibly satisfying.</p>
-                    </div>
-                </div>
-
-                <div
-                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
-                    <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=1374"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Fish Fingers">
-                        <div
-                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
-                            ₹380</div>
-                    </div>
-                    <div class="px-2 pb-2">
-                        <h3 class="text-2xl font-bold mb-2">Golden Fish Fingers</h3>
-                        <p class="text-white/50 text-sm font-light">Crispy on the outside, tender on the inside. Served
-                            with our house tartar sauce.</p>
-                    </div>
-                </div>
-
-                <div
-                    class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
-                    <div class="w-full h-64 rounded-2xl overflow-hidden mb-6 relative">
-                        <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Cocktails">
-                        <div
-                            class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">
-                            ₹400</div>
-                    </div>
-                    <div class="px-2 pb-2">
-                        <h3 class="text-2xl font-bold mb-2">Aurous Signature Mix</h3>
-                        <p class="text-white/50 text-sm font-light">Crafted by excellent mixologists to perfectly
-                            accompany your vibrant evening.</p>
+                    <div>
+                        <a href="https://www.google.com/maps/place/Aurous+Restro+Lounge+%7C+Best+Restaurant+in+Bistupur-Jamshedpur/@22.7911633,86.181417,17z/data=!3m1!4b1!4m6!3m5!1s0x39f5e350bd849d6b:0x573d59bfe5580a2b!8m2!3d22.7911584!4d86.1839919!16s%2Fg%2F11js7ldhxr?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D"
+                            target="_blank"
+                            class="bg-[#E0115F] hover:bg-[#ff2e7e] text-white px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-widest transition-all inline-flex items-center gap-2 shadow-[0_0_15px_rgba(224,17,95,0.4)] hover:shadow-[0_0_25px_rgba(224,17,95,0.6)] hover:-translate-y-1">
+                            <i class="fa-solid fa-location-arrow"></i> Get Directions
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="echoes" class="py-16 md:py-32 overflow-hidden relative">
+        <section id="echoes" class="py-10 md:py-20 overflow-hidden relative">
             <div class="px-6 md:px-12 max-w-7xl mx-auto">
-                <div class="text-center mb-12 md:mb-20 relative z-20">
+                <div class="text-center mb-8 md:mb-14 relative z-20">
                     <h4 class="text-[#E0115F] uppercase tracking-[0.3em] text-xs font-bold mb-4">Real Echoes</h4>
                     <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">Loved by<br><span
                             class="text-transparent bg-clip-text bg-gradient-to-r from-[#E0115F] to-rose-400">Jamshedpur.</span>
@@ -384,9 +339,14 @@
                 </div>
 
                 <div class="text-center md:text-left">
-                    <p class="text-white font-medium mb-1"><i class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Near
-                        Bharat Cycle Store, Diagonal Rd</p>
-                    <p class="text-white/50 text-sm">Bistupur, Jamshedpur 831001</p>
+                    <a href="https://www.google.com/maps/place/Aurous+Restro+Lounge+%7C+Best+Restaurant+in+Bistupur-Jamshedpur/@22.7911633,86.181417,17z/data=!3m1!4b1!4m6!3m5!1s0x39f5e350bd849d6b:0x573d59bfe5580a2b!8m2!3d22.7911584!4d86.1839919!16s%2Fg%2F11js7ldhxr?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D"
+                        target="_blank" class="block hover:text-[#E0115F] transition-colors group">
+                        <p class="text-white font-medium mb-1 group-hover:text-[#E0115F] transition-colors"><i
+                                class="fa-solid fa-map-pin text-[#E0115F] mr-2"></i> Near
+                            Bharat Cycle Store, Diagonal Rd</p>
+                        <p class="text-white/50 text-sm group-hover:text-[#E0115F]/80 transition-colors">Bistupur,
+                            Jamshedpur 831001</p>
+                    </a>
                 </div>
 
                 <div class="text-center md:text-right">
@@ -461,42 +421,44 @@
     </div>
 
     <div id="review-modal"
-        class="fixed inset-0 z-[110] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 px-4">
-        <div class="fixed inset-0 bg-black/80 backdrop-blur-xl cursor-pointer" id="close-review-bg"></div>
-        <div class="relative z-10 w-full max-w-md p-8 md:p-10 bg-[#0a0a0a] border border-white/10 transform translate-y-10 transition-all duration-500 rounded-3xl shadow-2xl"
+        class="fixed inset-0 z-[110] flex items-start md:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 overflow-y-auto py-4 md:py-0 px-4">
+        <div class="fixed inset-0 bg-black/85 backdrop-blur-xl cursor-pointer" id="close-review-bg"></div>
+        <div class="liquid-glass-card relative z-10 w-full max-w-sm my-auto p-5 md:p-8 rounded-[2rem] flex flex-col"
             id="review-box">
             <button id="close-review"
-                class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors">
-                <i class="fa-solid fa-xmark"></i>
+                class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white/50 hover:text-white hover:bg-[#E0115F] transition-all duration-200 z-20">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
 
-            <div class="text-center mb-8 mt-2">
-                <h2 class="text-3xl font-bold tracking-tight">Your Echo.</h2>
-                <p class="text-xs uppercase tracking-[0.2em] text-[#E0115F] mt-2 font-bold">Share Your Experience</p>
+            <div class="text-center mb-5 mt-1 relative z-10">
+                <h2 class="text-2xl font-bold tracking-tight text-white">Your Echo.</h2>
+                <p class="text-[10px] uppercase tracking-[0.22em] text-[#E0115F] mt-1.5 font-bold">Share Your Experience
+                </p>
             </div>
 
-            <form id="review-form" class="flex flex-col gap-5">
-                <div class="flex gap-4">
-                    <div class="flex-1">
-                        <label
-                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Name</label>
+            <form id="review-form" class="flex flex-col gap-4 relative z-10">
+
+
+                <div class="flex gap-3">
+                    <div class="res-input-group flex-1">
+                        <label>Name</label>
                         <input type="text" id="review-name" required
-                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
-                            placeholder="John Doe">
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            style="font-size: 16px;" placeholder="John Doe">
                     </div>
-                    <div class="flex-1">
-                        <label
-                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Location</label>
+                    <div class="res-input-group flex-1">
+                        <label>Location</label>
                         <input type="text" id="review-location" required
-                            class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
-                            placeholder="City">
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            style="font-size: 16px;" placeholder="City">
                     </div>
                 </div>
-                <div class="flex gap-4">
-                    <div class="flex-1">
-                        <label
-                            class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Rating</label>
-                        <div class="flex gap-2 text-2xl text-white/20 mt-1" id="star-rating-input">
+
+
+                <div class="flex gap-3 items-start">
+                    <div class="res-input-group flex-1">
+                        <label>Rating</label>
+                        <div class="flex gap-2 text-xl text-white/20 mt-1.5" id="star-rating-input">
                             <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
                                 data-value="1"></i>
                             <i class="fa-solid fa-star cursor-pointer hover:text-[#E0115F] transition-colors"
@@ -510,30 +472,31 @@
                         </div>
                         <input type="hidden" id="review-rating" value="5" required>
                     </div>
-                    <div class="flex-1">
-                        <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Photos
-                            (Optional)</label>
+                    <div class="res-input-group flex-1">
+                        <label>Photos</label>
                         <div class="relative w-full">
                             <input type="file" id="review-image"
                                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*"
                                 multiple>
-                            <div class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs flex flex-col items-center justify-center text-white/50 transition-colors h-full"
+                            <div class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm flex items-center justify-center gap-2 text-white/50 transition-colors"
                                 id="review-image-label">
-                                <i class="fa-solid fa-cloud-arrow-up text-lg mb-1"></i>
-                                <span>Upload Photos</span>
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <span>Upload</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold">Your
-                        Review</label>
+
+
+                <div class="res-input-group">
+                    <label>Your Review</label>
                     <textarea id="review-text" required rows="3"
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar"
-                        placeholder="Tell us about your experience..."></textarea>
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30 resize-none hide-scrollbar"
+                        style="font-size: 16px;" placeholder="Tell us about your experience..."></textarea>
                 </div>
+
                 <button type="submit"
-                    class="mt-2 bg-warm-gradient text-[#ffffff] py-4 rounded-xl text-xs uppercase tracking-[0.2em] font-bold btn-primary-creative btn-shine-effect overflow-hidden">
+                    class="mt-1 bg-warm-gradient text-[#ffffff] py-3.5 rounded-xl text-xs uppercase tracking-[0.2em] font-bold btn-primary-creative btn-shine-effect overflow-hidden">
                     <span>Submit Review</span>
                 </button>
             </form>
@@ -541,108 +504,114 @@
     </div>
 
     <div id="reservation-modal"
-        class="fixed inset-0 z-[120] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500">
-        <div class="fixed inset-0 bg-black/80 backdrop-blur-md cursor-pointer" id="close-reservation-bg"></div>
-        <div class="liquid-glass-card relative z-10 w-[94%] md:max-w-lg max-h-[88vh] overflow-y-auto p-3.5 md:p-10 rounded-[2.5rem] flex flex-col transform translate-y-20 md:translate-y-0 transition-all duration-500"
-            id="reservation-box" style="filter: blur(10px);">
+        class="fixed inset-0 z-[120] flex items-start md:items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 overflow-y-auto py-4 md:py-0">
+        <div class="fixed inset-0 bg-black/85 backdrop-blur-lg cursor-pointer" id="close-reservation-bg"></div>
+
+        <div class="liquid-glass-card relative z-10 w-[95%] md:max-w-xl my-auto p-5 md:p-8 rounded-[2rem] flex flex-col"
+            id="reservation-box">
+
+            <!-- Close Button -->
             <button id="close-reservation"
-                class="absolute top-3 right-5 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white/50 hover:text-white hover:bg-[#E0115F] transition-colors z-20">
-                <i class="fa-solid fa-xmark"></i>
+                class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-white/50 hover:text-white hover:bg-[#E0115F] transition-all duration-200 z-20">
+                <i class="fa-solid fa-xmark text-sm"></i>
             </button>
 
-            <div class="text-center mb-3 md:mb-6 relative z-10 mt-1">
-                <h2 class="text-[19px] md:text-3xl font-bold tracking-tight text-white">Reserve Your Vibe.</h2>
-                <p class="text-[8px] md:text-[10px] uppercase tracking-[0.2em] text-[#E0115F] mt-0.5 md:mt-1 font-bold">
-                    Secure Your Exclusive
+            <!-- Header -->
+            <div class="text-center mb-5 md:mb-6 relative z-10">
+                <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Reserve Your Vibe.</h2>
+                <p class="text-[10px] uppercase tracking-[0.22em] text-[#E0115F] mt-1.5 font-bold">Secure Your Exclusive
                     Experience</p>
             </div>
 
-            <form id="reservation-form" class="flex flex-col gap-2 md:gap-4 relative z-10 w-full">
-                <div class="flex gap-2">
-                    <div class="flex-1">
-                        <label
-                            class="block text-[9px] uppercase tracking-widest text-white/50 mb-0.5 font-semibold">Name</label>
+            <form id="reservation-form" class="flex flex-col gap-4 relative z-10 w-full">
+
+                <!-- Name + Phone Row -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="res-input-group">
+                        <label>Name</label>
                         <input type="text" id="reserve-name" name="name" required
-                            class="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-[10px] focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 md:py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
                             placeholder="Your Name">
                     </div>
-                    <div class="flex-1">
-                        <label
-                            class="block text-[9px] uppercase tracking-widest text-white/50 mb-0.5 font-semibold">Phone</label>
+                    <div class="res-input-group">
+                        <label>Phone</label>
                         <input type="tel" id="reserve-phone" name="phone" required maxlength="10"
-                            class="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-[10px] focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 md:py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white placeholder-white/30"
                             placeholder="10-digit number">
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-1">
-                    <label class="text-[9px] uppercase tracking-widest text-white/50 font-semibold mb-0.5">Special
-                        Occasion</label>
+                <!-- Occasion -->
+                <div class="res-input-group">
+                    <label>Special Occasion</label>
                     <div class="relative">
                         <select id="occasion" name="occasion"
-                            class="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1.5 text-[10px] focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white/70 appearance-none cursor-pointer">
-                            <option value="casual" class="bg-[#0a0a0a]">Casual Dining</option>
-                            <option value="birthday" class="bg-[#0a0a0a]">Birthday Party</option>
-                            <option value="anniversary" class="bg-[#0a0a0a]">Anniversary</option>
-                            <option value="date_night" class="bg-[#0a0a0a]">Date Night</option>
-                            <option value="business" class="bg-[#0a0a0a]">Business Meeting</option>
-                            <option value="other" class="bg-[#0a0a0a]">Other Celebration</option>
+                            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 md:py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white/80 appearance-none cursor-pointer">
+                            <option value="casual" class="bg-[#0d0d0d]">🍽️ Casual Dining</option>
+                            <option value="birthday" class="bg-[#0d0d0d]">🎂 Birthday Party</option>
+                            <option value="anniversary" class="bg-[#0d0d0d]">💍 Anniversary</option>
+                            <option value="date_night" class="bg-[#0d0d0d]">🌹 Date Night</option>
+                            <option value="business" class="bg-[#0d0d0d]">💼 Business Meeting</option>
+                            <option value="other" class="bg-[#0d0d0d]">🎉 Other Celebration</option>
                         </select>
                         <i
-                            class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none text-xs"></i>
+                            class="fa-solid fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none text-xs"></i>
                     </div>
                 </div>
 
-                <div class="flex flex-col gap-1.2 my-1 md:my-4">
-                    <label class="text-[8.5px] uppercase tracking-widest text-white/40 font-bold mb-0.5">Select Date &
-                        Time</label>
-                    <div
-                        class="flex justify-between items-center gap-1 relative h-[111px] w-full rounded-[1rem] overflow-hidden border border-white/5 bg-white/5 backdrop-blur-xl px-1 shadow-inner wheel-container-fixed">
-                        <div
-                            class="absolute top-1/2 left-0 w-full h-16 -translate-y-1/2 bg-white/10 border-y border-[#E0115F]/50 pointer-events-none z-0 shadow-[0_0_30px_rgba(224,17,95,0.15)] selection-ring">
-                        </div>
-
+                <!-- Date & Time Custom Wheel Picker (Dono PC aur Mobile ke liye) -->
+                <div class="flex flex-col gap-1.5 w-full">
+                    <label class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/40 font-bold">📅 Select
+                        Date & Time</label>
+                    <div class="flex justify-between items-center gap-1 relative w-full rounded-2xl overflow-hidden border border-white/5 bg-white/5 backdrop-blur-xl px-1 shadow-inner wheel-container-fixed"
+                        style="height:111px;max-height:111px;overflow:hidden;">
+                        <div class="absolute left-0 w-full pointer-events-none z-0 selection-ring"
+                            style="top:50%;transform:translateY(-50%);height:37px;"></div>
                         <div id="wheel-date"
-                            class="h-full w-[40%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[37px] text-center font-bold">
-                        </div>
-
+                            class="overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 text-center font-bold"
+                            style="height:111px;width:40%;padding-top:37px;padding-bottom:37px;"></div>
                         <div id="wheel-hour"
-                            class="h-full w-[20%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[37px] text-center border-l border-white/5">
-                        </div>
-
+                            class="overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 text-center border-l border-white/5"
+                            style="height:111px;width:20%;padding-top:37px;padding-bottom:37px;"></div>
                         <div id="wheel-minute"
-                            class="h-full w-[20%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[37px] text-center border-l border-white/5">
-                        </div>
-
+                            class="overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 text-center border-l border-white/5"
+                            style="height:111px;width:20%;padding-top:37px;padding-bottom:37px;"></div>
                         <div id="wheel-ampm"
-                            class="h-full w-[20%] overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 py-[37px] text-center border-l border-white/5">
-                        </div>
+                            class="overflow-y-scroll hide-scrollbar snap-y snap-mandatory relative z-10 text-center border-l border-white/5"
+                            style="height:111px;width:20%;padding-top:37px;padding-bottom:37px;"></div>
                     </div>
                 </div>
 
+                <!-- Hidden fields for form submit -->
                 <input type="hidden" id="selected-date" name="date">
                 <input type="hidden" id="selected-hour" name="hour">
                 <input type="hidden" id="selected-minute" name="minute">
                 <input type="hidden" id="selected-ampm" name="ampm">
 
-                <div class="flex flex-col gap-1">
-                    <label class="text-[9px] uppercase tracking-widest text-white/50 font-semibold">Guests</label>
+
+
+                <!-- Guests -->
+                <div class="res-input-group">
+                    <label>👥 Guests</label>
                     <div
-                        class="flex justify-between items-center bg-white/5 border border-white/10 rounded-lg px-2.5 py-1">
+                        class="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-4 py-2.5">
                         <button type="button" id="guest-minus"
-                            class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors"><i
-                                class="fa-solid fa-minus text-[8px]"></i></button>
-                        <span id="guest-count" class="text-sm font-bold text-white">2</span>
+                            class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors">
+                            <i class="fa-solid fa-minus text-xs"></i>
+                        </button>
+                        <span id="guest-count" class="text-lg font-bold text-white">2</span>
                         <input type="hidden" id="guest-input" name="guest_count" value="2">
                         <button type="button" id="guest-plus"
-                            class="w-6 h-6 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors"><i
-                                class="fa-solid fa-plus text-[8px]"></i></button>
+                            class="w-8 h-8 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
+                <!-- Submit -->
                 <button type="submit"
-                    class="mt-1.5 bg-warm-gradient text-[#ffffff] py-2.5 rounded-lg text-[9px] uppercase tracking-[0.2em] font-bold w-full btn-shine-effect overflow-hidden">
-                    <span>Confirm Reservation</span>
+                    class="bg-warm-gradient text-white py-3.5 rounded-xl text-xs uppercase tracking-[0.22em] font-bold w-full btn-shine-effect overflow-hidden hover:shadow-[0_0_25px_rgba(224,17,95,0.45)] transition-all">
+                    <span>✨ Confirm Reservation</span>
                 </button>
             </form>
         </div>
@@ -681,13 +650,13 @@
 
 
     <div id="toast-container"
-        class="fixed top-8 left-1/2 -translate-x-1/2 z-[300] flex flex-col gap-3 pointer-events-none w-full max-w-xs md:max-w-md px-6">
+        class="fixed bottom-28 md:bottom-8 left-1/2 -translate-x-1/2 z-[300] flex flex-col gap-3 pointer-events-none w-full max-w-xs md:max-w-md px-6">
     </div>
 
     <audio id="bg-music" src="assets/audio/bgm.mp3" loop preload="auto"></audio>
 
-    <div
-        class="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.45] md:scale-[0.6]">
+    <div id="music-player-widget"
+        class="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-[90] flex flex-col items-end group/he select-none origin-bottom-right scale-[0.45] md:scale-[0.6] transition-opacity duration-500 opacity-100 pointer-events-auto">
         <div class="relative z-0 h-16 -mb-2 transition-all duration-200 group-hover/he:h-0 mr-12">
             <svg width="128" height="128" viewBox="0 0 128 128"
                 class="duration-500 border-4 rounded-full shadow-md border-zinc-400 border-spacing-5 animate-[spin_3s_linear_infinite] transition-all">
@@ -832,32 +801,58 @@
         </div>
     </div>
 
-    <nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] bg-[#050505]/80 backdrop-blur-xl border-t border-white/10 pb-safe pb-3 pt-2 px-6 flex justify-between items-center transition-transform duration-500 translate-y-full"
+    <nav class="md:hidden fixed bottom-0 left-0 w-full z-[100] bg-[#050505]/80 backdrop-blur-xl border-t border-white/10 pb-safe pb-3 pt-2 flex justify-around items-center transition-transform duration-500 translate-y-full"
         id="mobile-nav">
         <a href="#" id="nav-home"
-            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors flex-1">
             <i class="fa-solid fa-house text-lg"></i>
             <span class="text-[10px] uppercase tracking-wider font-semibold">Home</span>
         </a>
         <a href="#vibe" id="nav-vibe"
-            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors flex-1">
             <i class="fa-solid fa-martini-glass text-lg"></i>
             <span class="text-[10px] uppercase tracking-wider font-semibold">Vibe</span>
         </a>
         <a href="#menu" id="nav-menu"
-            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors flex-1">
             <i class="fa-solid fa-utensils text-lg"></i>
             <span class="text-[10px] uppercase tracking-wider font-semibold">Menu</span>
         </a>
+        <a href="#location" id="nav-map"
+            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors flex-1">
+            <i class="fa-solid fa-map-location-dot text-lg"></i>
+            <span class="text-[10px] uppercase tracking-wider font-semibold">Map</span>
+        </a>
         <a href="#echoes" id="nav-echoes"
-            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors">
+            class="mobile-nav-link flex flex-col items-center gap-1 text-white/60 hover:text-[#E0115F] transition-colors flex-1">
             <i class="fa-solid fa-star text-lg"></i>
             <span class="text-[10px] uppercase tracking-wider font-semibold">Reviews</span>
         </a>
     </nav>
 
+    <!-- Upload Success Popup -->
+    <div id="upload-success-popup"
+        class="fixed inset-0 z-[200] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 px-6">
+        <div class="fixed inset-0 bg-black/75 backdrop-blur-xl" id="upload-popup-bg" onclick="closeUploadPopup()"></div>
+        <div id="upload-popup-box"
+            class="relative z-10 w-full max-w-xs bg-[#0a0a0a] border border-white/10 rounded-3xl p-7 flex flex-col items-center gap-4 shadow-2xl transform scale-90 transition-all duration-500">
+            <div class="w-16 h-16 rounded-full bg-[#E0115F]/10 border border-[#E0115F]/30 flex items-center justify-center">
+                <i class="fa-solid fa-camera text-[#E0115F] text-2xl"></i>
+            </div>
+            <div class="text-center">
+                <h3 class="text-lg font-bold text-white tracking-tight">Memory Submitted! &#128248;</h3>
+                <p class="text-white/50 text-xs mt-2 leading-relaxed">Your photo has been sent for admin approval. It'll appear in the Aurous gallery once approved.</p>
+            </div>
+            <span class="text-[9px] uppercase tracking-[0.25em] text-[#E0115F] font-bold">Aurous Memories</span>
+            <button onclick="closeUploadPopup()"
+                class="w-full bg-[#E0115F] hover:bg-[#ff2e7e] text-white py-3 rounded-xl text-xs uppercase tracking-[0.18em] font-bold transition-all">
+                Done
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="/assets/js/script.js?v=2"></script>
+    <script src="/assets/js/script.js?v=3"></script>
 </body>
 
 </html>
