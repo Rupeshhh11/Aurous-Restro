@@ -1016,6 +1016,12 @@
                     <span>Menu Management</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('vibe-photos')">
+                    <i class="fas fa-images"></i>
+                    <span>Vibe</span>
+                </a>
+            </li>
         </ul>
         <div class="logout-btn" onclick="logout()">
             <i class="fas fa-right-from-bracket"></i>
@@ -1267,6 +1273,73 @@
             </div>
         </section>
 
+        <section id="vibe-photosSection" class="content-section">
+            <!-- Part 1: Vibe Banner Settings -->
+            <div class="data-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+                <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0 0 1.5rem 0;">
+                    Vibe Banner Settings</h3>
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
+                        <!-- Current Banner Preview -->
+                        <div style="flex: 1; min-width: 250px; max-width: 320px;">
+                            <span style="color: var(--text-dim); font-size: 0.85rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase;">Current Banner</span>
+                            <div style="border: 1px solid var(--border); border-radius: 16px; overflow: hidden; aspect-ratio: 1; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; position: relative;">
+                                <img id="adminBannerPreview" src="" alt="No banner configured" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                <div id="adminBannerPlaceholder" style="color: var(--text-dim); font-size: 0.9rem;">No Banner Image Uploaded</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Upload and Description controls -->
+                        <div style="flex: 2; min-width: 280px; display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label style="color: var(--text-dim); font-size: 0.85rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase;">Upload New Banner Photo</label>
+                                <input type="file" id="banner-photo-file" accept="image/*" style="display: none;" onchange="uploadBannerPhoto()">
+                                <button onclick="document.getElementById('banner-photo-file').click()"
+                                    style="background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); padding: 0.6rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600; display: inline-flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-upload"></i> Choose Banner Photo
+                                </button>
+                                <span id="banner-file-name" style="margin-left: 0.75rem; color: var(--text-dim); font-size: 0.85rem;"></span>
+                            </div>
+                            
+                            <div>
+                                <label style="color: var(--text-dim); font-size: 0.85rem; display: block; margin-bottom: 0.5rem; text-transform: uppercase;">Banner Description (Max 20 Words)</label>
+                                <textarea id="banner-description-input" rows="3" placeholder="Enter banner description text (max 20 words)..." 
+                                    style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; color: white; padding: 0.75rem; font-family: inherit; resize: none; font-size: 0.9rem;"
+                                    oninput="countDescriptionWords()"></textarea>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.35rem; font-size: 0.8rem;">
+                                    <span id="banner-word-count" style="color: var(--text-dim);">0 / 20 words</span>
+                                    <span id="banner-word-warning" style="color: #ff4444; display: none;">Word limit exceeded!</span>
+                                </div>
+                            </div>
+                            
+                            <button onclick="saveBannerSettings()"
+                                style="background: var(--primary); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 10px; cursor: pointer; font-weight: 700; align-self: flex-start; margin-top: 0.5rem;">
+                                Save Banner Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 2: Vibe Gallery Moderation -->
+            <div class="data-card" style="padding: 1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+                    <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">
+                        Vibe Gallery Moderation</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="file" id="vibe-photo-file" accept="image/*" style="display: none;"
+                            onchange="uploadVibePhoto()">
+                        <button onclick="document.getElementById('vibe-photo-file').click()"
+                            style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i
+                                class="fas fa-plus"></i> Upload Photo (Auto-Approved)</button>
+                    </div>
+                </div>
+                <div id="vibePhotosGrid"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+                </div>
+            </div>
+        </section>
+
 
         <section id="reviewsSection" class="content-section">
             <div class="filter-bar">
@@ -1313,7 +1386,7 @@
     <!-- Menu Item Modal -->
     <div id="menuItemModal"
         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:4000; align-items:center; justify-content:center;">
-        
+
         <style>
             /* Premium CSS Toggle Switch (Compact) */
             .switch-container {
@@ -1328,10 +1401,12 @@
                 user-select: none;
                 transition: 0.2s;
             }
+
             .switch-container:hover {
                 background: rgba(255, 255, 255, 0.04);
                 border-color: rgba(255, 255, 255, 0.1);
             }
+
             .switch-label {
                 color: rgba(255, 255, 255, 0.7);
                 font-size: 0.88rem;
@@ -1341,12 +1416,14 @@
                 align-items: center;
                 gap: 0.4rem;
             }
+
             .switch-input {
                 opacity: 0;
                 width: 0;
                 height: 0;
                 position: absolute;
             }
+
             .switch-slider {
                 position: relative;
                 display: inline-block;
@@ -1357,6 +1434,7 @@
                 border-radius: 30px;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
+
             .switch-slider::before {
                 content: "";
                 position: absolute;
@@ -1369,37 +1447,47 @@
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
-            .switch-input:checked + .switch-slider {
+
+            .switch-input:checked+.switch-slider {
                 background-color: #E0115F;
                 border-color: rgba(224, 17, 95, 0.2);
                 box-shadow: 0 0 8px rgba(224, 17, 95, 0.4);
             }
-            .switch-input:checked + .switch-slider::before {
+
+            .switch-input:checked+.switch-slider::before {
                 transform: translateX(18px);
             }
 
             /* Input Focus Glowing Effects */
-            .premium-input:focus, .premium-select:focus, .premium-textarea:focus {
+            .premium-input:focus,
+            .premium-select:focus,
+            .premium-textarea:focus {
                 border-color: #E0115F !important;
                 box-shadow: 0 0 10px rgba(224, 17, 95, 0.25) !important;
                 background: rgba(255, 255, 255, 0.05) !important;
                 outline: none;
             }
-            .premium-input, .premium-select, .premium-textarea {
+
+            .premium-input,
+            .premium-select,
+            .premium-textarea {
                 transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
-            
+
             /* Custom Scrollbar for Modal content if overflow */
             .premium-modal-content::-webkit-scrollbar {
                 width: 5px;
             }
+
             .premium-modal-content::-webkit-scrollbar-track {
                 background: transparent;
             }
+
             .premium-modal-content::-webkit-scrollbar-thumb {
                 background: rgba(255, 255, 255, 0.08);
                 border-radius: 3px;
             }
+
             .premium-modal-content::-webkit-scrollbar-thumb:hover {
                 background: rgba(255, 255, 255, 0.15);
             }
@@ -1407,10 +1495,12 @@
 
         <div class="premium-modal-content"
             style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 16px; padding: 1.2rem 1.6rem; width: 92%; max-width: 440px; max-height: 95vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 17, 95, 0.1); font-family: 'Outfit', sans-serif;">
-            
+
             <!-- Modal Header -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.6rem;">
-                <h3 style="color:white; font-size:1.2rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.5rem;" id="menuModalTitle">
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.6rem;">
+                <h3 style="color:white; font-size:1.2rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.5rem;"
+                    id="menuModalTitle">
                     <i class="fas fa-hamburger" style="color:#E0115F; font-size: 1.1rem;"></i> Add Menu Item
                 </h3>
                 <button onclick="closeMenuItemModal()"
@@ -1420,20 +1510,22 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <!-- Modal Body -->
             <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                
+
                 <!-- Item Name Input -->
                 <div style="position:relative; display:flex; align-items:center;">
-                    <i class="fas fa-signature" style="position:absolute; left:0.85rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
+                    <i class="fas fa-signature"
+                        style="position:absolute; left:0.85rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
                     <input id="menuItemName" placeholder="Item Name" class="premium-input"
                         style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
                 </div>
-                
+
                 <!-- Category Select -->
                 <div style="position: relative; width: 100%;">
-                    <i class="fas fa-tags" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
+                    <i class="fas fa-tags"
+                        style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
                     <select id="menuItemCategory" class="premium-select"
                         style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 0.55rem 2.2rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
                         <option value="Starters" style="background:#111; color:white;">Starters</option>
@@ -1442,61 +1534,80 @@
                         <option value="Roti" style="background:#111; color:white;">Roti</option>
                         <option value="Desserts" style="background:#111; color:white;">Desserts</option>
                     </select>
-                    <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
+                    <i class="fas fa-chevron-down"
+                        style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
                 </div>
-                
+
                 <!-- Price Input -->
                 <div style="position:relative; display:flex; align-items:center;">
-                    <i class="fas fa-rupee-sign" style="position:absolute; left:0.95rem; color:rgba(255,255,255,0.3); font-size:0.88rem; pointer-events:none;"></i>
+                    <i class="fas fa-rupee-sign"
+                        style="position:absolute; left:0.95rem; color:rgba(255,255,255,0.3); font-size:0.88rem; pointer-events:none;"></i>
                     <input id="menuItemPrice" type="number" placeholder="Price (₹)" class="premium-input"
                         style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
                 </div>
-                
+
                 <!-- Description Textarea -->
                 <div style="position:relative; display:flex;">
-                    <i class="fas fa-align-left" style="position:absolute; left:0.85rem; top:0.75rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
+                    <i class="fas fa-align-left"
+                        style="position:absolute; left:0.85rem; top:0.75rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
                     <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" class="premium-textarea"
                         style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; resize:vertical; font-size:0.88rem; outline:none; min-height:55px;"></textarea>
                 </div>
-                
+
                 <!-- Image Upload & URL input -->
-                <div style="display:flex; align-items:center; gap:0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:0.4rem; position:relative;">
+                <div
+                    style="display:flex; align-items:center; gap:0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:0.4rem; position:relative;">
                     <input type="file" id="menuItemImageFile" accept="image/*" style="display:none;"
                         onchange="handleMenuImageUpload(event)">
-                    
+
                     <button type="button" onclick="document.getElementById('menuItemImageFile').click()"
                         style="background:linear-gradient(135deg, rgba(224, 17, 95, 0.12), rgba(224, 17, 95, 0.04)); border:1px solid rgba(224, 17, 95, 0.25); padding:0.45rem 0.8rem; border-radius:8px; color:white; cursor:pointer; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; white-space:nowrap;"
                         onmouseover="this.style.background='rgba(224, 17, 95, 0.2)'; this.style.borderColor='rgba(224, 17, 95, 0.45)'; this.style.transform='translateY(-1px)'"
                         onmouseout="this.style.background='rgba(224, 17, 95, 0.12)'; this.style.borderColor='rgba(224, 17, 95, 0.25)'; this.style.transform='none'">
                         <i class="fas fa-cloud-upload-alt" style="color:#E0115F; font-size: 0.85rem;"></i> Upload Photo
                     </button>
-                    
+
                     <input id="menuItemImage" placeholder="Or enter Image URL" class="premium-input"
                         style="background:transparent; border:none; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.85rem; padding:0.3rem 0.4rem;">
                 </div>
-                
+
                 <!-- Veg/Non-Veg Dropdown Select -->
                 <div style="position: relative; width: 100%;">
-                    <i class="fas fa-leaf" style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
+                    <i class="fas fa-leaf"
+                        style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
                     <select id="menuItemVeg" class="premium-select"
                         style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 0.55rem 2.2rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
                         <option value="true" style="background:#111; color:white;">🟢 Vegetarian</option>
                         <option value="false" style="background:#111; color:white;">🔴 Non-Vegetarian</option>
                     </select>
-                    <i class="fas fa-chevron-down" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
+                    <i class="fas fa-chevron-down"
+                        style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
                 </div>
-                
+
                 <!-- Available Premium Switch Toggle -->
                 <label class="switch-container">
                     <span class="switch-label">
-                        <i class="fas fa-eye" style="color:rgba(255, 255, 255, 0.4); font-size: 0.85rem;"></i> Available in Menu
+                        <i class="fas fa-eye" style="color:rgba(255, 255, 255, 0.4); font-size: 0.85rem;"></i> Available
+                        in Menu
                     </span>
                     <div style="position: relative; display: inline-block; width: 38px; height: 20px;">
                         <input type="checkbox" id="menuItemAvailable" class="switch-input" checked>
                         <span class="switch-slider"></span>
                     </div>
                 </label>
-                
+
+                <!-- Signature Premium Switch Toggle -->
+                <label class="switch-container">
+                    <span class="switch-label">
+                        <i class="fas fa-star" style="color:rgba(255, 255, 255, 0.4); font-size: 0.85rem;"></i> Is
+                        Signature
+                    </span>
+                    <div style="position: relative; display: inline-block; width: 38px; height: 20px;">
+                        <input type="checkbox" id="menuItemSignature" class="switch-input">
+                        <span class="switch-slider"></span>
+                    </div>
+                </label>
+
                 <!-- Save Button -->
                 <button id="menuItemSaveBtn" onclick="saveMenuItem()"
                     style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.65rem; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.92rem; letter-spacing:0.3px; box-shadow: 0 4px 12px rgba(224, 17, 95, 0.25); transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; justify-content:center; gap:0.4rem; margin-top:0.2rem;"
@@ -1514,9 +1625,11 @@
         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:4000; align-items:center; justify-content:center;">
         <div class="premium-modal-content"
             style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 20px; padding: 2rem; width: 92%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
-                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3
+                    style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
                     <i class="fas fa-file-invoice-dollar" style="color:#E0115F;"></i> Manual Order Entry
                 </h3>
                 <button onclick="closeManualOrderModal()"
@@ -1526,21 +1639,23 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div style="display:flex; flex-direction:column; gap:1.2rem;">
                 <!-- Table Select -->
                 <div style="position: relative; width: 100%;">
-                    <i class="fas fa-chair" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
+                    <i class="fas fa-chair"
+                        style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
                     <select id="moTableNumber" class="premium-select"
                         style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.8rem 2.5rem 0.8rem 2.5rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.95rem;">
                         <option value="" style="background:#111; color:white;">Select Active Table...</option>
                     </select>
-                    <i class="fas fa-chevron-down" style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
+                    <i class="fas fa-chevron-down"
+                        style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
                 </div>
-                
+
                 <!-- Items list -->
                 <div id="moItemsList" style="display:flex; flex-direction:column; gap:0.6rem;"></div>
-                
+
                 <!-- Add Item Button -->
                 <button onclick="addManualOrderItem()"
                     style="background:rgba(255,255,255,0.02); border:1px dashed rgba(224, 17, 95, 0.4); color:rgba(255,255,255,0.7); padding:0.75rem; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.9rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; transition:all 0.25s;"
@@ -1548,11 +1663,12 @@
                     onmouseout="this.style.background='rgba(255, 255, 255, 0.02)'; this.style.borderColor='rgba(224, 17, 95, 0.4)'; this.style.color='rgba(255,255,255,0.7)';">
                     <i class="fas fa-plus-circle" style="color:#E0115F;"></i> Add Item
                 </button>
-                
+
                 <!-- Bottom panel with total & submit -->
-                <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:1.2rem; margin-top:0.4rem; display:flex; justify-content:space-between; align-items:center;">
+                <div
+                    style="border-top:1px solid rgba(255,255,255,0.08); padding-top:1.2rem; margin-top:0.4rem; display:flex; justify-content:space-between; align-items:center;">
                     <span id="moTotal" style="font-size:1.3rem; font-weight:700; color:white;">Total: ₹0</span>
-                    
+
                     <button onclick="submitManualOrder()"
                         style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.75rem 1.6rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.95rem; letter-spacing:0.5px; box-shadow: 0 4px 15px rgba(224, 17, 95, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; gap:0.5rem;"
                         onmouseover="this.style.boxShadow='0 6px 20px rgba(224, 17, 95, 0.5)'; this.style.transform='translateY(-2px)'; this.style.filter='brightness(1.1)'"
@@ -1570,9 +1686,11 @@
         style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:4000; align-items:center; justify-content:center;">
         <div class="premium-modal-content"
             style="background: linear-gradient(145deg, #121212, #080808); border: 1px solid rgba(224, 17, 95, 0.2); border-radius: 20px; padding: 2rem; width: 92%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
-                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3
+                    style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
                     <i class="fas fa-walking" style="color:#E0115F;"></i> Add Walk-in
                 </h3>
                 <button onclick="closeWalkinModal()"
@@ -1582,32 +1700,36 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <div style="display:flex; flex-direction:column; gap:1.2rem;">
                 <!-- Guest Name -->
                 <div style="position:relative; display:flex; align-items:center;">
-                    <i class="fas fa-user-edit" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                    <i class="fas fa-user-edit"
+                        style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
                     <input id="wiName" placeholder="Guest Name" class="premium-input"
                         style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
                 </div>
-                
+
                 <!-- Phone Number -->
                 <div style="position:relative; display:flex; align-items:center;">
-                    <i class="fas fa-phone-alt" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                    <i class="fas fa-phone-alt"
+                        style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
                     <input id="wiPhone" placeholder="Phone Number" class="premium-input"
                         style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
                 </div>
-                
+
                 <!-- Guests and Occasion row -->
                 <div style="display:flex; gap:1rem;">
                     <div style="position:relative; display:flex; align-items:center; flex: 1;">
-                        <i class="fas fa-users" style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
+                        <i class="fas fa-users"
+                            style="position:absolute; left:1rem; color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none;"></i>
                         <input id="wiGuests" type="number" placeholder="Guests" class="premium-input"
                             style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:0.8rem 1rem 0.8rem 2.5rem; color:white; width:100%; box-sizing:border-box; font-size:0.95rem; outline:none;">
                     </div>
-                    
+
                     <div style="position: relative; flex: 1.3;">
-                        <i class="fas fa-glass-cheers" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
+                        <i class="fas fa-glass-cheers"
+                            style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.9rem; pointer-events:none; z-index: 10;"></i>
                         <select id="wiOccasion" class="premium-select"
                             style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.8rem 2.5rem 0.8rem 2.5rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.95rem;">
                             <option value="walk_in" style="background:#111; color:white;">Walk-in</option>
@@ -1615,10 +1737,11 @@
                             <option value="anniversary" style="background:#111; color:white;">Anniversary</option>
                             <option value="date_night" style="background:#111; color:white;">Date Night</option>
                         </select>
-                        <i class="fas fa-chevron-down" style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
+                        <i class="fas fa-chevron-down"
+                            style="position: absolute; right: 1.2rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.8rem;"></i>
                     </div>
                 </div>
-                
+
                 <!-- Submit -->
                 <button onclick="submitWalkin()"
                     style="background: linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color: white; border: none; padding: 0.85rem; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 1rem; letter-spacing:0.5px; box-shadow: 0 4px 15px rgba(224, 17, 95, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-top:0.4rem;"
@@ -1638,9 +1761,11 @@
             style="position:absolute; inset:0; background:transparent; cursor:pointer;" aria-hidden="true"></div>
         <div role="dialog" aria-modal="true" onclick="event.stopPropagation()" class="premium-modal-content"
             style="position:relative; z-index:1; background: linear-gradient(145deg, #121212, #080808); border:1px solid rgba(224, 17, 95, 0.2); border-radius:20px; padding:2rem; width:92%; max-width:450px; max-height:85vh; overflow-y:auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(224, 17, 95, 0.12); font-family: 'Outfit', sans-serif;">
-            
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
-                <h3 style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
+
+            <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                <h3
+                    style="color:white; font-size:1.4rem; font-weight:700; font-family: 'Playfair Display', serif; display:flex; align-items:center; gap:0.6rem;">
                     <i class="fas fa-receipt" style="color:#E0115F;"></i> Order Details
                 </h3>
                 <button type="button" onclick="closeOrderViewModal()"
@@ -1682,6 +1807,212 @@
         let allReviewsData = [];
         let allReservationsData = [];
 
+        let bannerFileToUpload = null;
+
+        function countDescriptionWords() {
+            const textarea = document.getElementById('banner-description-input');
+            const countSpan = document.getElementById('banner-word-count');
+            const warningSpan = document.getElementById('banner-word-warning');
+            if (!textarea || !countSpan) return;
+            const text = textarea.value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            countSpan.textContent = `${words} / 20 words`;
+            if (words > 20) {
+                if (warningSpan) warningSpan.style.display = 'inline';
+                countSpan.style.color = '#ff4444';
+            } else {
+                if (warningSpan) warningSpan.style.display = 'none';
+                countSpan.style.color = 'var(--text-dim)';
+            }
+        }
+
+        function uploadBannerPhoto() {
+            const input = document.getElementById('banner-photo-file');
+            const label = document.getElementById('banner-file-name');
+            if (input?.files?.[0]) {
+                bannerFileToUpload = input.files[0];
+                if (label) label.textContent = bannerFileToUpload.name;
+            }
+        }
+
+        async function saveBannerSettings() {
+            const textarea = document.getElementById('banner-description-input');
+            const text = textarea ? textarea.value.trim() : '';
+            const words = text ? text.split(/\s+/).length : 0;
+            if (words > 20) {
+                showToast('⚠️ Description exceeds 20 words limit!');
+                return;
+            }
+            
+            const formData = new FormData();
+            if (bannerFileToUpload) {
+                formData.append('file', bannerFileToUpload);
+            }
+            formData.append('description', text);
+            
+            try {
+                const response = await fetch('/api/admin/vibe-banner', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showToast('✨ Banner settings saved successfully');
+                    bannerFileToUpload = null;
+                    const label = document.getElementById('banner-file-name');
+                    if (label) label.textContent = '';
+                    loadBannerSettings();
+                } else {
+                    const error = await response.text();
+                    showToast('Failed to save settings: ' + error);
+                }
+            } catch (err) {
+                console.error('Error saving banner settings:', err);
+                showToast('An error occurred. Please try again.');
+            }
+        }
+
+        async function loadBannerSettings() {
+            try {
+                const response = await fetch('/api/vibe-banner');
+                if (response.ok) {
+                    const banner = await response.json();
+                    if (banner) {
+                        const preview = document.getElementById('adminBannerPreview');
+                        const placeholder = document.getElementById('adminBannerPlaceholder');
+                        const textarea = document.getElementById('banner-description-input');
+                        
+                        if (banner.image_url) {
+                            if (preview) {
+                                preview.src = banner.image_url;
+                                preview.style.display = 'block';
+                            }
+                            if (placeholder) placeholder.style.display = 'none';
+                        } else {
+                            if (preview) preview.style.display = 'none';
+                            if (placeholder) placeholder.style.display = 'block';
+                        }
+                        
+                        if (banner.description && textarea) {
+                            textarea.value = banner.description;
+                            countDescriptionWords();
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to load banner settings:', err);
+            }
+        }
+
+        async function uploadVibePhoto() {
+            const input = document.getElementById('vibe-photo-file');
+            const file = input?.files?.[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/admin/vibe-photos', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Vibe upload failed:', errorText);
+                    showToast('Upload failed. Please try again.');
+                    return;
+                }
+
+                loadVibePhotos();
+                showToast('📸 Vibe photo uploaded successfully');
+            } catch (err) {
+                console.error('Vibe upload error:', err);
+                showToast('Upload failed. Please try again.');
+            } finally {
+                input.value = '';
+            }
+        }
+
+        async function loadVibePhotos() {
+            try {
+                const photos = await fetch('/api/admin/vibe-photos', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(res => res.ok ? res.json() : []);
+                renderVibePhotos(photos);
+            } catch (err) {
+                console.error('Failed to load vibe photos:', err);
+            }
+        }
+
+        function renderVibePhotos(photos) {
+            const grid = document.getElementById('vibePhotosGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            photos.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'data-card';
+                card.style.padding = '0.75rem';
+                card.style.position = 'relative';
+                
+                let approvalBtnHtml = '';
+                let statusBadgeHtml = '';
+                if (!photo.approved) {
+                    approvalBtnHtml = `<button onclick="approveVibePhoto(${photo.id})" style="background:#2ecc71;color:white;border:none;padding:0.4rem 0.75rem;border-radius:8px;cursor:pointer;"><i class="fas fa-check"></i> Approve</button>`;
+                    statusBadgeHtml = `<span style="position:absolute;top:15px;left:15px;background:#f39c12;color:white;padding:3px 8px;border-radius:20px;font-size:0.75rem;font-weight:bold;z-index:10;">Pending</span>`;
+                } else {
+                    statusBadgeHtml = `<span style="position:absolute;top:15px;left:15px;background:#2ecc71;color:white;padding:3px 8px;border-radius:20px;font-size:0.75rem;font-weight:bold;z-index:10;">Live</span>`;
+                }
+                
+                card.innerHTML = `
+                    ${statusBadgeHtml}
+                    <img src="${photo.image_url}" alt="Vibe photo" style="width:100%;height:180px;object-fit:cover;border-radius:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;gap:0.5rem;flex-wrap:wrap;">
+                        <span style="color:#fff;font-size:0.9rem;">Likes: ${photo.likes}</span>
+                        <div style="display:flex;gap:0.35rem;">
+                            ${approvalBtnHtml}
+                            <button onclick="deleteVibePhoto(${photo.id})" style="background:#E0115F;color:white;border:none;padding:0.4rem 0.75rem;border-radius:8px;cursor:pointer;">Delete</button>
+                        </div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        async function approveVibePhoto(photoId) {
+            try {
+                const response = await fetch(`/api/admin/vibe-photos/${photoId}/approve`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    loadVibePhotos();
+                    showToast('✅ Photo approved and published!');
+                } else {
+                    showToast('Failed to approve photo.');
+                }
+            } catch (err) {
+                console.error('Approve failed:', err);
+            }
+        }
+
+        async function deleteVibePhoto(photoId) {
+            try {
+                const response = await fetch(`/api/admin/vibe-photos/${photoId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    loadVibePhotos();
+                    showToast('Photo deleted');
+                }
+            } catch (err) {
+                console.error('Delete failed:', err);
+            }
+        }
+
         async function apiFetch(endpoint, method = 'GET', body = null) {
             const options = {
                 method,
@@ -1714,11 +2045,18 @@
             const mobileNavLink = document.getElementById('m-nav-' + section);
             if (mobileNavLink) mobileNavLink.classList.add('active');
 
-            document.getElementById('sectionTitle').textContent = section.charAt(0).toUpperCase() + section.slice(1);
+            let title = section.charAt(0).toUpperCase() + section.slice(1);
+            if (section === 'vibe-photos') {
+                title = 'Vibe';
+            }
+            document.getElementById('sectionTitle').textContent = title;
 
 
             updateStatsCardsVisibility(section);
         }
+
+        loadVibePhotos();
+        loadBannerSettings();
 
         function updateStatsCardsVisibility(section) {
             const todayRes = document.getElementById('statResToday');
@@ -1750,6 +2088,9 @@
                 fetchOrders();
             } else if (section === 'tables') {
                 fetchTables();
+            } else if (section === 'vibe-photos') {
+                loadVibePhotos();
+                loadBannerSettings();
             }
         }
 
@@ -1831,6 +2172,9 @@
                                     ${Array(rev.rating).fill('<i class="fas fa-star"></i>').join('')}
                                     ${Array(5 - rev.rating).fill('<i class="far fa-star"></i>').join('')}
                                 </div>
+                                <button onclick="adminTogglePinReview(${rev.id})" style="background: ${rev.is_pinned ? 'rgba(255,215,0,0.1)' : 'rgba(255,255,255,0.05)'}; color: ${rev.is_pinned ? '#ffd700' : 'var(--text-dim)'}; border: 1px solid ${rev.is_pinned ? 'rgba(255,215,0,0.2)' : 'var(--border)'}; padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-family: 'Outfit'; transition: 0.3s;">
+                                    <i class="fas fa-thumbtack"></i> ${rev.is_pinned ? 'Unpin' : 'Pin'}
+                                </button>
                                 <button onclick="adminDeleteReview(${rev.id})" style="background: rgba(255,68,68,0.1); color: #ff4444; border: 1px solid rgba(255,68,68,0.2); padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-family: 'Outfit'; transition: 0.3s;" onmouseover="this.style.background='rgba(255,68,68,0.25)'" onmouseout="this.style.background='rgba(255,68,68,0.1)'">
                                     <i class="fas fa-trash-alt"></i> Delete
                                 </button>
@@ -2343,7 +2687,7 @@
                 const istYear = parts.find(p => p.type === 'year').value;
                 const istMonth = parts.find(p => p.type === 'month').value;
                 const istDay = parts.find(p => p.type === 'day').value;
-                
+
                 const dateStr = `${istYear}-${istMonth}-${istDay}`;
                 const istDateObj = new Date(istYear, parseInt(istMonth) - 1, parseInt(istDay));
                 const displayStr = i === 0 ? 'Today' : `${days[istDateObj.getDay()]}, ${months[istDateObj.getMonth()]} ${istDateObj.getDate()}`;
@@ -2423,6 +2767,19 @@
                 }
             } catch (err) {
                 console.error(err);
+            }
+        }
+
+        async function adminTogglePinReview(reviewId) {
+            try {
+                const res = await apiFetch(`/api/admin/reviews/${reviewId}/pin`, 'PUT');
+                if (res) {
+                    showToast('Review pin status updated');
+                    loadData();
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to update pin status', 'error');
             }
         }
 
@@ -3145,6 +3502,7 @@
                     document.getElementById('menuItemImage').value = item.image_url || '';
                     document.getElementById('menuItemVeg').value = item.is_veg ? 'true' : 'false';
                     document.getElementById('menuItemAvailable').checked = item.is_available;
+                    document.getElementById('menuItemSignature').checked = item.is_signature || false;
                 }
             } else {
                 document.getElementById('menuItemName').value = '';
@@ -3154,6 +3512,7 @@
                 document.getElementById('menuItemImage').value = '';
                 document.getElementById('menuItemVeg').value = 'true';
                 document.getElementById('menuItemAvailable').checked = true;
+                document.getElementById('menuItemSignature').checked = false;
             }
             modal.style.display = 'flex';
         }
@@ -3195,7 +3554,8 @@
                 description: document.getElementById('menuItemDesc').value.trim() || null,
                 image_url: document.getElementById('menuItemImage').value.trim() || null,
                 is_veg: document.getElementById('menuItemVeg').value === 'true',
-                is_available: document.getElementById('menuItemAvailable').checked
+                is_available: document.getElementById('menuItemAvailable').checked,
+                is_signature: document.getElementById('menuItemSignature').checked
             };
             if (!payload.name || !payload.price) { showToast('Name and price are required'); return; }
             const url = editingMenuItemId ? `/api/admin/menu/${editingMenuItemId}` : '/api/admin/menu';
