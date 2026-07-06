@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Syne:wght@400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Syne:wght@400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 html {
     scroll-behavior: smooth;
@@ -578,6 +578,312 @@ input:-webkit-autofill:active {
     display: none;
 }
 
+#vibe {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(224, 17, 95, 0.09), transparent 34%),
+        linear-gradient(180deg, #050505 0%, #090909 52%, #050505 100%);
+}
+
+.vibe-story-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    gap: 1.35rem;
+}
+
+#vibe-whats-new-title {
+    line-height: 1;
+}
+
+#vibe-banner-container {
+    max-width: 980px !important;
+}
+
+#vibe-banner-card {
+    width: 100%;
+    height: clamp(250px, 48vw, 520px);
+    border-radius: 1.75rem;
+}
+
+#vibe-banner-desc:empty {
+    display: none;
+}
+
+.vibe-modern-dining {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 2rem;
+    width: min(980px, 100%);
+    padding: 1.35rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.vibe-modern-dining h4 {
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+}
+
+.vibe-modern-dining p {
+    max-width: 560px;
+    font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+    justify-self: end;
+}
+
+#vibe-gallery-section {
+    max-width: 760px !important;
+    margin-top: 2.5rem !important;
+}
+
+#vibe-gallery-container {
+    height: clamp(240px, 34vw, 380px) !important;
+    border-radius: 1.5rem !important;
+    cursor: zoom-in;
+    transform-origin: center center;
+    transition:
+        width 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+        height 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+        inset 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+        border-radius 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.5s ease,
+        transform 0.78s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.78s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#vibe-active-card {
+    transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#vibe-active-img {
+    object-fit: cover !important;
+}
+
+#vibe-upload-label,
+#vibe-collapse-btn,
+#vibe-prev,
+#vibe-next,
+#like-vibe-btn,
+#vibe-gallery-container .vibe-overlay-bottom {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, color 0.3s ease !important;
+}
+
+#vibe-gallery-container .vibe-overlay-top {
+    pointer-events: none;
+}
+
+#vibe-gallery-container.expanded .vibe-overlay-top {
+    pointer-events: auto !important;
+    z-index: 100002 !important;
+}
+
+#vibe-gallery-container.expanded {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99999 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: 100vw !important;
+    border-radius: 0 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    background: rgba(3, 3, 3, 0.97) !important;
+    cursor: default;
+    box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.45);
+}
+
+#vibe-gallery-container.expanded #vibe-active-card {
+    width: 100% !important;
+    height: 100% !important;
+    padding: clamp(4.5rem, 7vw, 6.5rem) clamp(1rem, 5vw, 5rem);
+}
+
+#vibe-gallery-container.expanded #vibe-active-img {
+    object-fit: contain !important;
+}
+
+#vibe-gallery-container.expanded #vibe-bg-blur {
+    opacity: 0.28;
+}
+
+#vibe-gallery-container.expanded #vibe-upload-label,
+#vibe-gallery-container.expanded #vibe-collapse-btn,
+#vibe-gallery-container.expanded #vibe-prev,
+#vibe-gallery-container.expanded #vibe-next,
+#vibe-gallery-container.expanded #like-vibe-btn,
+#vibe-gallery-container.expanded .vibe-overlay-bottom {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+#vibe-gallery-container.expanded #vibe-upload-label {
+    display: flex !important;
+    position: fixed;
+    top: max(1rem, env(safe-area-inset-top));
+    left: max(1rem, env(safe-area-inset-left));
+    transform: translateY(0);
+}
+
+#vibe-gallery-container.expanded #vibe-collapse-btn {
+    display: flex !important;
+    position: fixed;
+    top: max(1rem, env(safe-area-inset-top));
+    right: max(1rem, env(safe-area-inset-right));
+    transform: translateY(0);
+}
+
+#vibe-gallery-container.expanded .vibe-overlay-bottom {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent);
+}
+
+#vibe-gallery-container.expanded #vibe-prev,
+#vibe-gallery-container.expanded #vibe-next {
+    display: flex !important;
+    transform: translateY(-50%) scale(1);
+}
+
+#vibe-hand-hint {
+    transition: opacity 0.4s ease;
+}
+
+#vibe-gallery-container.expanded #vibe-hand-hint {
+    opacity: 0 !important;
+}
+
+.vibe-like-button {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.7rem 1rem;
+    background: rgba(0, 0, 0, 0.68);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    transform: translateY(10px) scale(0.96);
+}
+
+#vibe-gallery-container.expanded .vibe-like-button {
+    transform: translateY(0) scale(1);
+}
+
+.vibe-like-button:hover,
+.vibe-like-button.liked {
+    color: #E0115F;
+    border-color: rgba(224, 17, 95, 0.38);
+}
+
+.vibe-like-button.just-liked i {
+    animation: vibeHeartPop 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.count-pop {
+    animation: vibeCountPop 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes vibeHeartPop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.45);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes vibeCountPop {
+    0% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+
+    45% {
+        transform: translateY(-4px);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 767px) {
+    .vibe-story-stack {
+        gap: 0.8rem;
+    }
+
+    #vibe-banner-card {
+        height: 132px !important;
+        border-radius: 0.9rem !important;
+    }
+
+    .vibe-modern-dining {
+        grid-template-columns: 1fr 1.2fr;
+        gap: 0.7rem;
+        padding: 0.7rem 0.55rem;
+    }
+
+    .vibe-modern-dining h4 {
+        font-size: 0.95rem;
+    }
+
+    .vibe-modern-dining p {
+        font-size: 0.68rem !important;
+        line-height: 1.35 !important;
+    }
+
+    #vibe-gallery-section {
+        margin-top: 0.9rem !important;
+    }
+
+    #vibe-gallery-container {
+        height: 210px !important;
+        min-height: 210px !important;
+        border-radius: 1rem !important;
+    }
+
+    #vibe-gallery-container #vibe-active-card {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+    #vibe-gallery-container.expanded {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-active-card {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        padding: 4.25rem 0.75rem 5.5rem !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-top {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-collapse-btn,
+    #vibe-gallery-container.expanded #vibe-upload-label {
+        top: max(0.8rem, env(safe-area-inset-top)) !important;
+    }
+}
+
 .color-scheme-dark::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
@@ -720,7 +1026,7 @@ input:-webkit-autofill:active {
         padding: 0 !important;
     }
 
-    /* ===== VIBE SECTION MOBILE LAYOUT — WIREFRAME EXACT ===== */
+    /* ===== VIBE SECTION MOBILE LAYOUT â€” WIREFRAME EXACT ===== */
 
     /* Top cards: side-by-side row like wireframe */
     #vibe-top-cards {
@@ -787,7 +1093,7 @@ input:-webkit-autofill:active {
         padding: 0 !important;
     }
 
-    /* Banner image card — taller, no aspect-square */
+    /* Banner image card â€” taller, no aspect-square */
     #vibe-banner-card {
         aspect-ratio: auto !important;
         height: 300px !important;
@@ -812,11 +1118,62 @@ input:-webkit-autofill:active {
         min-height: 280px !important;
         margin: 0 !important;
         border-radius: 1.1rem !important;
+        background: #080808;
     }
 
     #vibe-gallery-container #vibe-active-card {
-        width: 94% !important;
-        height: 86% !important;
+        width: 90% !important;
+        height: 90% !important;
+        max-width: 90% !important;
+        max-height: 90% !important;
+    }
+
+    #vibe-gallery-container #vibe-bg-blur {
+        z-index: 1;
+    }
+
+    #vibe-gallery-container #vibe-active-img {
+        z-index: 2;
+        object-fit: cover !important;
+    }
+
+    #vibe-gallery-container #vibe-upload-label {
+        display: none !important;
+    }
+
+    #vibe-gallery-container #vibe-collapse-btn {
+        display: none !important;
+    }
+
+    #vibe-gallery-container .vibe-overlay-top {
+        padding-right: 16px !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-top {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-collapse-btn {
+        display: flex !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-upload-label {
+        display: flex !important;
+        position: absolute !important;
+        top: 16px !important;
+        left: 16px !important;
+        z-index: 40 !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-bottom {
+        justify-content: flex-end !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-prev,
+    #vibe-gallery-container.expanded #vibe-next {
+        opacity: 1 !important;
     }
 
     #vibe-prev,
@@ -864,7 +1221,7 @@ input:-webkit-autofill:active {
         display: none !important;
     }
 
-    /* Like button — neeche hi rehta hai, sirf bada */
+    /* Like button â€” neeche hi rehta hai, sirf bada */
     #vibe-gallery-container.expanded .vibe-overlay-bottom {
         opacity: 1 !important;
         visibility: visible !important;
@@ -874,7 +1231,7 @@ input:-webkit-autofill:active {
         justify-content: space-between !important;
         top: auto !important;
         bottom: 0 !important;
-        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%) !important;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%) !important;
         padding: 20px 16px 24px 16px !important;
     }
 
@@ -1316,5 +1673,257 @@ input:-webkit-autofill:active {
         font-size: 16px !important;
         padding-top: 3px !important;
         padding-bottom: 3px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #vibe-top-cards.vibe-story-stack {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 0.8rem !important;
+        padding: 0 8px !important;
+        margin-bottom: 18px !important;
+    }
+
+    #vibe-whats-new-title {
+        font-size: 1.55rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+
+    #vibe-banner-container {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    #vibe-banner-card {
+        width: 100% !important;
+        height: 132px !important;
+        min-height: 132px !important;
+        border-radius: 0.9rem !important;
+    }
+
+    #vibe-banner-desc {
+        font-size: 0.76rem !important;
+        line-height: 1.45 !important;
+        margin-top: 0.1rem !important;
+    }
+
+    #vibe-text-card.vibe-modern-dining {
+        display: grid !important;
+        grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr) !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 0 !important;
+        padding: 0.7rem 0.6rem !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.09) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09) !important;
+    }
+
+    #vibe-text-card.vibe-modern-dining h4 {
+        font-size: 0.96rem !important;
+        line-height: 1.1 !important;
+        letter-spacing: 0 !important;
+        margin: 0 !important;
+        text-transform: none !important;
+    }
+
+    #vibe-text-card.vibe-modern-dining p {
+        font-size: 0.68rem !important;
+        line-height: 1.35 !important;
+        margin: 0 !important;
+        justify-self: auto !important;
+    }
+
+    #vibe-gallery-section {
+        margin-top: 0.8rem !important;
+        padding: 0 8px !important;
+    }
+
+    #vibe-gallery-section h2 {
+        font-size: 1.35rem !important;
+        line-height: 1.1 !important;
+    }
+
+    #vibe-gallery-container {
+        width: 100% !important;
+        height: 210px !important;
+        min-height: 210px !important;
+        border-radius: 1rem !important;
+    }
+
+    #vibe-gallery-container #vibe-active-card {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+
+    #vibe-gallery-container #vibe-active-img {
+        object-fit: cover !important;
+    }
+
+    #vibe-gallery-container.expanded {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        border-radius: 0 !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-active-card {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        padding: 4.25rem 0.75rem 5.5rem !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-active-img {
+        object-fit: contain !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-top {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* Quick polish updates: larger banner, no Modern Dining block, centered expanded gallery text */
+#vibe-banner-card {
+    height: clamp(310px, 54vw, 610px) !important;
+}
+
+.vibe-modern-dining,
+#vibe-text-card.vibe-modern-dining {
+    display: none !important;
+}
+
+#vibe-gallery-container.expanded .vibe-overlay-top>.flex {
+    position: fixed !important;
+    top: max(1rem, env(safe-area-inset-top)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(520px, calc(100vw - 9rem)) !important;
+    justify-content: center !important;
+    pointer-events: none !important;
+}
+
+#vibe-gallery-container.expanded .vibe-overlay-top .text-left {
+    text-align: center !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    border: 1px solid rgba(255, 255, 255, 0.09) !important;
+    border-radius: 999px !important;
+    padding: 0.55rem 1rem !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+}
+
+#vibe-gallery-container.expanded #vibe-upload-label,
+#vibe-gallery-container.expanded #vibe-collapse-btn {
+    pointer-events: auto !important;
+}
+
+@media (max-width: 768px) {
+    #vibe-banner-card {
+        height: 172px !important;
+        min-height: 172px !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-top>.flex {
+        top: max(4rem, env(safe-area-inset-top)) !important;
+        width: min(320px, calc(100vw - 2rem)) !important;
+    }
+
+    #vibe-gallery-container.expanded .vibe-overlay-top .text-left {
+        max-width: 100% !important;
+        padding: 0.48rem 0.85rem !important;
+    }
+}
+
+/* User requested: keep upload top-left, remove text under it, fix overlay placement */
+#vibe-gallery-container .vibe-overlay-top .text-left {
+    display: none !important;
+}
+
+#vibe-gallery-container.expanded .vibe-overlay-top>.flex {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: auto !important;
+    justify-content: flex-start !important;
+    pointer-events: none !important;
+}
+
+#vibe-gallery-container.expanded #vibe-upload-label {
+    display: flex !important;
+    position: fixed !important;
+    top: max(1rem, env(safe-area-inset-top)) !important;
+    left: max(1rem, env(safe-area-inset-left)) !important;
+    transform: none !important;
+    pointer-events: auto !important;
+}
+
+#vibe-gallery-container.expanded #vibe-collapse-btn {
+    display: flex !important;
+    position: fixed !important;
+    top: max(1rem, env(safe-area-inset-top)) !important;
+    right: max(1rem, env(safe-area-inset-right)) !important;
+    transform: none !important;
+    pointer-events: auto !important;
+}
+
+@media (max-width: 768px) {
+    #vibe-gallery-container.expanded .vibe-overlay-top>.flex {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        width: auto !important;
+    }
+
+    #vibe-gallery-container.expanded #vibe-upload-label {
+        top: max(0.8rem, env(safe-area-inset-top)) !important;
+        left: max(0.8rem, env(safe-area-inset-left)) !important;
+    }
+}
+
+/* Final spacing and liked-state polish */
+#vibe {
+    padding-top: 2.5rem !important;
+}
+
+#vibe-banner-card {
+    height: clamp(360px, 58vw, 680px) !important;
+}
+
+.vibe-like-button.liked,
+.vibe-like-button.is-liked,
+.vibe-like-button[disabled] {
+    color: #E0115F !important;
+    border-color: rgba(224, 17, 95, 0.55) !important;
+    background: rgba(224, 17, 95, 0.14) !important;
+    box-shadow: 0 0 24px rgba(224, 17, 95, 0.22) !important;
+    opacity: 1 !important;
+}
+
+.vibe-like-button.liked i,
+.vibe-like-button.is-liked i,
+.vibe-like-button[disabled] i {
+    color: #E0115F !important;
+}
+
+@media (max-width: 768px) {
+    #vibe {
+        padding-top: 24px !important;
+    }
+
+    #vibe-banner-card {
+        height: 205px !important;
+        min-height: 205px !important;
     }
 }
