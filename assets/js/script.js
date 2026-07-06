@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
 
 
     window.showToast = function (message) {
@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.innerHTML = `
-            <i class="fa-solid fa-circle-check"></i>
-            <span>${message}</span>
-        `;
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-circle-check';
+        const text = document.createElement('span');
+        text.textContent = message;
+        toast.append(icon, text);
         container.appendChild(toast);
 
 
@@ -27,11 +28,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const preloader = document.getElementById('preloader');
     const heroContent = document.querySelector('.hero-content');
     const chars = document.querySelectorAll('.preloader-char');
+    const preloadLocationMap = (() => {
+        let started = false;
+        return () => {
+            if (started) return;
+            const mapFrame = document.getElementById('location-map');
+            if (!mapFrame || mapFrame.src) return;
+            const src = mapFrame.dataset.src;
+            if (src) {
+                started = true;
+                mapFrame.src = src;
+            }
+        };
+    })();
 
     let count = 0;
 
     if (preloader) {
         document.body.style.overflow = 'hidden';
+        requestAnimationFrame(preloadLocationMap);
     }
 
 
@@ -100,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const preloaderEmoji = document.getElementById('preloader-emoji');
     const emojiInner = preloaderEmoji?.querySelector('.emoji-bounce');
-    const emojis = ['👨‍🍳', '🍲', '🥘', '🍳', '🍱', '🍽️', '😋'];
+    const emojis = ['\u{1F468}\u200D\u{1F373}', '\u{1F372}', '\u{1F958}', '\u{1F373}', '\u{1F371}', '\u{1F37D}\uFE0F', '\u{1F60B}'];
 
 
     if (preloader) {
@@ -171,16 +186,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ===== SCROLL REVEAL ANIMATIONS =====
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, entry.target.dataset.delay ? parseInt(entry.target.dataset.delay) : 0);
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal-up').forEach(el => revealObserver.observe(el));
+
     const menuScroll = document.getElementById('menu-scroll');
     const scrollLeftBtn = document.getElementById('scroll-left');
     const scrollRightBtn = document.getElementById('scroll-right');
 
     if (menuScroll && scrollLeftBtn && scrollRightBtn) {
         scrollLeftBtn.addEventListener('click', () => {
-            menuScroll.scrollBy({ left: -400, behavior: 'smooth' });
+            menuScroll.scrollBy({ left: -302, behavior: 'smooth' });
         });
         scrollRightBtn.addEventListener('click', () => {
-            menuScroll.scrollBy({ left: 400, behavior: 'smooth' });
+            menuScroll.scrollBy({ left: 302, behavior: 'smooth' });
         });
     }
 
@@ -281,8 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const itemCount = resData.orders.reduce((sum, o) => sum + o.items.reduce((n, i) => n + i.quantity, 0), 0);
         const itemsHtml = resData.orders.flatMap(o => o.items.map(i => `
             <div class="flex justify-between gap-1.5 text-[7px] leading-tight text-white/75 py-0.5">
-                <span class="truncate">${i.quantity}× ${i.item_name}</span>
-                <span class="shrink-0 font-medium text-white/90">₹${i.price_per_item * i.quantity}</span>
+                <span class="truncate">${i.quantity} ${i.item_name}</span>
+                <span class="shrink-0 font-medium text-white/90">${i.price_per_item * i.quantity}</span>
             </div>
         `)).join('');
         return `
@@ -358,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="text-sm font-bold text-white">You're all set</h3>
                 <p class="text-[7px] text-green-400/90 font-semibold uppercase tracking-wider mt-0.5">Table confirmed</p>
             `;
-            statusMessageHtml = `<p class="text-[9px] text-green-400/75 mt-2 leading-snug px-1">Table confirmed — we can't wait to welcome you at Aurous.</p>`;
+            statusMessageHtml = `<p class="text-[9px] text-green-400/75 mt-2 leading-snug px-1">Table confirmed ” we can't wait to welcome you at Aurous.</p>`;
             actionBtnHtml = `
                 <button id="cancel-res-btn" data-index="${index}" class="px-4 py-1.5 border border-rose-500/30 bg-rose-500/5 text-rose-500 rounded-full text-[8px] uppercase tracking-widest hover:bg-rose-500 hover:text-white transition-all font-bold">
                     Cancel visit
@@ -555,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fa-solid fa-calendar-xmark text-white/10 text-2xl"></i>
                     </div>
                     <h3 class="text-base font-bold text-white tracking-tight">No visits yet</h3>
-                    <p class="text-[9px] text-white/40 mt-2 max-w-[190px] mx-auto leading-relaxed">Plan a table at Aurous — we'd love to host you.</p>
+                    <p class="text-[9px] text-white/40 mt-2 max-w-[190px] mx-auto leading-relaxed">Plan a table at Aurous ” we'd love to host you.</p>
                 </div>
             `;
         }
@@ -710,7 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const foods = ['🍕', '🍔', '🍟', '🌭', '🍿', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🍞', '🥐', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🍖', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🍝', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
+    const foods = ['🍅', '🥒', '🥬', '🌭', '🌮', '🧂', '🥓', '🥚', '🧇', '🥞', '🧈', '🥨', '🥟', '🥨', '🥯', '🥖', '🧀', '🥗', '🥙', '🥪', '🌮', '🌯', '🥫', '🥘', '🍗', '🥩', '🍠', '🥟', '🥠', '🥡', '🍱', '🍘', '🍙', '🍚', '🍛', '🍜', '🦪', '🍣', '🍤', '🍥', '🥮', '🍢', '🧆', '🥘', '🍲', '🥣', '🥧', '🍦', '🍧', '🍨', '🍩', '🍹', '🍷', '🥂'];
 
     let lastFoodTime = 0;
 
@@ -742,37 +770,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (bgMusic && playStatus) {
         bgMusic.volume = 0.6;
+    }
 
+    const musicPlayerWidget = document.getElementById('music-player-widget');
+    if (musicPlayerWidget) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight * 0.5) {
+                musicPlayerWidget.classList.add('opacity-0', 'pointer-events-none');
+                musicPlayerWidget.classList.remove('opacity-100', 'pointer-events-auto');
+            } else {
+                musicPlayerWidget.classList.remove('opacity-0', 'pointer-events-none');
+                musicPlayerWidget.classList.add('opacity-100', 'pointer-events-auto');
+            }
+        });
+
+        musicPlayerWidget.addEventListener('click', (e) => {
+
+            if (e.target.closest('input[type="range"]') || e.target.closest('.space-x-5')) return;
+
+            playStatus.checked = !playStatus.checked;
+            if (playStatus.checked) {
+                bgMusic.volume = 0.6;
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
+                }).catch(err => console.warn("Play prevented:", err));
+            } else {
+                bgMusic.pause();
+                isMusicPlaying = false;
+                if (playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
+            }
+        });
+
+
+        musicPlayerWidget.addEventListener('mouseenter', () => {
+            if (window.innerWidth > 768 && !isMusicPlaying) {
+
+            }
+        });
+    }
+
+    if (bgMusic && playStatus) {
         const playToggleLabel = playStatus.closest('label');
-        const musicPlayerWidget = document.querySelector('.group\\/he');
-
-        if (musicPlayerWidget) {
-
-            musicPlayerWidget.addEventListener('click', (e) => {
-
-                if (e.target.closest('input[type="range"]') || e.target.closest('.space-x-5')) return;
-
-                playStatus.checked = !playStatus.checked;
-                if (playStatus.checked) {
-                    bgMusic.volume = 0.6;
-                    bgMusic.play().then(() => {
-                        isMusicPlaying = true;
-                        if (playerSpinDisc) playerSpinDisc.classList.add('animate-[spin_3s_linear_infinite]');
-                    }).catch(err => console.warn("Play prevented:", err));
-                } else {
-                    bgMusic.pause();
-                    isMusicPlaying = false;
-                    if (playerSpinDisc) playerSpinDisc.classList.remove('animate-[spin_3s_linear_infinite]');
-                }
-            });
-
-
-            musicPlayerWidget.addEventListener('mouseenter', () => {
-                if (window.innerWidth > 768 && !isMusicPlaying) {
-
-                }
-            });
-        }
 
         playToggleLabel.addEventListener('click', (e) => {
             e.preventDefault();
@@ -911,41 +950,6 @@ document.addEventListener('DOMContentLoaded', () => {
         starInputs[4].click();
     }
 
-    const defaultReviews = [
-        {
-            id: '1',
-            name: 'Ritika Verma',
-            tag: 'Local',
-            rating: 5,
-            title: 'A Culinary Masterpiece',
-            text: 'The Roasted Chicken Chilli is perfectly balanced with flavors that dance on your palate. The presentation here is as stunning as the taste. Best Restro Lounge in Bistupur without a doubt.',
-            image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&q=80&w=1000',
-            avatar: '',
-            timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-            id: '2',
-            name: 'Aman Singh',
-            tag: 'Food Enthusiast',
-            rating: 4.5,
-            title: 'The Premium Sizzler Experience',
-            text: 'Their Chef\'s Special Sizzler is an absolute showstopper. Smoked perfectly with a rich aroma that takes over the room. The luxury interiors combined with top-notch food is an unbeatable combo.',
-            image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1000',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-            timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-            id: '3',
-            name: 'Neha Sharma',
-            tag: 'Jamshedpur Resident',
-            rating: 5,
-            title: 'Vibrant Evenings & Mixology',
-            text: 'One of the best evening spots in Jamshedpur! The signature cocktails are a must-try. The music, the crowd, the drinks—everything is curated for a truly premium experience.',
-            image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1000',
-            avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80',
-            timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
-        }
-    ];
 
     function getRelativeTime(dateString) {
         const now = new Date();
@@ -1032,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        let allReviews = [...(window.apiReviews || []), ...getStoredReviews(), ...defaultReviews];
+        let allReviews = [...(window.apiReviews || []), ...getStoredReviews()];
 
         let deletedDefaults = JSON.parse(localStorage.getItem('deleted_default_reviews') || '[]');
         allReviews = allReviews.filter(r => !deletedDefaults.includes(r.id));
@@ -1042,7 +1046,9 @@ document.addEventListener('DOMContentLoaded', () => {
             allReviews = allReviews.filter(r => Math.floor(r.rating) === filterStars);
         }
 
-        if (limit) {
+        if (containerId === 'reviews-container') {
+            allReviews = allReviews.filter(r => r.is_pinned).slice(0, 2);
+        } else if (limit) {
             allReviews = allReviews.slice(0, limit);
         }
 
@@ -1177,7 +1183,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     image: r.image_url || 'https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470',
                     avatar: '',
                     timestamp: r.created_at,
-                    reply_text: r.reply_text
+                    reply_text: r.reply_text,
+                    is_pinned: r.is_pinned
                 }));
             }
         } catch (err) {
@@ -1256,13 +1263,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     await loadReviewsFromAPI();
-                    window.showToast("Review submitted successfully! ✨");
+                    window.showToast("Review submitted successfully! âœ¨");
                 } else {
-                    window.showToast("❌ Failed to submit review.");
+                    window.showToast("âŒ Failed to submit review.");
                 }
             } catch (error) {
                 console.error("Error submitting review:", error);
-                window.showToast("❌ Connection error.");
+                window.showToast("âŒ Connection error.");
             } finally {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -1299,27 +1306,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openReservation(e) {
         if (e) e.preventDefault();
-        if (reservationModal && reservationBox && typeof gsap !== 'undefined') {
+        if (reservationModal && reservationBox) {
             reservationModal.classList.remove('opacity-0', 'pointer-events-none');
             document.body.style.overflow = 'hidden';
 
-            gsap.fromTo(reservationBox,
-                { y: '100%', filter: 'blur(20px)', opacity: 0 },
-                { y: '0%', filter: 'blur(0px)', opacity: 1, duration: 1, ease: 'elastic.out(1, 0.8)' }
-            );
+            // Set today as min date
+            const dateInput = document.getElementById('reserve-date');
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.min = today;
+                if (!dateInput.value) dateInput.value = today;
+            }
+
+            if (typeof gsap !== 'undefined') {
+                gsap.fromTo(reservationBox,
+                    { y: 60, opacity: 0, scale: 0.96 },
+                    { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: 'power4.out' }
+                );
+            } else {
+                reservationBox.style.opacity = '1';
+            }
         }
     }
 
     function closeReservation(e) {
         if (e) e.preventDefault();
-        if (reservationModal && reservationBox && typeof gsap !== 'undefined') {
-            gsap.to(reservationBox, {
-                y: '100%', filter: 'blur(10px)', opacity: 0, duration: 0.6, ease: 'power3.in',
-                onComplete: () => {
-                    reservationModal.classList.add('opacity-0', 'pointer-events-none');
-                    document.body.style.overflow = '';
-                }
-            });
+        if (reservationModal && reservationBox) {
+            if (typeof gsap !== 'undefined') {
+                gsap.to(reservationBox, {
+                    y: 40, opacity: 0, scale: 0.96, duration: 0.3, ease: 'power3.in',
+                    onComplete: () => {
+                        reservationModal.classList.add('opacity-0', 'pointer-events-none');
+                        document.body.style.overflow = '';
+                        gsap.set(reservationBox, { clearProps: 'all' });
+                    }
+                });
+            } else {
+                reservationModal.classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }
         }
     }
 
@@ -1365,9 +1390,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateNum = istDateObj.getDate();
 
             const div = document.createElement('div');
-            div.className = 'snap-center h-[37px] flex flex-col items-center justify-center text-white/50 cursor-pointer transition-all duration-300 wheel-item select-none';
+            div.className = 'snap-center h-[37px] flex flex-col md:flex-row items-center justify-center text-white/50 cursor-pointer transition-all duration-300 wheel-item select-none gap-0 md:gap-1.5';
             div.dataset.value = dateStr;
-            div.innerHTML = `<span class="text-[7.5px] md:text-[8px] uppercase tracking-widest font-black mb-0.5">${dayName}</span><span class="text-[9.5px] md:text-[10px] font-bold">${monthName} ${dateNum}</span>`;
+            div.innerHTML = `<span class="text-[7.5px] md:text-[11px] uppercase tracking-widest font-black md:font-bold mb-0.5 md:mb-0">${dayName}</span><span class="text-[9.5px] md:text-[11px] font-bold">${monthName} ${dateNum}</span>`;
             wheelDate.appendChild(div);
         }
 
@@ -1388,7 +1413,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wheelMinute.appendChild(div);
         });
 
-        const ampmValues = ['AM', 'PM'];
+        const ampmValues = ['PM'];
         ampmValues.forEach(v => {
             const div = document.createElement('div');
             div.className = 'snap-center h-[37px] flex items-center justify-center text-white/50 text-[13px] md:text-base font-black cursor-pointer transition-all duration-300 wheel-item select-none';
@@ -1543,11 +1568,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (wheelDate) wheelDate.scrollTo({ top: 0, behavior: 'smooth' });
                     }, 600);
                 } else {
-                    window.showToast("❌ Failed to reserve table.");
+                    window.showToast("âŒ Failed to reserve table.");
                 }
             } catch (error) {
                 console.error("Error submitting reservation:", error);
-                window.showToast("❌ Connection error.");
+                window.showToast("âŒ Connection error.");
             } finally {
                 submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
@@ -1565,17 +1590,14 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentIndex = 0;
 
         const modalHtml = `
-            <div id="gallery-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+            <div id="gallery-modal" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-between py-12 md:py-16 opacity-0 transition-opacity duration-300">
                 <button onclick="closeGallery()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-[#E0115F] transition-colors z-50 group">
                     <i class="fa-solid fa-xmark text-lg group-hover:scale-110 transition-transform"></i>
                 </button>
 
-                <div class="relative w-full h-[80vh] flex flex-col items-center justify-center px-4 md:px-16 mt-4">
-                    <img id="gallery-image" src="${images[0]}" class="max-w-full max-h-[85%] object-contain rounded-xl shadow-2xl transition-all duration-300 transform scale-95">
-
-                    <div id="gallery-review-text" class="mt-6 px-6 max-w-3xl text-center text-white/80 text-sm md:text-base italic font-light transition-opacity duration-300">
-                        "${text}"
-                    </div>
+                <!-- Centered Image Container -->
+                <div class="relative w-full flex-grow flex items-center justify-center px-4 md:px-16 mt-8">
+                    <img id="gallery-image" src="${images[0]}" class="max-w-full max-h-[65vh] object-contain rounded-xl shadow-2xl transition-all duration-300 transform scale-95">
 
                     <button id="gallery-prev" class="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#E0115F] backdrop-blur-md transition-all z-50 ${images.length <= 1 ? 'hidden' : ''}">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -1586,8 +1608,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                 </div>
 
-                <div class="absolute bottom-8 flex gap-3" id="gallery-dots">
-                    ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full ${i === 0 ? 'bg-[#E0115F] scale-125' : 'bg-white/30'} transition-all duration-300"></div>`).join('')}
+                <!-- Bottom Wrapper for Text and Dots -->
+                <div class="w-full flex flex-col items-center gap-4 px-6 mt-4 shrink-0">
+                    <div class="flex gap-3" id="gallery-dots">
+                        ${images.map((_, i) => `<div class="w-2.5 h-2.5 rounded-full ${i === 0 ? 'bg-[#E0115F] scale-125' : 'bg-white/30'} transition-all duration-300"></div>`).join('')}
+                    </div>
+                    
+                    <div id="gallery-review-text" class="max-w-3xl text-center text-white/80 text-xs md:text-sm italic font-light transition-opacity duration-300 leading-relaxed px-4">
+                        "${text}"
+                    </div>
                 </div>
             </div>
         `;
@@ -1665,48 +1694,41 @@ document.addEventListener('DOMContentLoaded', () => {
         'hero': document.getElementById('nav-home'),
         'vibe': document.getElementById('nav-vibe'),
         'menu': document.getElementById('nav-menu'),
+        'location': document.getElementById('nav-map'),
         'echoes': document.getElementById('nav-echoes')
     };
 
-    const observerOptions = {
-        root: null,
-        rootMargin: '-40% 0px -40% 0px',
-        threshold: 0
-    };
-
-    let activeId = 'hero';
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                activeId = entry.target.id;
-
-
-                Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
-
-
-                if (navLinksMapping[activeId]) {
-                    navLinksMapping[activeId].classList.add('active');
-                }
-            }
-        });
-    }, observerOptions);
-
-
-    ['hero', 'vibe', 'menu', 'echoes'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el);
-    });
-
+    const sections = ['hero', 'vibe', 'menu', 'location', 'echoes'];
 
     window.addEventListener('scroll', () => {
-        if (window.scrollY < 50) {
-            Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
-            navLinksMapping['hero']?.classList.add('active');
-        } else if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
-            Object.values(navLinksMapping).forEach(link => link?.classList.remove('active'));
-            navLinksMapping['echoes']?.classList.add('active');
+        let currentActive = 'hero';
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+        for (const id of sections) {
+            const el = document.getElementById(id);
+            if (el) {
+                const top = el.offsetTop;
+                if (scrollPosition >= top) {
+                    currentActive = id;
+                }
+            }
         }
+
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 120) {
+            currentActive = 'echoes';
+        }
+
+        if (window.scrollY < 50) {
+            currentActive = 'hero';
+        }
+
+        Object.keys(navLinksMapping).forEach(key => {
+            if (key === currentActive) {
+                navLinksMapping[key]?.classList.add('active');
+            } else {
+                navLinksMapping[key]?.classList.remove('active');
+            }
+        });
     });
 
     window.closeGallery = function () {
@@ -1722,4 +1744,517 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Signature Items 
+    async function loadSignatures() {
+        const menuScroll = document.getElementById('menu-scroll');
+        if (!menuScroll) return;
+
+        try {
+            const response = await fetch('/api/menu');
+            if (response.ok) {
+                const data = await response.json();
+                const signatures = data.filter(item => item.is_signature && item.is_available);
+
+                menuScroll.innerHTML = '';
+
+                if (signatures.length === 0) {
+                    menuScroll.innerHTML = '<div class="text-white/50 text-center w-full py-10">No signature items available at the moment.</div>';
+                    return;
+                }
+
+                signatures.forEach(item => {
+                    const price = typeof item.price === 'number' ? `₹${item.price}` : '';
+                    const imgUrl = item.image_url || 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=1469';
+                    const desc = item.description || '';
+
+                    const html = `
+                        <div class="snap-center shrink-0 w-[85vw] md:w-[400px] bg-white/5 rounded-3xl p-4 border border-white/5 group hover:border-white/20 transition-all">
+                            <div class="w-full h-48 md:h-64 rounded-2xl overflow-hidden mb-4 md:mb-6 relative">
+                                <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="${item.name}">
+                                <div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold border border-white/10">${price}</div>
+                            </div>
+                            <div class="px-2 pb-2">
+                                <h3 class="text-2xl font-bold mb-2">${item.name}</h3>
+                                <p class="text-white/50 text-sm font-light">${desc}</p>
+                            </div>
+                        </div>
+                    `;
+                    menuScroll.insertAdjacentHTML('beforeend', html);
+                });
+            }
+        } catch (error) {
+            console.error('Error loading signatures:', error);
+            menuScroll.innerHTML = '<div class="text-white/50 text-center w-full py-10">Failed to load signatures.</div>';
+        }
+    }
+
+    // Call loadSignatures if we are on a page with the menu-scroll container
+    if (document.getElementById('menu-scroll')) {
+        loadSignatures();
+    }
+
+    // VIBE GALLERY COMPONENT
+    const vibeContainer = document.getElementById('vibe-gallery-container');
+    console.log('ðŸŽ¬ Vibe Gallery Component Initializing...');
+    console.log('vibeContainer found:', !!vibeContainer);
+    if (vibeContainer) {
+        console.log('âœ… Vibe Gallery Component initialized successfully');
+        let vibePhotos = [];
+        let currentVibeIndex = 0;
+        let vibeAutoPlayTimer = null;
+
+        const bgBlurImg = document.getElementById('vibe-bg-blur');
+        const activeImg = document.getElementById('vibe-active-img');
+        const activeCard = document.getElementById('vibe-active-card');
+        const activeTitle = document.getElementById('vibe-active-title');
+        const activeSub = document.getElementById('vibe-active-sub');
+        const likesCountSpan = document.getElementById('vibe-likes-count');
+        const likeBtn = document.getElementById('like-vibe-btn');
+        const heartIcon = document.getElementById('vibe-heart-icon');
+        const bigHeart = document.getElementById('big-vibe-heart');
+        const prevBtn = document.getElementById('vibe-prev');
+        const nextBtn = document.getElementById('vibe-next');
+
+        console.log('ðŸ“ DOM Elements found:', {
+            bgBlurImg: !!bgBlurImg,
+            activeImg: !!activeImg,
+            activeCard: !!activeCard,
+            likesCountSpan: !!likesCountSpan,
+            likeBtn: !!likeBtn,
+            heartIcon: !!heartIcon,
+            bigHeart: !!bigHeart,
+            prevBtn: !!prevBtn,
+            nextBtn: !!nextBtn
+        });
+
+        const likedVibeStorageKey = 'aurous_vibe_liked_photos';
+        const getLikedVibeIds = () => {
+            try {
+                const stored = localStorage.getItem(likedVibeStorageKey);
+                return stored ? JSON.parse(stored) : [];
+            } catch (err) {
+                return [];
+            }
+        };
+        const likedVibeIds = new Set(getLikedVibeIds());
+        const getVibeLikeKeys = (photo) => {
+            if (!photo) return [];
+            return [`id:${photo.id}`, `url:${photo.image_url}`];
+        };
+        const hasLikedVibePhoto = (photo) => getVibeLikeKeys(photo).some((key) => likedVibeIds.has(key));
+        const rememberLikedVibePhoto = (photo) => {
+            getVibeLikeKeys(photo).forEach((key) => likedVibeIds.add(key));
+        };
+
+        const updateLikeButtonState = (photoId) => {
+            const photo = vibePhotos[currentVibeIndex];
+            const alreadyLiked = hasLikedVibePhoto(photo) || (photoId && likedVibeIds.has(photoId));
+            if (!likeBtn) return;
+            if (alreadyLiked) {
+                likeBtn.classList.add('is-liked');
+                likeBtn.setAttribute('disabled', 'disabled');
+            } else {
+                likeBtn.classList.remove('is-liked', 'liked');
+                likeBtn.removeAttribute('disabled');
+            }
+        };
+
+        const saveLikedVibeIds = () => {
+            try {
+                localStorage.setItem(likedVibeStorageKey, JSON.stringify(Array.from(likedVibeIds)));
+            } catch (err) {
+                console.warn('Unable to save liked vibes locally.', err);
+            }
+        };
+
+        const fetchVibePhotos = async () => {
+            try {
+                const res = await fetch('/api/vibe-photos');
+                if (res.ok) {
+                    vibePhotos = await res.json();
+                    if (vibePhotos.length > 0) {
+                        renderVibePhoto(0);
+                        startVibeAutoplay();
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading vibe gallery:", err);
+            }
+        };
+
+        const renderVibePhoto = (index) => {
+            if (!vibePhotos[index]) return;
+            const photo = vibePhotos[index];
+
+            activeCard.style.opacity = '0';
+            activeCard.style.transform = 'scale(0.95)';
+
+            setTimeout(() => {
+                activeImg.src = photo.image_url;
+                if (bgBlurImg) bgBlurImg.src = photo.image_url;
+                likesCountSpan.textContent = photo.likes;
+
+                // Show caption/post text if available
+                if (activeTitle) activeTitle.textContent = photo.caption || 'Aurous Moment';
+                if (activeSub) activeSub.textContent = photo.caption ? '' : 'Captured memories';
+
+                heartIcon.className = "fa-solid fa-heart";
+                likeBtn.className = "vibe-like-button";
+                updateLikeButtonState(photo.id);
+
+                activeCard.style.opacity = '1';
+                activeCard.style.transform = 'scale(1)';
+            }, 300);
+        };
+
+        const handleVibeLike = async () => {
+            if (vibePhotos.length === 0) return;
+            const photo = vibePhotos[currentVibeIndex];
+            if (!photo || hasLikedVibePhoto(photo)) return;
+
+            rememberLikedVibePhoto(photo);
+            saveLikedVibeIds();
+            updateLikeButtonState(photo.id);
+
+            photo.likes += 1;
+            likesCountSpan.textContent = photo.likes;
+            heartIcon.className = "fa-solid fa-heart text-[#E0115F]";
+            likeBtn.className = "vibe-like-button liked";
+            likeBtn.classList.add('just-liked');
+            likesCountSpan.classList.add('count-pop');
+
+            bigHeart.style.transform = 'scale(1)';
+            bigHeart.style.opacity = '1';
+            setTimeout(() => {
+                bigHeart.style.transform = 'scale(0)';
+                bigHeart.style.opacity = '0';
+            }, 800);
+            setTimeout(() => {
+                likeBtn.classList.remove('just-liked');
+                likeBtn.classList.add('is-liked');
+                likesCountSpan.classList.remove('count-pop');
+            }, 520);
+
+            try {
+                const res = await fetch(`/api/vibe-photos/${photo.id}/like`, { method: 'POST' });
+                if (res.ok) {
+                    const updatedPhoto = await res.json();
+                    photo.likes = updatedPhoto.likes;
+                    photo.id = updatedPhoto.id || photo.id;
+                    photo.image_url = updatedPhoto.image_url || photo.image_url;
+                    rememberLikedVibePhoto(photo);
+                    saveLikedVibeIds();
+                    likesCountSpan.textContent = photo.likes;
+                }
+            } catch (err) {
+                console.error("Failed to persist like:", err);
+            }
+        };
+
+        const startVibeAutoplay = () => {
+            stopVibeAutoplay();
+            if (isVibeExpanded) return;
+            vibeAutoPlayTimer = setInterval(() => {
+                if (vibePhotos.length > 0) {
+                    currentVibeIndex = (currentVibeIndex + 1) % vibePhotos.length;
+                    renderVibePhoto(currentVibeIndex);
+                }
+            }, 5000);
+        };
+
+        const stopVibeAutoplay = () => {
+            if (vibeAutoPlayTimer) clearInterval(vibeAutoPlayTimer);
+        };
+
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            stopVibeAutoplay();
+            currentVibeIndex = (currentVibeIndex - 1 + vibePhotos.length) % vibePhotos.length;
+            renderVibePhoto(currentVibeIndex);
+            startVibeAutoplay();
+        });
+
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            stopVibeAutoplay();
+            currentVibeIndex = (currentVibeIndex + 1) % vibePhotos.length;
+            renderVibePhoto(currentVibeIndex);
+            startVibeAutoplay();
+        });
+
+        likeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleVibeLike();
+        });
+
+        let lastTap = 0;
+        let suppressNextClick = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
+        const handleSwipeNavigation = (deltaX) => {
+            if (!vibePhotos.length) return;
+            if (Math.abs(deltaX) < 55) return;
+            suppressNextClick = true;
+            stopVibeAutoplay();
+            currentVibeIndex = deltaX < 0
+                ? (currentVibeIndex + 1) % vibePhotos.length
+                : (currentVibeIndex - 1 + vibePhotos.length) % vibePhotos.length;
+            renderVibePhoto(currentVibeIndex);
+            startVibeAutoplay();
+        };
+
+        activeCard.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            touchStartTime = Date.now();
+            console.log('ðŸ‘‰ Touch START:', { x: touchStartX, y: touchStartY });
+        }, { passive: true });
+
+        activeCard.addEventListener('touchmove', (e) => {
+            // Allow swipe to work by not preventing default on horizontal moves
+        }, { passive: true });
+
+        activeCard.addEventListener('touchend', (e) => {
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            const deltaTime = Date.now() - touchStartTime;
+
+            console.log('âœ‹ Touch END:', { deltaX, deltaY, deltaTime });
+
+            // Swipe detection: if horizontal distance > vertical and > threshold
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 55 && deltaTime < 500) {
+                console.log('ðŸ‘ˆðŸ‘‰ SWIPE detected!', { deltaX });
+                handleSwipeNavigation(deltaX);
+            }
+        }, { passive: true });
+
+        activeCard.addEventListener('click', (e) => {
+            console.log('activeCard clicked');
+            // Don't trigger expand if we just swiped
+            if (suppressNextClick) {
+                console.log('Suppressing click due to swipe');
+                suppressNextClick = false;
+                return;
+            }
+
+            const now = Date.now();
+            // Double tap to like
+            if (now - lastTap < 300) {
+                console.log(' Double tap detected - liking');
+                handleVibeLike();
+                lastTap = 0;
+            } else {
+                lastTap = now;
+                // Single tap to expand
+                console.log('Single tap detected. isVibeExpanded:', isVibeExpanded);
+                if (!isVibeExpanded) {
+                    console.log('Expanding gallery...');
+                    expandVibeGallery();
+                }
+            }
+        });
+
+        vibeContainer.addEventListener('click', (e) => {
+            // Only expand if clicking on the card itself, not on controls
+            if (e.target.closest('#like-vibe-btn') ||
+                e.target.closest('#vibe-prev') ||
+                e.target.closest('#vibe-next') ||
+                e.target.closest('#vibe-collapse-btn') ||
+                e.target.closest('#vibe-upload-label')) {
+                return;
+            }
+            // Clicking outside card area also expands if not already expanded
+            if (!isVibeExpanded) {
+                expandVibeGallery();
+            }
+        });
+
+
+        // ===== EXPAND / COLLAPSE GALLERY LOGIC =====
+        const textCard = document.getElementById('vibe-text-card');
+        const collapseBtn = document.getElementById('vibe-collapse-btn');
+        const uploadLabel = document.getElementById('vibe-upload-label');
+        const handHint = document.getElementById('vibe-hand-hint');
+        const userUploadInput = document.getElementById('vibe-user-upload');
+        let isVibeExpanded = false;
+
+        const expandVibeGallery = () => {
+            console.log(' expandVibeGallery called, isVibeExpanded:', isVibeExpanded);
+            if (isVibeExpanded) return;
+            isVibeExpanded = true;
+
+            console.log(' Adding expanded class to vibeContainer');
+            // Add expanded class which makes it fixed and fullscreen
+            vibeContainer.classList.add('expanded');
+
+            console.log('vibeContainer classes:', vibeContainer.className);
+            console.log(' vibeContainer.classList contains expanded:', vibeContainer.classList.contains('expanded'));
+
+            // Show like button and overlay while expanded
+            const overlayBottom = vibeContainer.querySelector('.vibe-overlay-bottom');
+            if (overlayBottom) {
+                overlayBottom.style.pointerEvents = 'auto';
+            }
+            if (likeBtn) {
+                likeBtn.style.pointerEvents = 'auto';
+            }
+
+            // Stop autoplay when expanded
+            stopVibeAutoplay();
+
+            // Hide hand hint
+            if (handHint) handHint.style.opacity = '0';
+
+            // Disable page scroll
+            document.body.style.overflow = 'hidden';
+            console.log(' Gallery expanded successfully!');
+        };
+
+        window.collapseVibeGallery = (e) => {
+            if (e) e.stopPropagation();
+            if (!isVibeExpanded) return;
+            isVibeExpanded = false;
+
+            // Remove expanded class to restore normal positioning
+            vibeContainer.classList.remove('expanded');
+
+            // Hide like button and overlay when collapsed
+            const overlayBottom = vibeContainer.querySelector('.vibe-overlay-bottom');
+            if (overlayBottom) {
+                overlayBottom.style.pointerEvents = 'none';
+            }
+            if (likeBtn) {
+                likeBtn.style.pointerEvents = 'none';
+            }
+
+            // Show hand hint if not on desktop
+            if (handHint && window.innerWidth <= 768) {
+                handHint.style.opacity = '1';
+            }
+
+            // Re-enable page scroll
+            document.body.style.overflow = '';
+            startVibeAutoplay();
+        };
+
+        // Collapse when scrolling away
+        window.addEventListener('scroll', () => {
+            // If expanded, clicking outside should collapse
+            // But since it's fixed, we don't need scroll collapse
+        }, { passive: true });
+
+        // Hand hint auto-hide after 4 seconds
+        if (handHint) {
+            setTimeout(() => {
+                if (!isVibeExpanded && handHint) {
+                    handHint.style.transition = 'opacity 0.8s ease';
+                    handHint.style.opacity = '0';
+                    setTimeout(() => { if (!isVibeExpanded) handHint.style.display = 'none'; }, 800);
+                }
+            }, 4000);
+        }
+
+        // User upload handler
+        if (userUploadInput) {
+            userUploadInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                const maxSize = 5 * 1024 * 1024;
+                if (!allowedTypes.includes(file.type) || file.size > maxSize) {
+                    if (window.showToast) window.showToast('Please upload a JPG, PNG, or WebP image under 5 MB.');
+                    e.target.value = '';
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Ask user for optional caption/post text
+                try {
+                    const caption = window.prompt('Add a caption or post text for your memory (optional):');
+                    if (caption !== null && caption !== undefined && caption.trim() !== '') {
+                        formData.append('caption', caption.trim());
+                    }
+                } catch (err) {
+                    // ignore prompt errors
+                }
+
+                try {
+                    const res = await fetch('/api/vibe-photos/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (res.ok) {
+                        // Show nice popup instead of toast
+                        const popup = document.getElementById('upload-success-popup');
+                        const box = document.getElementById('upload-popup-box');
+                        if (popup) {
+                            popup.classList.remove('opacity-0', 'pointer-events-none');
+                            popup.classList.add('opacity-100');
+                            if (box) {
+                                box.classList.remove('scale-90');
+                                box.classList.add('scale-100');
+                            }
+                        }
+                    } else {
+                        const errorText = await res.text();
+                        console.error('Upload failed:', errorText);
+                        if (window.showToast) window.showToast('Upload failed. Please try again.');
+                    }
+                } catch (err) {
+                    console.error('Upload error:', err);
+                    if (window.showToast) window.showToast('Upload failed. Please try again.');
+                }
+                e.target.value = '';
+            });
+        }
+
+        // Close upload popup
+        window.closeUploadPopup = () => {
+            const popup = document.getElementById('upload-success-popup');
+            const box = document.getElementById('upload-popup-box');
+            if (popup) {
+                popup.classList.add('opacity-0', 'pointer-events-none');
+                popup.classList.remove('opacity-100');
+                if (box) {
+                    box.classList.add('scale-90');
+                    box.classList.remove('scale-100');
+                }
+            }
+        };
+
+        const fetchVibeBanner = async () => {
+            try {
+                const res = await fetch('/api/vibe-banner');
+                if (res.ok) {
+                    const banner = await res.json();
+                    if (banner) {
+                        const bannerImg = document.getElementById('vibe-banner-img');
+                        const bannerDesc = document.getElementById('vibe-banner-desc');
+                        if (bannerImg && banner.image_url) {
+                            bannerImg.src = banner.image_url;
+                        }
+                        if (bannerDesc && banner.description) {
+                            bannerDesc.textContent = banner.description;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading vibe banner:", err);
+            }
+        };
+
+        fetchVibePhotos();
+        fetchVibeBanner();
+    }
+
 });
+
+
+
