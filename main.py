@@ -32,11 +32,17 @@ with engine.connect() as conn:
     except Exception:
 
         pass
+    try:
+        conn.execute(text("ALTER TABLE vibe_photos ADD COLUMN approved BOOLEAN DEFAULT 0"))
+        conn.commit()
+    except Exception:
+        pass
+
 
 app = FastAPI(title="Aurous Restro API")
 
 
-SECRET_KEY = "aurous_secret_key_change_this_in_production"
+SECRET_KEY = os.getenv("AUROUS_SECRET_KEY", "aurous_secret_key_change_this_in_production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
@@ -82,6 +88,38 @@ async def get_current_member(token: str = Depends(oauth2_scheme), db: Session = 
 
 os.makedirs("assets/images/uploads", exist_ok=True)
 
+ALLOWED_IMAGE_TYPES = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+}
+MAX_UPLOAD_BYTES = 5 * 1024 * 1024
+
+
+def validate_image_upload(file: UploadFile) -> str:
+    extension = os.path.splitext(file.filename or "")[1].lower()
+    expected_extension = ALLOWED_IMAGE_TYPES.get(file.content_type or "")
+    if not expected_extension or extension not in {expected_extension, ".jpeg" if expected_extension == ".jpg" else expected_extension}:
+        raise HTTPException(status_code=400, detail="Only JPG, PNG, and WebP images are allowed.")
+
+    file.file.seek(0, os.SEEK_END)
+    size = file.file.tell()
+    file.file.seek(0)
+    if size <= 0:
+        raise HTTPException(status_code=400, detail="Uploaded image is empty.")
+    if size > MAX_UPLOAD_BYTES:
+        raise HTTPException(status_code=400, detail="Image must be 5 MB or smaller.")
+    return ".jpg" if extension == ".jpeg" else extension
+
+
+def save_upload(file: UploadFile, prefix: str) -> str:
+    file_extension = validate_image_upload(file)
+    unique_filename = f"{prefix}_{uuid.uuid4().hex}{file_extension}"
+    file_path = os.path.join("assets", "images", "uploads", unique_filename)
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    return f"/{file_path.replace(os.sep, '/')}"
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -93,13 +131,20 @@ async def startup_event():
             "ALTER TABLE reservations ADD COLUMN status VARCHAR DEFAULT 'pending'",
             "ALTER TABLE reservations ADD COLUMN deleted_by_admin INTEGER DEFAULT 0",
             "ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0",
-            "ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"
+            "ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0",
+            "ALTER TABLE reviews ADD COLUMN is_pinned BOOLEAN DEFAULT 0"
         ]:
             try:
                 db.execute(text(stmt))
                 db.commit()
             except Exception:
                 db.rollback()
+        # Ensure caption column exists for vibe_photos
+        try:
+            db.execute(text("ALTER TABLE vibe_photos ADD COLUMN caption VARCHAR"))
+            db.commit()
+        except Exception:
+            db.rollback()
 
         admin = db.query(models.Member).filter(models.Member.username == "admin").first()
         if not admin:
@@ -154,16 +199,21 @@ async def create_review(
     images: Optional[List[UploadFile]] = File(None),
     db: Session = Depends(get_db)
 ):
+    name = name.strip()
+    location = location.strip()
+    review_text = review_text.strip()
+    if not 1 <= rating <= 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5.")
+    if not name or len(name) > 80 or len(location) > 80 or not review_text or len(review_text) > 1000:
+        raise HTTPException(status_code=400, detail="Please provide valid review details.")
+
     image_urls = []
     if images:
+        if len(images) > 4:
+            raise HTTPException(status_code=400, detail="You can upload up to 4 images.")
         for img in images:
             if img.filename:
-                file_extension = os.path.splitext(img.filename)[1]
-                unique_filename = f"{uuid.uuid4().hex}{file_extension}"
-                file_path = f"assets/images/uploads/{unique_filename}"
-                with open(file_path, "wb") as buffer:
-                    shutil.copyfileobj(img.file, buffer)
-                image_urls.append(f"/{file_path}")
+                image_urls.append(save_upload(img, "review"))
     
     image_url_str = ",".join(image_urls) if image_urls else None
 
@@ -224,7 +274,7 @@ def admin_reply_to_review(reply: schemas.ReviewReply, current_member: models.Mem
     return db_review
 
 @app.delete("/api/reviews/{review_id}")
-def delete_review_public(review_id: int, db: Session = Depends(get_db)):
+def delete_review_public(review_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
     db_review = db.query(models.Review).filter(models.Review.id == review_id).first()
     if not db_review:
         raise HTTPException(status_code=404, detail="Review not found")
@@ -240,6 +290,17 @@ def admin_delete_review(review_id: int, current_member: models.Member = Depends(
     db.delete(db_review)
     db.commit()
     return {"detail": "Review deleted"}
+
+@app.put("/api/admin/reviews/{review_id}/pin", response_model=schemas.ReviewResponse)
+def admin_toggle_pin_review(review_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_review = db.query(models.Review).filter(models.Review.id == review_id).first()
+    if not db_review:
+        raise HTTPException(status_code=404, detail="Review not found")
+    
+    db_review.is_pinned = not db_review.is_pinned
+    db.commit()
+    db.refresh(db_review)
+    return db_review
     
 @app.delete("/api/admin/reservations/{reservation_id}")
 def admin_delete_reservation(reservation_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
@@ -471,12 +532,136 @@ def admin_delete_menu_item(item_id: int, current_member: models.Member = Depends
 
 @app.post("/api/admin/menu/upload-image")
 async def upload_menu_image(file: UploadFile = File(...), current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
-    file_extension = os.path.splitext(file.filename or "")[1]
-    unique_filename = f"menu_{uuid.uuid4().hex}{file_extension}"
-    file_path = f"assets/images/uploads/{unique_filename}"
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    return {"image_url": f"/{file_path}"}
+    return {"image_url": save_upload(file, "menu")}
+
+
+@app.get("/api/vibe-photos", response_model=List[schemas.VibePhotoResponse])
+def get_vibe_photos(db: Session = Depends(get_db)):
+    photos = db.query(models.VibePhoto).filter(models.VibePhoto.approved == True).order_by(models.VibePhoto.created_at.desc()).all()
+    if not photos:
+        # Fallback premium Unsplash images if database is empty
+        return [
+            schemas.VibePhotoResponse(id=-1, image_url="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes=142, approved=True, created_at=datetime.utcnow()),
+            schemas.VibePhotoResponse(id=-2, image_url="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes=98, approved=True, created_at=datetime.utcnow() - timedelta(days=1)),
+            schemas.VibePhotoResponse(id=-3, image_url="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes=75, approved=True, created_at=datetime.utcnow() - timedelta(days=2))
+        ]
+    return photos
+
+@app.post("/api/vibe-photos/{photo_id}/like", response_model=schemas.VibePhotoResponse)
+def like_vibe_photo(photo_id: int, db: Session = Depends(get_db)):
+    if photo_id < 0:
+        # It's a fallback image. Create a database record for it so the like is persistent!
+        fallbacks = {
+            -1: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470",
+            -2: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470",
+            -3: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470"
+        }
+        url = fallbacks.get(photo_id, "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470")
+        db_photo = models.VibePhoto(image_url=url, likes=1, approved=True)
+        db.add(db_photo)
+        db.commit()
+        db.refresh(db_photo)
+        return db_photo
+    
+    db_photo = db.query(models.VibePhoto).filter(models.VibePhoto.id == photo_id).first()
+    if not db_photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    db_photo.likes += 1
+    db.commit()
+    db.refresh(db_photo)
+    return db_photo
+
+@app.post("/api/vibe-photos/upload", response_model=schemas.VibePhotoResponse)
+async def upload_vibe_photo(file: UploadFile = File(...), caption: str | None = Form(None), db: Session = Depends(get_db)):
+    image_url = save_upload(file, "vibe")
+    if caption is not None:
+        caption = caption.strip()[:240]
+
+    db_photo = models.VibePhoto(image_url=image_url, approved=False, caption=caption)
+    db.add(db_photo)
+    db.commit()
+    db.refresh(db_photo)
+    return db_photo
+
+# Admin Moderation / Vibe APIs
+@app.get("/api/admin/vibe-photos", response_model=List[schemas.VibePhotoResponse])
+def admin_get_all_vibe_photos(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    return db.query(models.VibePhoto).order_by(models.VibePhoto.created_at.desc()).all()
+
+@app.post("/api/admin/vibe-photos", response_model=schemas.VibePhotoResponse)
+async def admin_upload_vibe_photo(file: UploadFile = File(...), caption: str | None = Form(None), current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    image_url = save_upload(file, "vibe")
+    if caption is not None:
+        caption = caption.strip()[:240]
+    
+    db_photo = models.VibePhoto(image_url=image_url, approved=True, caption=caption)
+    db.add(db_photo)
+    db.commit()
+    db.refresh(db_photo)
+    return db_photo
+
+@app.post("/api/admin/vibe-photos/{photo_id}/approve", response_model=schemas.VibePhotoResponse)
+def approve_vibe_photo(photo_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_photo = db.query(models.VibePhoto).filter(models.VibePhoto.id == photo_id).first()
+    if not db_photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    db_photo.approved = True
+    db.commit()
+    db.refresh(db_photo)
+    return db_photo
+
+@app.delete("/api/admin/vibe-photos/{photo_id}")
+def admin_delete_vibe_photo(photo_id: int, current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
+    db_photo = db.query(models.VibePhoto).filter(models.VibePhoto.id == photo_id).first()
+    if not db_photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    
+    # Delete local file if it exists
+    if db_photo.image_url.startswith("/assets/images/uploads/"):
+        try:
+            os.remove(db_photo.image_url.lstrip("/"))
+        except Exception:
+            pass
+            
+    db.delete(db_photo)
+    db.commit()
+    return {"detail": "Photo deleted"}
+
+# Vibe Banner APIs
+@app.get("/api/vibe-banner", response_model=Optional[schemas.VibeBannerResponse])
+def get_vibe_banner(db: Session = Depends(get_db)):
+    return db.query(models.VibeBanner).first()
+
+@app.post("/api/admin/vibe-banner", response_model=schemas.VibeBannerResponse)
+async def update_vibe_banner(
+    file: Optional[UploadFile] = File(None),
+    description: Optional[str] = Form(None),
+    current_member: models.Member = Depends(get_current_member),
+    db: Session = Depends(get_db)
+):
+    if description:
+        description = description.strip()
+        words = description.split()
+        if len(words) > 20:
+            raise HTTPException(status_code=400, detail="Description cannot be more than 20 words.")
+        if len(description) > 180:
+            raise HTTPException(status_code=400, detail="Description is too long.")
+
+    banner = db.query(models.VibeBanner).first()
+    if not banner:
+        banner = models.VibeBanner()
+        db.add(banner)
+        db.flush()
+
+    if file:
+        banner.image_url = save_upload(file, "banner")
+
+    if description is not None:
+        banner.description = description
+
+    db.commit()
+    db.refresh(banner)
+    return banner
 
 
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
