@@ -54,6 +54,7 @@ class VibePhoto(Base):
     image_url: Mapped[str] = mapped_column(String)
     likes: Mapped[int] = mapped_column(Integer, default=0)
     approved: Mapped[bool] = mapped_column(Boolean, default=False)
+    caption: Mapped[str | None] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
 
 class VibeBanner(Base):
