@@ -972,9 +972,10 @@ input:-webkit-autofill:active {
         gap: 12px !important;
     }
 
+
     .social-icons a {
-        width: 45px !important;
-        height: 45px !important;
+        width: 44px !important;
+        height: 44px !important;
         border-radius: 12px !important;
     }
 
@@ -1026,9 +1027,7 @@ input:-webkit-autofill:active {
         padding: 0 !important;
     }
 
-    /* ===== VIBE SECTION MOBILE LAYOUT â€” WIREFRAME EXACT ===== */
 
-    /* Top cards: side-by-side row like wireframe */
     #vibe-top-cards {
         display: flex !important;
         flex-direction: row !important;
@@ -1038,7 +1037,7 @@ input:-webkit-autofill:active {
         padding: 0 4px !important;
     }
 
-    /* Left: smaller text card */
+
     #vibe-text-card {
         flex: 0 0 42% !important;
         width: 42% !important;
@@ -1070,7 +1069,7 @@ input:-webkit-autofill:active {
         margin-top: 0.4rem !important;
     }
 
-    /* Stats row inside text card */
+
     #vibe-text-card .grid {
         padding-top: 0.5rem !important;
     }
@@ -1084,7 +1083,7 @@ input:-webkit-autofill:active {
         margin-top: 0 !important;
     }
 
-    /* Right: bigger banner container */
+
     #vibe-banner-container {
         flex: 1 !important;
         max-width: none !important;
@@ -1093,7 +1092,7 @@ input:-webkit-autofill:active {
         padding: 0 !important;
     }
 
-    /* Banner image card â€” taller, no aspect-square */
+
     #vibe-banner-card {
         aspect-ratio: auto !important;
         height: 300px !important;
