@@ -5,8 +5,12 @@ from sqlalchemy.orm import sessionmaker
 
 SQLALCHEMY_DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/aurous_db"
+    "postgresql://aurous_db_user:6McWJSyrRf7eIoaFK6ewPM6hs3Bez3WF@dpg-d9bv0b57vvec73ffjl0g-a/aurous_db"
 )
+
+
+if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
