@@ -33,7 +33,7 @@ with engine.connect() as conn:
 
         pass
     try:
-        conn.execute(text("ALTER TABLE vibe_photos ADD COLUMN approved BOOLEAN DEFAULT 0"))
+        conn.execute(text("ALTER TABLE vibe_photos ADD COLUMN approved BOOLEAN DEFAULT FALSE"))
         conn.commit()
     except Exception:
         pass
@@ -132,7 +132,7 @@ async def startup_event():
             "ALTER TABLE reservations ADD COLUMN deleted_by_admin INTEGER DEFAULT 0",
             "ALTER TABLE reservations ADD COLUMN deleted_by_user INTEGER DEFAULT 0",
             "ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0",
-            "ALTER TABLE reviews ADD COLUMN is_pinned BOOLEAN DEFAULT 0"
+            "ALTER TABLE reviews ADD COLUMN is_pinned BOOLEAN DEFAULT FALSE"
         ]:
             try:
                 db.execute(text(stmt))
