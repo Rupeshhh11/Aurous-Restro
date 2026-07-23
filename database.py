@@ -8,7 +8,6 @@ SQLALCHEMY_DATABASE_URL = os.getenv(
     "postgresql://aurous_db_user:6McWJSyrRf7eIoaFK6ewPM6hs3Bez3WF@dpg-d9bv0b57vvec73ffjl0g-a/aurous_db"
 )
 
-
 if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
     SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
