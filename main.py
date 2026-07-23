@@ -14,7 +14,15 @@ from typing import List, Optional
 import models
 import schemas
 from database import engine, get_db
+import cloudinary
+import cloudinary.uploader
 
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True
+)
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -86,7 +94,7 @@ async def get_current_member(token: str = Depends(oauth2_scheme), db: Session = 
     return user
 
 
-os.makedirs("assets/images/uploads", exist_ok=True)
+# Local uploads folder is no longer needed since we store images on Cloudinary
 
 ALLOWED_IMAGE_TYPES = {
     "image/jpeg": ".jpg",
@@ -114,11 +122,18 @@ def validate_image_upload(file: UploadFile) -> str:
 
 def save_upload(file: UploadFile, prefix: str) -> str:
     file_extension = validate_image_upload(file)
-    unique_filename = f"{prefix}_{uuid.uuid4().hex}{file_extension}"
-    file_path = os.path.join("assets", "images", "uploads", unique_filename)
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    return f"/{file_path.replace(os.sep, '/')}"
+    # We do not append the extension to the public_id, Cloudinary manages formats automatically
+    unique_filename = f"{prefix}_{uuid.uuid4().hex}"
+    try:
+        upload_result = cloudinary.uploader.upload(
+            file.file,
+            public_id=unique_filename,
+            folder="aurous_uploads"
+        )
+        return upload_result.get("secure_url")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upload image to Cloudinary: {str(e)}")
+
 
 
 @app.on_event("startup")
@@ -622,6 +637,19 @@ def admin_delete_vibe_photo(photo_id: int, current_member: models.Member = Depen
             os.remove(db_photo.image_url.lstrip("/"))
         except Exception:
             pass
+    elif "res.cloudinary.com" in db_photo.image_url:
+        try:
+            parts = db_photo.image_url.split("/")
+            if "aurous_uploads" in parts:
+                folder_index = parts.index("aurous_uploads")
+                cloudinary_public_id = "/".join(parts[folder_index:])
+                cloudinary_public_id = cloudinary_public_id.split(".")[0]
+            else:
+                last_part = parts[-1]
+                cloudinary_public_id = last_part.split(".")[0]
+            cloudinary.uploader.destroy(cloudinary_public_id)
+        except Exception:
+            pass
             
     db.delete(db_photo)
     db.commit()
@@ -694,3 +722,5 @@ def read_reviews_page():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+
