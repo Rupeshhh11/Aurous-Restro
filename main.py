@@ -662,7 +662,7 @@ def get_vibe_banner(db: Session = Depends(get_db)):
 
 @app.post("/api/admin/vibe-banner", response_model=schemas.VibeBannerResponse)
 async def update_vibe_banner(
-    file: Optional[UploadFile] = File(None),
+    files: Optional[List[UploadFile]] = File(None),
     description: Optional[str] = Form(None),
     current_member: models.Member = Depends(get_current_member),
     db: Session = Depends(get_db)
@@ -681,8 +681,14 @@ async def update_vibe_banner(
         db.add(banner)
         db.flush()
 
-    if file:
-        banner.image_url = save_upload(file, "banner")
+    # Accept up to 4 banner images, upload each to Cloudinary, store comma-separated URLs
+    if files:
+        valid_files = [f for f in files if f and f.filename]
+        if len(valid_files) > 4:
+            raise HTTPException(status_code=400, detail="You can upload up to 4 banner images.")
+        if valid_files:
+            urls = [save_upload(f, "banner") for f in valid_files]
+            banner.image_url = ",".join(urls)
 
     if description is not None:
         banner.description = description
