@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, status
+from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, Query, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -690,9 +690,53 @@ async def update_vibe_banner(
             urls = [save_upload(f, "banner") for f in valid_files]
             banner.image_url = ",".join(urls)
 
-    if description is not None:
-        banner.description = description
+@app.delete("/api/admin/vibe-banner", response_model=Optional[schemas.VibeBannerResponse])
+async def delete_vibe_banner(
+    index: Optional[int] = Query(None),
+    image_url: Optional[str] = Query(None),
+    current_member: models.Member = Depends(get_current_member),
+    db: Session = Depends(get_db)
+):
+    banner = db.query(models.VibeBanner).first()
+    if not banner or not banner.image_url:
+        return banner
 
+    urls = [u.strip() for u in banner.image_url.split(",") if u.strip()]
+
+    target_url_to_delete = None
+
+    if image_url:
+        if image_url in urls:
+            urls.remove(image_url)
+            target_url_to_delete = image_url
+    elif index is not None and 0 <= index < len(urls):
+        target_url_to_delete = urls.pop(index)
+    else:
+        # Delete all banner images
+        for u in urls:
+            if "cloudinary.com" in u:
+                try:
+                    parts = u.split("/")
+                    filename = parts[-1]
+                    public_id = "aurous_restro/" + filename.split(".")[0]
+                    cloudinary.uploader.destroy(public_id)
+                except Exception as e:
+                    print(f"Error destroying Cloudinary banner image: {e}")
+        banner.image_url = None
+        db.commit()
+        db.refresh(banner)
+        return banner
+
+    if target_url_to_delete and "cloudinary.com" in target_url_to_delete:
+        try:
+            parts = target_url_to_delete.split("/")
+            filename = parts[-1]
+            public_id = "aurous_restro/" + filename.split(".")[0]
+            cloudinary.uploader.destroy(public_id)
+        except Exception as e:
+            print(f"Error destroying Cloudinary image: {e}")
+
+    banner.image_url = ",".join(urls) if urls else None
     db.commit()
     db.refresh(banner)
     return banner
