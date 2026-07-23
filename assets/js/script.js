@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 
 
     window.showToast = function (message) {
@@ -2229,26 +2229,212 @@
             }
         };
 
+        // ======================================================
+        // VIBE BANNER — Multi-image carousel + Lightbox
+        // ======================================================
+        let bannerUrls = [];
+        let bannerCurrentIdx = 0;
+        let bannerAutoTimer = null;
+
+        function buildBannerDots(container, count, activeIdx) {
+            if (!container) return;
+            container.innerHTML = '';
+            if (count <= 1) return;
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'w-2 h-2 rounded-full transition-all duration-300 ' +
+                    (i === activeIdx ? 'bg-white scale-125' : 'bg-white/30');
+                dot.onclick = (e) => { e.stopPropagation(); bannerGoTo(i); };
+                container.appendChild(dot);
+            }
+        }
+
+        function buildBannerSlides(slidesEl, urls) {
+            if (!slidesEl) return;
+            slidesEl.innerHTML = '';
+            slidesEl.style.width = (urls.length * 100) + '%';
+            urls.forEach(url => {
+                const slide = document.createElement('div');
+                slide.style.width = (100 / urls.length) + '%';
+                slide.className = 'flex-shrink-0 flex items-center justify-center bg-black';
+                slide.style.minHeight = '320px';
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Aurous Banner';
+                img.className = 'w-full h-full object-contain select-none';
+                img.style.maxHeight = '420px';
+                slide.appendChild(img);
+                slidesEl.appendChild(slide);
+            });
+        }
+
+        function bannerGoTo(idx) {
+            if (!bannerUrls.length) return;
+            bannerCurrentIdx = (idx + bannerUrls.length) % bannerUrls.length;
+            const slidesEl = document.getElementById('vibe-banner-slides');
+            const dotsEl = document.getElementById('vibe-banner-dots');
+            if (slidesEl) {
+                slidesEl.style.transform = `translateX(-${bannerCurrentIdx * (100 / bannerUrls.length)}%)`;
+            }
+            buildBannerDots(dotsEl, bannerUrls.length, bannerCurrentIdx);
+        }
+
+        window.bannerSlide = function(dir) {
+            bannerGoTo(bannerCurrentIdx + dir);
+            resetBannerAutoTimer();
+        };
+
+        function startBannerAutoTimer() {
+            if (bannerUrls.length <= 1) return;
+            bannerAutoTimer = setInterval(() => {
+                bannerGoTo(bannerCurrentIdx + 1);
+            }, 2000);
+        }
+
+        function resetBannerAutoTimer() {
+            clearInterval(bannerAutoTimer);
+            startBannerAutoTimer();
+        }
+
+        // Touch swipe on the small banner card
+        (function setupBannerCardSwipe() {
+            const card = document.getElementById('vibe-banner-card');
+            if (!card) return;
+            let startX = 0;
+            card.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            card.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                if (Math.abs(dx) > 40) {
+                    bannerSlide(dx < 0 ? 1 : -1);
+                }
+            }, { passive: true });
+        })();
+
         const fetchVibeBanner = async () => {
             try {
                 const res = await fetch('/api/vibe-banner');
                 if (res.ok) {
                     const banner = await res.json();
                     if (banner) {
-                        const bannerImg = document.getElementById('vibe-banner-img');
                         const bannerDesc = document.getElementById('vibe-banner-desc');
-                        if (bannerImg && banner.image_url) {
-                            bannerImg.src = banner.image_url;
-                        }
                         if (bannerDesc && banner.description) {
                             bannerDesc.textContent = banner.description;
                         }
+                        if (banner.image_url) {
+                            bannerUrls = banner.image_url.split(',').map(u => u.trim()).filter(Boolean);
+                        } else {
+                            // Fallback single image
+                            bannerUrls = ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200'];
+                        }
+                        const slidesEl = document.getElementById('vibe-banner-slides');
+                        const dotsEl = document.getElementById('vibe-banner-dots');
+                        buildBannerSlides(slidesEl, bannerUrls);
+                        buildBannerDots(dotsEl, bannerUrls.length, 0);
+                        bannerCurrentIdx = 0;
+                        if (slidesEl) slidesEl.style.transform = 'translateX(0%)';
+                        startBannerAutoTimer();
+
+                        // Seed lightbox slides too
+                        buildLightboxSlides(bannerUrls);
                     }
                 }
             } catch (err) {
                 console.error("Error loading vibe banner:", err);
             }
         };
+
+        // ======================================================
+        // BANNER LIGHTBOX
+        // ======================================================
+        let lbCurrentIdx = 0;
+
+        function buildLightboxSlides(urls) {
+            const lbSlides = document.getElementById('banner-lightbox-slides');
+            const lbDots = document.getElementById('banner-lightbox-dots');
+            if (!lbSlides) return;
+            lbSlides.innerHTML = '';
+            lbSlides.style.width = (urls.length * 100) + '%';
+            urls.forEach(url => {
+                const slide = document.createElement('div');
+                slide.style.width = (100 / urls.length) + '%';
+                slide.className = 'flex-shrink-0 flex items-center justify-center';
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'Aurous Banner';
+                img.className = 'w-full h-auto object-contain rounded-2xl';
+                img.style.maxHeight = '85vh';
+                slide.appendChild(img);
+                lbSlides.appendChild(slide);
+            });
+            buildLightboxDots(lbDots, urls.length, 0);
+        }
+
+        function buildLightboxDots(container, count, activeIdx) {
+            if (!container) return;
+            container.innerHTML = '';
+            if (count <= 1) return;
+            for (let i = 0; i < count; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'w-2 h-2 rounded-full transition-all duration-300 ' +
+                    (i === activeIdx ? 'bg-white scale-125' : 'bg-white/30');
+                dot.onclick = (e) => { e.stopPropagation(); lightboxGoTo(i); };
+                container.appendChild(dot);
+            }
+        }
+
+        function lightboxGoTo(idx) {
+            lbCurrentIdx = (idx + bannerUrls.length) % bannerUrls.length;
+            const lbSlides = document.getElementById('banner-lightbox-slides');
+            const lbDots = document.getElementById('banner-lightbox-dots');
+            const counter = document.getElementById('banner-lightbox-counter');
+            if (lbSlides) lbSlides.style.transform = `translateX(-${lbCurrentIdx * (100 / bannerUrls.length)}%)`;
+            buildLightboxDots(lbDots, bannerUrls.length, lbCurrentIdx);
+            if (counter) counter.textContent = `${lbCurrentIdx + 1} / ${bannerUrls.length}`;
+        }
+
+        window.lightboxSlide = function(dir) { lightboxGoTo(lbCurrentIdx + dir); };
+
+        window.openBannerLightbox = function(startIdx) {
+            if (!bannerUrls.length) return;
+            const lb = document.getElementById('banner-lightbox');
+            if (!lb) return;
+            lb.classList.remove('opacity-0', 'pointer-events-none');
+            lb.classList.add('opacity-100');
+            document.body.style.overflow = 'hidden';
+            clearInterval(bannerAutoTimer);
+            lbCurrentIdx = startIdx || bannerCurrentIdx;
+            lightboxGoTo(lbCurrentIdx);
+        };
+
+        window.closeBannerLightbox = function() {
+            const lb = document.getElementById('banner-lightbox');
+            if (!lb) return;
+            lb.classList.add('opacity-0', 'pointer-events-none');
+            lb.classList.remove('opacity-100');
+            document.body.style.overflow = '';
+            startBannerAutoTimer();
+        };
+
+        // Touch swipe inside lightbox (mobile)
+        (function setupLightboxSwipe() {
+            const wrapper = document.getElementById('banner-lightbox-slides-wrapper');
+            if (!wrapper) return;
+            let startX = 0;
+            wrapper.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+            wrapper.addEventListener('touchend', e => {
+                const dx = e.changedTouches[0].clientX - startX;
+                if (Math.abs(dx) > 40) lightboxSlide(dx < 0 ? 1 : -1);
+            }, { passive: true });
+        })();
+
+        // Keyboard arrow navigation for lightbox
+        document.addEventListener('keydown', e => {
+            const lb = document.getElementById('banner-lightbox');
+            if (!lb || lb.classList.contains('opacity-0')) return;
+            if (e.key === 'ArrowRight') lightboxSlide(1);
+            if (e.key === 'ArrowLeft') lightboxSlide(-1);
+            if (e.key === 'Escape') closeBannerLightbox();
+        });
 
         fetchVibePhotos();
         fetchVibeBanner();
