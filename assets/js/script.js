@@ -1892,12 +1892,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (bgBlurImg) bgBlurImg.src = photo.image_url;
                 if (likesCountSpan) likesCountSpan.textContent = photo.likes || 0;
 
-                // Instagram-style caption display at the bottom of the photo
+                // Caption display - just the caption text, no branding
                 if (captionTextEl) {
                     if (photo.caption && photo.caption.trim()) {
-                        captionTextEl.innerHTML = `<span class="text-white font-bold mr-1">aurous_lounge</span> ${escapeVibeHtml(photo.caption.trim())}`;
+                        captionTextEl.textContent = photo.caption.trim();
                     } else {
-                        captionTextEl.innerHTML = `<span class="text-white font-bold mr-1">aurous_lounge</span> Aurous Moments &bull; Experience the extraordinary vibe ✨`;
+                        captionTextEl.textContent = 'Aurous Moments \u2022 Experience the extraordinary vibe \u2728';
                     }
                 }
 
