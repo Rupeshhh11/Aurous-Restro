@@ -12,17 +12,28 @@ import shutil
 import uuid
 from typing import List, Optional
 import models
+from urllib.parse import urlparse
 import schemas
 from database import engine, get_db
 import cloudinary
 import cloudinary.uploader
 
-cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-    secure=True
-)
+cloudinary_url = os.getenv("CLOUDINARY_URL")
+if cloudinary_url and cloudinary_url.startswith("cloudinary://"):
+    _parsed = urlparse(cloudinary_url)
+    cloudinary.config(
+        cloud_name=_parsed.hostname,
+        api_key=_parsed.username,
+        api_secret=_parsed.password,
+        secure=True
+    )
+else:
+    cloudinary.config(
+        cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", "qahddnsk"),
+        api_key=os.getenv("CLOUDINARY_API_KEY", "576279682356495"),
+        api_secret=os.getenv("CLOUDINARY_API_SECRET", "A_kJicqk_e9fC2xAi2IL0Ocr-U8"),
+        secure=True
+    )
 
 models.Base.metadata.create_all(bind=engine)
 
