@@ -1796,9 +1796,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // VIBE GALLERY COMPONENT
     const vibeContainer = document.getElementById('vibe-gallery-container');
     console.log('ðŸŽ¬ Vibe Gallery Component Initializing...');
-    console.log('vibeContainer found:', !!vibeContainer);
     if (vibeContainer) {
-        console.log('âœ… Vibe Gallery Component initialized successfully');
         let vibePhotos = [];
         let currentVibeIndex = 0;
         let vibeAutoPlayTimer = null;
@@ -1806,7 +1804,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bgBlurImg = document.getElementById('vibe-bg-blur');
         const activeImg = document.getElementById('vibe-active-img');
         const activeCard = document.getElementById('vibe-active-card');
-        const activeTitle = document.getElementById('vibe-active-title');
+        const captionTextEl = document.getElementById('vibe-caption-text');
         const activeSub = document.getElementById('vibe-active-sub');
         const likesCountSpan = document.getElementById('vibe-likes-count');
         const likeBtn = document.getElementById('like-vibe-btn');
@@ -1815,19 +1813,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevBtn = document.getElementById('vibe-prev');
         const nextBtn = document.getElementById('vibe-next');
 
-        console.log('ðŸ“ DOM Elements found:', {
-            bgBlurImg: !!bgBlurImg,
-            activeImg: !!activeImg,
-            activeCard: !!activeCard,
-            likesCountSpan: !!likesCountSpan,
-            likeBtn: !!likeBtn,
-            heartIcon: !!heartIcon,
-            bigHeart: !!bigHeart,
-            prevBtn: !!prevBtn,
-            nextBtn: !!nextBtn
-        });
+        function escapeVibeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
 
-        const likedVibeStorageKey = 'aurous_vibe_liked_photos';
+        const likedVibeStorageKey = 'aurous_vibe_liked_photos_v4';
         const getLikedVibeIds = () => {
             try {
                 const stored = localStorage.getItem(likedVibeStorageKey);
@@ -1837,33 +1828,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         const likedVibeIds = new Set(getLikedVibeIds());
-        const getVibeLikeKeys = (photo) => {
-            if (!photo) return [];
-            return [`id:${photo.id}`, `url:${photo.image_url}`];
-        };
-        const hasLikedVibePhoto = (photo) => getVibeLikeKeys(photo).some((key) => likedVibeIds.has(key));
-        const rememberLikedVibePhoto = (photo) => {
-            getVibeLikeKeys(photo).forEach((key) => likedVibeIds.add(key));
+
+        const getPhotoKey = (photo) => {
+            if (!photo) return '';
+            return photo.id ? `id_${photo.id}` : `url_${photo.image_url}`;
         };
 
-        const updateLikeButtonState = (photoId) => {
-            const photo = vibePhotos[currentVibeIndex];
-            const alreadyLiked = hasLikedVibePhoto(photo) || (photoId && likedVibeIds.has(photoId));
-            if (!likeBtn) return;
-            if (alreadyLiked) {
-                likeBtn.classList.add('is-liked');
-                likeBtn.setAttribute('disabled', 'disabled');
-            } else {
-                likeBtn.classList.remove('is-liked', 'liked');
-                likeBtn.removeAttribute('disabled');
+        const hasLikedVibePhoto = (photo) => {
+            const key = getPhotoKey(photo);
+            return key ? likedVibeIds.has(key) : false;
+        };
+
+        const rememberLikedVibePhoto = (photo) => {
+            const key = getPhotoKey(photo);
+            if (key) {
+                likedVibeIds.add(key);
+                try {
+                    localStorage.setItem(likedVibeStorageKey, JSON.stringify(Array.from(likedVibeIds)));
+                } catch (err) {
+                    console.warn('Unable to save liked vibes locally.', err);
+                }
             }
         };
 
-        const saveLikedVibeIds = () => {
-            try {
-                localStorage.setItem(likedVibeStorageKey, JSON.stringify(Array.from(likedVibeIds)));
-            } catch (err) {
-                console.warn('Unable to save liked vibes locally.', err);
+        const updateLikeButtonState = (photo) => {
+            if (!likeBtn || !heartIcon) return;
+            const isLiked = hasLikedVibePhoto(photo);
+            if (isLiked) {
+                heartIcon.className = "fa-solid fa-heart text-[#E0115F] scale-110";
+                likeBtn.classList.add('border-[#E0115F]/60', 'bg-[#E0115F]/25');
+                likeBtn.classList.remove('bg-black/60', 'border-white/20');
+            } else {
+                heartIcon.className = "fa-regular fa-heart text-white";
+                likeBtn.classList.remove('border-[#E0115F]/60', 'bg-[#E0115F]/25');
+                likeBtn.classList.add('bg-black/60', 'border-white/20');
             }
         };
 
@@ -1887,67 +1885,90 @@ document.addEventListener('DOMContentLoaded', () => {
             const photo = vibePhotos[index];
 
             activeCard.style.opacity = '0';
-            activeCard.style.transform = 'scale(0.95)';
+            activeCard.style.transform = 'scale(0.96)';
 
             setTimeout(() => {
                 activeImg.src = photo.image_url;
                 if (bgBlurImg) bgBlurImg.src = photo.image_url;
-                likesCountSpan.textContent = photo.likes;
+                if (likesCountSpan) likesCountSpan.textContent = photo.likes || 0;
 
-                // Show caption/post text if available
-                if (activeTitle) activeTitle.textContent = photo.caption || 'Aurous Moment';
-                if (activeSub) activeSub.textContent = photo.caption ? '' : 'Captured memories';
+                // Instagram-style caption display at the bottom of the photo
+                if (captionTextEl) {
+                    if (photo.caption && photo.caption.trim()) {
+                        captionTextEl.innerHTML = `<span class="text-white font-bold mr-1">aurous_lounge</span> ${escapeVibeHtml(photo.caption.trim())}`;
+                    } else {
+                        captionTextEl.innerHTML = `<span class="text-white font-bold mr-1">aurous_lounge</span> Aurous Moments &bull; Experience the extraordinary vibe ✨`;
+                    }
+                }
 
-                heartIcon.className = "fa-solid fa-heart";
-                likeBtn.className = "vibe-like-button";
-                updateLikeButtonState(photo.id);
+                if (activeSub) {
+                    activeSub.textContent = photo.created_at ? '• ' + new Date(photo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '• Featured';
+                }
+
+                updateLikeButtonState(photo);
 
                 activeCard.style.opacity = '1';
                 activeCard.style.transform = 'scale(1)';
-            }, 300);
+            }, 250);
         };
 
+        let isLikingInProgress = false;
         const handleVibeLike = async () => {
-            if (vibePhotos.length === 0) return;
+            if (vibePhotos.length === 0 || isLikingInProgress) return;
             const photo = vibePhotos[currentVibeIndex];
-            if (!photo || hasLikedVibePhoto(photo)) return;
+            if (!photo) return;
 
+            // Check if 1 device already liked (1 Phone 1 Like)
+            if (hasLikedVibePhoto(photo)) {
+                if (bigHeart) {
+                    bigHeart.style.transform = 'scale(1)';
+                    bigHeart.style.opacity = '1';
+                    setTimeout(() => {
+                        bigHeart.style.transform = 'scale(0)';
+                        bigHeart.style.opacity = '0';
+                    }, 400);
+                }
+                if (window.showToast) window.showToast('❤️ You already liked this photo!');
+                return;
+            }
+
+            isLikingInProgress = true;
             rememberLikedVibePhoto(photo);
-            saveLikedVibeIds();
-            updateLikeButtonState(photo.id);
+            updateLikeButtonState(photo);
 
-            photo.likes += 1;
-            likesCountSpan.textContent = photo.likes;
-            heartIcon.className = "fa-solid fa-heart text-[#E0115F]";
-            likeBtn.className = "vibe-like-button liked";
-            likeBtn.classList.add('just-liked');
-            likesCountSpan.classList.add('count-pop');
+            // Optimistic update
+            photo.likes = (photo.likes || 0) + 1;
+            if (likesCountSpan) {
+                likesCountSpan.textContent = photo.likes;
+                likesCountSpan.classList.add('count-pop');
+                setTimeout(() => likesCountSpan.classList.remove('count-pop'), 400);
+            }
 
-            bigHeart.style.transform = 'scale(1)';
-            bigHeart.style.opacity = '1';
-            setTimeout(() => {
-                bigHeart.style.transform = 'scale(0)';
-                bigHeart.style.opacity = '0';
-            }, 800);
-            setTimeout(() => {
-                likeBtn.classList.remove('just-liked');
-                likeBtn.classList.add('is-liked');
-                likesCountSpan.classList.remove('count-pop');
-            }, 520);
+            // Big heart animation
+            if (bigHeart) {
+                bigHeart.style.transform = 'scale(1.2)';
+                bigHeart.style.opacity = '1';
+                setTimeout(() => {
+                    bigHeart.style.transform = 'scale(0)';
+                    bigHeart.style.opacity = '0';
+                }, 600);
+            }
 
             try {
                 const res = await fetch(`/api/vibe-photos/${photo.id}/like`, { method: 'POST' });
                 if (res.ok) {
                     const updatedPhoto = await res.json();
                     photo.likes = updatedPhoto.likes;
-                    photo.id = updatedPhoto.id || photo.id;
-                    photo.image_url = updatedPhoto.image_url || photo.image_url;
-                    rememberLikedVibePhoto(photo);
-                    saveLikedVibeIds();
-                    likesCountSpan.textContent = photo.likes;
+                    if (photo.id < 0 && updatedPhoto.id > 0) {
+                        photo.id = updatedPhoto.id;
+                        rememberLikedVibePhoto(photo);
+                    }
+                    if (likesCountSpan) likesCountSpan.textContent = photo.likes;
                 }
             } catch (err) {
                 console.error("Failed to persist like:", err);
+            } finally {
+                isLikingInProgress = false;
             }
         };
 

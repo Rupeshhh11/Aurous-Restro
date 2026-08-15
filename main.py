@@ -674,11 +674,12 @@ def get_vibe_banner(db: Session = Depends(get_db)):
 @app.post("/api/admin/vibe-banner", response_model=schemas.VibeBannerResponse)
 async def update_vibe_banner(
     files: Optional[List[UploadFile]] = File(None),
+    existing_urls: Optional[str] = Form(None),
     description: Optional[str] = Form(None),
     current_member: models.Member = Depends(get_current_member),
     db: Session = Depends(get_db)
 ):
-    if description:
+    if description is not None:
         description = description.strip()
         words = description.split()
         if len(words) > 20:
@@ -692,15 +693,36 @@ async def update_vibe_banner(
         db.add(banner)
         db.flush()
 
-    # Accept up to 4 banner images, upload each to Cloudinary, store comma-separated URLs
+    old_urls = [u.strip() for u in (banner.image_url or "").split(",") if u.strip()]
+    kept_urls = [u.strip() for u in (existing_urls or "").split(",") if u.strip()] if existing_urls is not None else old_urls
+
+    new_urls = []
     if files:
         valid_files = [f for f in files if f and f.filename]
-        if len(valid_files) > 4:
-            raise HTTPException(status_code=400, detail="You can upload up to 4 banner images.")
-        if valid_files:
-            urls = [save_upload(f, "banner") for f in valid_files]
-            banner.image_url = ",".join(urls)
+        if len(kept_urls) + len(valid_files) > 4:
+            raise HTTPException(status_code=400, detail="You can have up to 4 banner photos in total.")
+        for f in valid_files:
+            new_urls.append(save_upload(f, "banner"))
 
+    final_urls = kept_urls + new_urls
+    if len(final_urls) > 4:
+        final_urls = final_urls[:4]
+
+    # Clean up any removed Cloudinary images
+    for u in old_urls:
+        if u not in final_urls and "cloudinary.com" in u:
+            try:
+                parts = u.split("/")
+                if "aurous_uploads" in parts:
+                    idx = parts.index("aurous_uploads")
+                    public_id = "/".join(parts[idx:]).split(".")[0]
+                else:
+                    public_id = parts[-1].split(".")[0]
+                cloudinary.uploader.destroy(public_id)
+            except Exception as e:
+                print(f"Error destroying old Cloudinary banner image: {e}")
+
+    banner.image_url = ",".join(final_urls) if final_urls else None
     if description is not None:
         banner.description = description
 
