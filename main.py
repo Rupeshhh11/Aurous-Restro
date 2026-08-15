@@ -701,6 +701,13 @@ async def update_vibe_banner(
             urls = [save_upload(f, "banner") for f in valid_files]
             banner.image_url = ",".join(urls)
 
+    if description is not None:
+        banner.description = description
+
+    db.commit()
+    db.refresh(banner)
+    return banner
+
 @app.delete("/api/admin/vibe-banner", response_model=Optional[schemas.VibeBannerResponse])
 async def delete_vibe_banner(
     index: Optional[int] = Query(None),
@@ -728,8 +735,11 @@ async def delete_vibe_banner(
             if "cloudinary.com" in u:
                 try:
                     parts = u.split("/")
-                    filename = parts[-1]
-                    public_id = "aurous_restro/" + filename.split(".")[0]
+                    if "aurous_uploads" in parts:
+                        idx = parts.index("aurous_uploads")
+                        public_id = "/".join(parts[idx:]).split(".")[0]
+                    else:
+                        public_id = parts[-1].split(".")[0]
                     cloudinary.uploader.destroy(public_id)
                 except Exception as e:
                     print(f"Error destroying Cloudinary banner image: {e}")
@@ -741,8 +751,11 @@ async def delete_vibe_banner(
     if target_url_to_delete and "cloudinary.com" in target_url_to_delete:
         try:
             parts = target_url_to_delete.split("/")
-            filename = parts[-1]
-            public_id = "aurous_restro/" + filename.split(".")[0]
+            if "aurous_uploads" in parts:
+                idx = parts.index("aurous_uploads")
+                public_id = "/".join(parts[idx:]).split(".")[0]
+            else:
+                public_id = parts[-1].split(".")[0]
             cloudinary.uploader.destroy(public_id)
         except Exception as e:
             print(f"Error destroying Cloudinary image: {e}")
