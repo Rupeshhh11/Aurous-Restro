@@ -30,8 +30,8 @@ if cloudinary_url and cloudinary_url.startswith("cloudinary://"):
 else:
     cloudinary.config(
         cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME", "qahddnsk"),
-        api_key=os.getenv("CLOUDINARY_API_KEY", "576279682356495"),
-        api_secret=os.getenv("CLOUDINARY_API_SECRET", "A_kJicqk_e9fC2xAi2IL0Ocr-U8"),
+        api_key=os.getenv("CLOUDINARY_API_KEY", "115729462567943"),
+        api_secret=os.getenv("CLOUDINARY_API_SECRET", "c6BU-l-B7zwIqEMRj-QnMRKZwkM"),
         secure=True
     )
 
