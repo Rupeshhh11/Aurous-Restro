@@ -2152,9 +2152,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 likeBtn.style.pointerEvents = 'none';
             }
 
-            // Show hand hint if not on desktop
-            if (handHint && window.innerWidth <= 768) {
+            // Show hand hint on collapse if needed
+            if (handHint) {
                 handHint.style.opacity = '1';
+                handHint.style.display = 'flex';
             }
 
             // Re-enable page scroll
@@ -2165,18 +2166,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Collapse when scrolling away
         window.addEventListener('scroll', () => {
             // If expanded, clicking outside should collapse
-            // But since it's fixed, we don't need scroll collapse
         }, { passive: true });
 
-        // Hand hint auto-hide after 4 seconds
+        // Hand hint stays visible and gently fades after user starts viewing/scrolling
         if (handHint) {
             setTimeout(() => {
                 if (!isVibeExpanded && handHint) {
-                    handHint.style.transition = 'opacity 0.8s ease';
-                    handHint.style.opacity = '0';
-                    setTimeout(() => { if (!isVibeExpanded) handHint.style.display = 'none'; }, 800);
+                    handHint.style.transition = 'opacity 1s ease';
+                    handHint.style.opacity = '0.85';
                 }
-            }, 4000);
+            }, 5000);
         }
 
         // User upload handler
@@ -2277,11 +2276,11 @@ document.addEventListener('DOMContentLoaded', () => {
             urls.forEach(url => {
                 const slide = document.createElement('div');
                 slide.style.width = (100 / urls.length) + '%';
-                slide.className = 'flex-shrink-0 flex items-center justify-center bg-black/60 overflow-hidden h-[200px] sm:h-[280px] md:h-[360px]';
+                slide.className = 'flex-shrink-0 flex items-center justify-center bg-black overflow-hidden h-[180px] sm:h-[230px] md:h-[280px]';
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = 'Aurous Banner';
-                img.className = 'w-full h-full object-contain select-none';
+                img.className = 'w-full h-full object-cover select-none transition-transform duration-700 hover:scale-105';
                 slide.appendChild(img);
                 slidesEl.appendChild(slide);
             });

@@ -179,7 +179,7 @@
 
 
 
-                    <div class="w-full mx-auto" id="vibe-banner-container">
+                    <div class="w-full max-w-3xl mx-auto" id="vibe-banner-container">
                         <!-- Banner Carousel -->
                         <div class="relative rounded-[1.75rem] border border-white/10 bg-black overflow-hidden shadow-2xl group cursor-pointer"
                             id="vibe-banner-card" onclick="openBannerLightbox(0)">
@@ -207,14 +207,14 @@
                             </button>
 
                             <!-- Click to expand hint -->
-                            <div class="absolute top-3 right-3 z-20 bg-black/50 border border-white/10 rounded-full px-3 py-1 text-[10px] text-white/60 uppercase tracking-widest pointer-events-none">
-                                <i class="fa-solid fa-expand mr-1"></i>View
+                            <div class="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md border border-white/15 rounded-full px-3 py-1 text-[10px] text-white/80 uppercase tracking-widest pointer-events-none flex items-center gap-1.5 shadow-lg">
+                                <i class="fa-solid fa-expand text-[#E0115F]"></i><span>View</span>
                             </div>
                         </div>
 
-                        <div class="mt-5 text-center px-2">
+                        <div class="mt-4 text-center px-2">
                             <p id="vibe-banner-desc"
-                                class="text-sm md:text-base font-outfit text-yellow-400/90 italic font-light tracking-wide max-w-3xl mx-auto">
+                                class="text-sm md:text-base font-outfit text-yellow-400/90 italic font-light tracking-wide max-w-2xl mx-auto">
                             </p>
                         </div>
                     </div>
@@ -226,14 +226,14 @@
                 <br />
 
 
-                <div class="w-full max-w-2xl mx-auto mt-16 text-center" id="vibe-gallery-section">
+                <div class="w-full max-w-2xl mx-auto mt-12 text-center" id="vibe-gallery-section">
                     <div class="mb-6">
                         <h2
                             class="text-3xl md:text-4xl font-extrabold tracking-tight text-[#E0115F] font-syne uppercase">
                             Aurous Gallery</h2>
                     </div>
 
-                    <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl group/vibe h-[320px] md:h-[450px]"
+                    <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl group/vibe h-[340px] md:h-[460px] cursor-pointer"
                         id="vibe-gallery-container">
                         <div id="vibe-active-card"
                             class="relative w-full h-full flex items-center justify-center overflow-hidden">
@@ -302,9 +302,16 @@
                             class="absolute right-4 top-1/2 -translate-y-1/2 z-40 hidden items-center justify-center w-10 h-10 rounded-full bg-black/40 text-white border border-white/10">
                             <i class="fa-solid fa-chevron-right"></i> </button>
 
+                        <!-- Modern Animated Tap/Swipe Hint Badge -->
                         <div id="vibe-hand-hint"
-                            class="absolute left-1/2 -translate-x-1/2 bottom-6 z-20 text-white/60 text-xs">Swipe to
-                            browse</div>
+                            class="absolute left-1/2 -translate-x-1/2 bottom-20 z-30 pointer-events-none flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-[0_8px_25px_rgba(0,0,0,0.6)] animate-bounce">
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-[#E0115F]"></span>
+                            </span>
+                            <i class="fa-solid fa-hand-pointer text-[#E0115F] text-sm animate-pulse"></i>
+                            <span class="tracking-wide text-[11px] text-white/90">Tap to View</span>
+                        </div>
                     </div>
                 </div>
             </div>
