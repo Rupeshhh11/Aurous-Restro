@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Syne:wght@400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Syne:wght@400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 html {
     scroll-behavior: smooth;
@@ -596,12 +596,13 @@ input:-webkit-autofill:active {
 }
 
 #vibe-banner-container {
-    max-width: 980px !important;
+    max-width: 460px;
+    margin: 0 auto;
 }
 
 #vibe-banner-card {
     width: 100%;
-    height: clamp(250px, 48vw, 520px);
+    height: 320px;
     border-radius: 1.75rem;
 }
 
@@ -1896,8 +1897,19 @@ input:-webkit-autofill:active {
     padding-top: 2.5rem !important;
 }
 
+#vibe-banner-container {
+    max-width: 440px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
 #vibe-banner-card {
-    height: clamp(360px, 58vw, 680px) !important;
+    width: 100% !important;
+    height: 320px !important;
+    min-height: 320px !important;
+    max-height: 320px !important;
+    border-radius: 1.75rem !important;
 }
 
 .vibe-like-button.liked,
@@ -1921,8 +1933,15 @@ input:-webkit-autofill:active {
         padding-top: 24px !important;
     }
 
+    #vibe-banner-container {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
     #vibe-banner-card {
-        height: 205px !important;
-        min-height: 205px !important;
+        height: 200px !important;
+        min-height: 200px !important;
+        max-height: 200px !important;
+        border-radius: 1.25rem !important;
     }
 }
