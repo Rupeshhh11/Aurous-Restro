@@ -1898,7 +1898,7 @@ input:-webkit-autofill:active {
 }
 
 #vibe-banner-container {
-    max-width: 440px !important;
+    max-width: 530px !important;
     width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -1906,9 +1906,9 @@ input:-webkit-autofill:active {
 
 #vibe-banner-card {
     width: 100% !important;
-    height: 320px !important;
-    min-height: 320px !important;
-    max-height: 320px !important;
+    height: 385px !important;
+    min-height: 385px !important;
+    max-height: 385px !important;
     border-radius: 1.75rem !important;
 }
 
