@@ -179,9 +179,9 @@
 
 
 
-                    <div class="w-full max-w-3xl mx-auto" id="vibe-banner-container">
+                    <div class="w-full md:max-w-md mx-auto" id="vibe-banner-container">
                         <!-- Banner Carousel -->
-                        <div class="relative rounded-[1.75rem] border border-white/10 bg-black overflow-hidden shadow-2xl group cursor-pointer"
+                        <div class="relative rounded-[1.75rem] border border-white/10 bg-black/80 overflow-hidden shadow-2xl group cursor-pointer"
                             id="vibe-banner-card" onclick="openBannerLightbox(0)">
 
                             <!-- Slides wrapper -->
@@ -196,25 +196,31 @@
 
                             <!-- Prev/Next arrows (desktop) -->
                             <button id="vibe-banner-prev"
-                                class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/10 items-center justify-center text-white hover:bg-[#E0115F] transition-colors"
+                                class="hidden md:flex absolute left-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/60 border border-white/15 items-center justify-center text-white hover:bg-[#E0115F] transition-colors"
                                 onclick="event.stopPropagation();bannerSlide(-1)">
                                 <i class="fa-solid fa-chevron-left text-xs"></i>
                             </button>
                             <button id="vibe-banner-next"
-                                class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-black/50 border border-white/10 items-center justify-center text-white hover:bg-[#E0115F] transition-colors"
+                                class="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-black/60 border border-white/15 items-center justify-center text-white hover:bg-[#E0115F] transition-colors"
                                 onclick="event.stopPropagation();bannerSlide(1)">
                                 <i class="fa-solid fa-chevron-right text-xs"></i>
                             </button>
 
-                            <!-- Click to expand hint -->
-                            <div class="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-md border border-white/15 rounded-full px-3 py-1 text-[10px] text-white/80 uppercase tracking-widest pointer-events-none flex items-center gap-1.5 shadow-lg">
-                                <i class="fa-solid fa-expand text-[#E0115F]"></i><span>View</span>
+                            <!-- Modern Animated Tap to View Hint for Banner (PC & Mobile) -->
+                            <div id="vibe-banner-hand-hint"
+                                class="absolute left-1/2 -translate-x-1/2 bottom-10 z-30 pointer-events-none flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-[0_8px_25px_rgba(0,0,0,0.7)] animate-bounce">
+                                <span class="flex h-2 w-2 relative">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#E0115F]"></span>
+                                </span>
+                                <i class="fa-solid fa-hand-pointer text-[#E0115F] text-sm animate-pulse"></i>
+                                <span class="tracking-wide text-[11px] text-white/90">Tap to View</span>
                             </div>
                         </div>
 
                         <div class="mt-4 text-center px-2">
                             <p id="vibe-banner-desc"
-                                class="text-sm md:text-base font-outfit text-yellow-400/90 italic font-light tracking-wide max-w-2xl mx-auto">
+                                class="text-sm md:text-base font-outfit text-yellow-400/90 italic font-light tracking-wide max-w-xl mx-auto">
                             </p>
                         </div>
                     </div>

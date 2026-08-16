@@ -2276,11 +2276,11 @@ document.addEventListener('DOMContentLoaded', () => {
             urls.forEach(url => {
                 const slide = document.createElement('div');
                 slide.style.width = (100 / urls.length) + '%';
-                slide.className = 'flex-shrink-0 flex items-center justify-center bg-black/60 overflow-hidden h-[200px] sm:h-[280px] md:h-[270px]';
+                slide.className = 'flex-shrink-0 flex items-center justify-center bg-black/60 overflow-hidden h-[200px] sm:h-[280px] md:h-[300px]';
                 const img = document.createElement('img');
                 img.src = url;
                 img.alt = 'Aurous Banner';
-                img.className = 'w-full h-full object-contain md:object-cover select-none';
+                img.className = 'w-full h-full object-contain select-none';
                 slide.appendChild(img);
                 slidesEl.appendChild(slide);
             });
