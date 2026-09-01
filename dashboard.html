@@ -5,6 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aurous Admin | Dashboard</title>
+    <script>
+        (function() {
+            var t = localStorage.getItem('aurous_token');
+            if (!t) {
+                window.location.replace('/login');
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -39,51 +47,81 @@
 
 
         .sidebar {
-            width: 280px;
+            width: 215px;
             background: var(--card-bg);
             border-right: 1px solid var(--border);
-            padding: 2rem;
+            padding: 1rem 0.65rem;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
         }
 
         .logo {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            margin-bottom: 3rem;
-            letter-spacing: 1px;
+            font-size: 1.2rem;
+            margin-bottom: 0.9rem;
+            padding: 0 0.4rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: baseline;
+            gap: 0.35rem;
         }
 
         .logo span {
             color: var(--primary);
+            font-size: 0.72rem;
+            letter-spacing: 1.5px;
+            font-weight: 700;
         }
 
         .nav-links {
             list-style: none;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.18rem;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-item {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0;
         }
 
         .nav-link {
             display: flex;
             align-items: center;
-            padding: 1rem;
+            padding: 0.46rem 0.65rem;
             color: var(--text-dim);
             text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            transition: all 0.2s ease;
             cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 500;
+            line-height: 1.2;
         }
 
         .nav-link i {
-            margin-right: 1rem;
-            width: 20px;
+            margin-right: 0.55rem;
+            width: 16px;
             text-align: center;
+            font-size: 0.85rem;
         }
 
         .nav-link:hover,
@@ -93,9 +131,10 @@
         }
 
         .nav-link.active {
-            background: rgba(224, 17, 95, 0.1);
+            background: rgba(224, 17, 95, 0.15);
             color: var(--primary);
             border-left: 3px solid var(--primary);
+            font-weight: 600;
         }
 
         .logout-btn {
@@ -103,10 +142,13 @@
             color: #ff4444;
             display: flex;
             align-items: center;
-            padding: 1rem;
+            padding: 0.46rem 0.65rem;
             cursor: pointer;
-            border-radius: 12px;
-            transition: 0.3s;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 0.82rem;
+            font-weight: 500;
+            gap: 0.55rem;
         }
 
         .logout-btn:hover {
@@ -228,10 +270,11 @@
 
 
         .main-content {
-            margin-left: 280px;
+            margin-left: 215px;
             flex-grow: 1;
-            padding: 1.5rem 3rem 3rem 3rem;
-            max-width: 1200px;
+            padding: 1.2rem 2rem 2.5rem 2rem;
+            max-width: calc(100vw - 215px);
+            box-sizing: border-box;
         }
 
         .header {
@@ -936,6 +979,194 @@
             color: white;
             border-color: var(--primary);
         }
+
+        /* ── POS & BILLING ENHANCEMENTS ─────────────────────────── */
+        .pos-grid-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1100px) {
+            .pos-grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pos-catalog-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .pos-cart-panel {
+            background: linear-gradient(145deg, #131313, #0b0b0b);
+            border: 1px solid rgba(224, 17, 95, 0.25);
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(224, 17, 95, 0.08);
+            position: sticky;
+            top: 1.5rem;
+        }
+
+        .pos-search-bar {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+
+        .pos-search-bar input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem 0.75rem 2.8rem;
+            color: white;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+            transition: all 0.25s;
+        }
+
+        .pos-search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(224, 17, 95, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .pos-search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .pos-item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1rem;
+            max-height: 65vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .pos-item-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .pos-item-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(224, 17, 95, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .pos-type-pill {
+            flex: 1;
+            padding: 0.55rem 0.6rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+
+        .pos-type-pill.active {
+            background: linear-gradient(135deg, rgba(224, 17, 95, 0.2), rgba(224, 17, 95, 0.08));
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 0 12px rgba(224, 17, 95, 0.2);
+        }
+
+        .pos-pay-btn {
+            flex: 1;
+            padding: 0.55rem 0.5rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .pos-pay-btn.active {
+            background: #2ecc71;
+            color: #000;
+            font-weight: 700;
+            border-color: #2ecc71;
+            box-shadow: 0 0 12px rgba(46, 204, 113, 0.3);
+        }
+
+        /* ── THERMAL RECEIPT PREVIEW STYLING (80mm) ───────────────── */
+        .thermal-receipt-wrap {
+            background: #fdfdfd;
+            color: #111;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 24px 20px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 340px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.02);
+            font-size: 13px;
+            line-height: 1.4;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+
+        .thermal-receipt-wrap::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: radial-gradient(circle, transparent, transparent 50%, #fdfdfd 50%, #fdfdfd 100%);
+            background-size: 14px 14px;
+        }
+
+        .thermal-divider {
+            border-top: 1px dashed #444;
+            margin: 8px 0;
+        }
+
+        .thermal-double-divider {
+            border-top: 1px double #222;
+            border-bottom: 1px double #222;
+            height: 3px;
+            margin: 8px 0;
+        }
+
+        /* printableReceiptArea hidden helper (not used for direct print anymore) */
+        #printableReceiptArea { display: none; }
     </style>
 </head>
 
@@ -955,25 +1186,33 @@
             <i class="fas fa-calendar-check"></i>
             <span>Res</span>
         </a>
-        <a class="mobile-nav-item" onclick="showSection('history')" id="m-nav-history">
-            <i class="fas fa-history"></i>
-            <span>History</span>
-        </a>
-        <a class="mobile-nav-item" onclick="showSection('reviews')" id="m-nav-reviews">
-            <i class="fas fa-star"></i>
-            <span>Reviews</span>
+        <a class="mobile-nav-item" onclick="showSection('pos-billing')" id="m-nav-pos-billing">
+            <i class="fas fa-cash-register"></i>
+            <span>POS</span>
         </a>
         <a class="mobile-nav-item" onclick="showSection('live-orders')" id="m-nav-live-orders">
             <i class="fas fa-bell"></i>
             <span>Orders</span>
         </a>
-        <a class="mobile-nav-item" onclick="showSection('tables')" id="m-nav-tables">
-            <i class="fas fa-utensils"></i>
-            <span>Tables</span>
+        <a class="mobile-nav-item" onclick="showSection('history')" id="m-nav-history">
+            <i class="fas fa-history"></i>
+            <span>History</span>
         </a>
         <a class="mobile-nav-item" onclick="showSection('menu')" id="m-nav-menu">
             <i class="fas fa-book-open"></i>
             <span>Menu</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('bill-settings')" id="m-nav-bill-settings">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Bill Set</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('tables')" id="m-nav-tables">
+            <i class="fas fa-utensils"></i>
+            <span>Tables</span>
+        </a>
+        <a class="mobile-nav-item" onclick="showSection('reviews')" id="m-nav-reviews">
+            <i class="fas fa-star"></i>
+            <span>Reviews</span>
         </a>
     </nav>
 
@@ -987,15 +1226,10 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="showSection('history')">
-                    <i class="fas fa-history"></i>
-                    <span>History</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" onclick="showSection('reviews')">
-                    <i class="fas fa-star"></i>
-                    <span>Reviews</span>
+                <a class="nav-link" onclick="showSection('pos-billing')">
+                    <i class="fas fa-cash-register"></i>
+                    <span>POS &amp; Quick Billing</span>
+                    <span style="background:var(--primary);color:white;font-size:0.56rem;font-weight:700;padding:1px 5px;border-radius:6px;margin-left:auto;">POS</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -1005,15 +1239,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" onclick="showSection('tables')">
-                    <i class="fas fa-utensils"></i>
-                    <span>Table Management</span>
+                <a class="nav-link" onclick="showSection('history')">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" onclick="showSection('menu')">
                     <i class="fas fa-book-open"></i>
                     <span>Menu Management</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('bill-settings')">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Bill &amp; Receipt Settings</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('tables')">
+                    <i class="fas fa-utensils"></i>
+                    <span>Table Management</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('reviews')">
+                    <i class="fas fa-star"></i>
+                    <span>Reviews</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -1231,6 +1483,166 @@
             </div>
         </section>
 
+        <section id="pos-billingSection" class="content-section">
+            <div class="pos-grid-container">
+                <!-- Left: Product Catalog & Fast Item Picker -->
+                <div class="pos-catalog-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                        <div>
+                            <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">
+                                POS &amp; Quick Billing
+                            </h3>
+                            <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 2px;">
+                                Fast restaurant billing, live tax calculation, table &amp; takeaway orders
+                            </p>
+                        </div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button onclick="fetchMenuAdmin(); showToast('Menu refreshed');" style="background:var(--glass); color:white; border:1px solid var(--border); padding:0.55rem 0.9rem; border-radius:10px; cursor:pointer; font-size:0.85rem;" title="Refresh Menu">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Instant Search Bar -->
+                    <div class="pos-search-bar">
+                        <i class="fas fa-search"></i>
+                        <input id="posSearchInput" type="text" placeholder="Search dish, beverage, item name or code..." oninput="filterPosItems()">
+                    </div>
+
+                    <!-- Category Pills & Veg Filter -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.2rem;">
+                        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;" id="posCategoryFilter">
+                            <button class="menu-cat-btn active" onclick="setPosCategory('all')">All</button>
+                            <button class="menu-cat-btn" onclick="setPosCategory('Starters')">Starters</button>
+                            <button class="menu-cat-btn" onclick="setPosCategory('Main Course')">Main Course</button>
+                            <button class="menu-cat-btn" onclick="setPosCategory('Drinks')">Drinks</button>
+                            <button class="menu-cat-btn" onclick="setPosCategory('Roti')">Roti</button>
+                            <button class="menu-cat-btn" onclick="setPosCategory('Desserts')">Desserts</button>
+                        </div>
+                        <div style="display:flex; gap:0.35rem; background:rgba(255,255,255,0.03); padding:3px; border-radius:10px; border:1px solid var(--border);">
+                            <button id="posVegAll" class="menu-cat-btn active" style="padding:3px 10px; font-size:0.75rem;" onclick="setPosVegFilter('all')">All</button>
+                            <button id="posVegOnly" class="menu-cat-btn" style="padding:3px 10px; font-size:0.75rem;" onclick="setPosVegFilter('veg')">🟢 Veg</button>
+                            <button id="posNonVegOnly" class="menu-cat-btn" style="padding:3px 10px; font-size:0.75rem;" onclick="setPosVegFilter('nonveg')">🔴 Non-Veg</button>
+                        </div>
+                    </div>
+
+                    <!-- Grid of POS Items -->
+                    <div id="posItemGrid" class="pos-item-grid">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Right: Active Cart & Billing Terminal -->
+                <div class="pos-cart-panel">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.8rem;">
+                        <h4 style="color:white; font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.5rem; margin:0;">
+                            <i class="fas fa-receipt" style="color:var(--primary);"></i> Current Bill
+                        </h4>
+                        <span id="posCartItemCount" style="background:rgba(224,17,95,0.2); color:var(--primary); font-size:0.75rem; font-weight:700; padding:2px 8px; border-radius:12px; border:1px solid rgba(224,17,95,0.3);">
+                            0 Items
+                        </span>
+                    </div>
+
+                    <!-- Order Type Selector -->
+                    <div style="display:flex; gap:0.4rem; margin-bottom:1rem;">
+                        <button class="pos-type-pill active" id="posTypeDineIn" onclick="setPosOrderType('dine_in')">
+                            <i class="fas fa-utensils"></i> Dine-In
+                        </button>
+                        <button class="pos-type-pill" id="posTypeTakeaway" onclick="setPosOrderType('takeaway')">
+                            <i class="fas fa-shopping-bag"></i> Takeaway
+                        </button>
+                        <button class="pos-type-pill" id="posTypeDelivery" onclick="setPosOrderType('delivery')">
+                            <i class="fas fa-motorcycle"></i> Delivery
+                        </button>
+                    </div>
+
+                    <!-- Dynamic Input (Table Selector or Customer Name) -->
+                    <div id="posTableSelectWrap" style="margin-bottom:0.8rem;">
+                        <select id="posTableSelect" onchange="handlePosTableChange()" style="background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:white; width:100%; font-family:inherit; font-size:0.88rem; outline:none;">
+                            <option value="0">Select Table (or 0 for General / Takeaway)...</option>
+                        </select>
+                    </div>
+
+                    <div id="posCustomerWrap" style="display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.8rem;">
+                        <input id="posCustomerName" placeholder="Guest / Customer Name" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; padding:0.5rem 0.7rem; color:white; font-size:0.82rem; outline:none; width:100%; box-sizing:border-box;">
+                        <input id="posCustomerPhone" placeholder="Phone Number" type="tel" style="background:rgba(0,0,0,0.4); border:1px solid var(--border); border-radius:10px; padding:0.5rem 0.7rem; color:white; font-size:0.82rem; outline:none; width:100%; box-sizing:border-box;">
+                    </div>
+
+                    <!-- Cart Items Container -->
+                    <div id="posCartItemsList" style="max-height:220px; overflow-y:auto; margin-bottom:1rem; border-top:1px dashed rgba(255,255,255,0.08); border-bottom:1px dashed rgba(255,255,255,0.08); padding:0.6rem 0;">
+                        <p style="color:var(--text-dim); text-align:center; padding:1.5rem 0; font-size:0.85rem;">
+                            No items in cart.<br>Click any item on the left to add.
+                        </p>
+                    </div>
+
+                    <!-- Tax & Charges Calculator -->
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:0.8rem; margin-bottom:1rem; font-size:0.82rem;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.35rem; color:rgba(255,255,255,0.8);">
+                            <span>Subtotal</span>
+                            <span id="posBillSubtotal" style="font-weight:600;">₹0</span>
+                        </div>
+
+                        <!-- Discount Line -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                            <span style="color:var(--text-dim); display:flex; align-items:center; gap:0.3rem;">
+                                Discount
+                                <input type="number" id="posDiscountInput" value="0" min="0" oninput="recalcPosBill()" style="background:rgba(0,0,0,0.5); border:1px solid var(--border); color:#2ecc71; width:50px; padding:2px 4px; border-radius:4px; font-size:0.75rem; text-align:right;">
+                                <select id="posDiscountType" onchange="recalcPosBill()" style="background:#111; border:1px solid var(--border); color:white; border-radius:4px; font-size:0.7rem; padding:1px 2px;">
+                                    <option value="flat">₹</option>
+                                    <option value="percent">%</option>
+                                </select>
+                            </span>
+                            <span id="posBillDiscount" style="color:#2ecc71;">-₹0</span>
+                        </div>
+
+                        <!-- GST Line -->
+                        <div id="posGstLine" style="display:flex; justify-content:space-between; margin-bottom:0.35rem; color:var(--text-dim);">
+                            <span>GST (<span id="posGstRateLabel">5%</span>)</span>
+                            <span id="posBillGst">₹0</span>
+                        </div>
+
+                        <!-- Service Charge / Packaging -->
+                        <div id="posServiceChargeLine" style="display:flex; justify-content:space-between; margin-bottom:0.35rem; color:var(--text-dim);">
+                            <span>Service / Packing Charge</span>
+                            <span id="posBillServiceCharge">₹0</span>
+                        </div>
+
+                        <!-- Grand Total -->
+                        <div style="border-top:1px solid rgba(255,255,255,0.12); margin-top:0.5rem; padding-top:0.6rem; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:1rem; font-weight:700; color:white;">Grand Total</span>
+                            <span id="posBillGrandTotal" style="font-size:1.35rem; font-weight:800; color:var(--primary);">₹0</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Mode -->
+                    <div style="margin-bottom:1rem;">
+                        <label style="color:var(--text-dim); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.5px; display:block; margin-bottom:0.35rem;">Payment Method</label>
+                        <div style="display:flex; gap:0.35rem;">
+                            <button class="pos-pay-btn active" id="posPayCash" onclick="setPosPayment('cash')">💵 Cash</button>
+                            <button class="pos-pay-btn" id="posPayUpi" onclick="setPosPayment('upi')">📱 UPI</button>
+                            <button class="pos-pay-btn" id="posPayCard" onclick="setPosPayment('card')">💳 Card</button>
+                            <button class="pos-pay-btn" id="posPayDue" onclick="setPosPayment('due')">⏳ Due</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                        <button onclick="posCheckoutAndPrint()" style="background:linear-gradient(135deg, #E0115F 0%, #b80d4c 100%); color:white; border:none; padding:0.8rem; border-radius:12px; font-weight:700; cursor:pointer; font-size:0.95rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; box-shadow:0 4px 15px rgba(224,17,95,0.3); transition:0.25s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                            <i class="fas fa-print"></i> Generate Bill &amp; Print
+                        </button>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button onclick="posSaveToKitchen()" style="flex:1; background:rgba(255,255,255,0.05); color:white; border:1px solid var(--border); padding:0.6rem; border-radius:10px; cursor:pointer; font-size:0.82rem; font-weight:600; display:flex; align-items:center; justify-content:center; gap:0.4rem; transition:0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                                <i class="fas fa-concierge-bell" style="color:#f39c12;"></i> Send to Kitchen
+                            </button>
+                            <button onclick="clearPosCart()" style="background:rgba(231,76,60,0.1); color:#ff4d4d; border:1px solid rgba(231,76,60,0.25); padding:0.6rem 0.9rem; border-radius:10px; cursor:pointer; font-size:0.82rem; font-weight:600;">
+                                <i class="fas fa-trash-alt"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="tablesSection" class="content-section">
             <div class="data-card" style="padding: 1.5rem;">
                 <h3
@@ -1252,13 +1664,31 @@
         <section id="menuSection" class="content-section">
             <div class="data-card" style="padding: 1.5rem;">
                 <div
-                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
-                    <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">
-                        Menu Management</h3>
-                    <button onclick="openMenuItemModal()"
-                        style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i
-                            class="fas fa-plus"></i> Add Item</button>
+                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.2rem;">
+                    <div>
+                        <h3 style="color: #E0115F; font-family: 'Playfair Display', serif; font-size: 1.8rem; margin:0;">
+                            Menu Management
+                        </h3>
+                        <p style="color: var(--text-dim); font-size: 0.85rem; margin-top: 2px;">
+                            Manage dishes, prices, categories, and real-time live availability on website &amp; POS
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button onclick="showSection('pos-billing')"
+                            style="background: rgba(224, 17, 95, 0.15); color: var(--primary); border: 1px solid var(--primary); padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i
+                                class="fas fa-cash-register"></i> Open POS Billing</button>
+                        <button onclick="openMenuItemModal()"
+                            style="background: var(--primary); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 10px; cursor: pointer; font-weight:600;"><i
+                                class="fas fa-plus"></i> Add Item</button>
+                    </div>
                 </div>
+
+                <!-- Menu Instant Search Bar -->
+                <div style="position:relative; margin-bottom:1.2rem;">
+                    <i class="fas fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-dim);"></i>
+                    <input id="menuSearchInput" type="text" placeholder="Search dish, price, category or ingredient..." oninput="filterMenuSearch(this.value)" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:12px; padding:0.75rem 1rem 0.75rem 2.8rem; color:white; font-family:inherit; font-size:0.95rem; outline:none; box-sizing:border-box;">
+                </div>
+
                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;" id="menuCategoryFilter">
                     <button class="menu-cat-btn active" onclick="filterMenuByCategory('all')">All</button>
                     <button class="menu-cat-btn" onclick="filterMenuByCategory('Starters')">Starters</button>
@@ -1272,6 +1702,138 @@
                 </div>
             </div>
         </section>
+
+        <section id="bill-settingsSection" class="content-section">
+            <div style="display:grid; grid-template-columns:1fr 380px; gap:1.5rem; align-items:start;" class="pos-grid-container">
+                <!-- Left: Form Controls -->
+                <div class="data-card" style="padding:1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+                        <div>
+                            <h3 style="color:#E0115F; font-family:'Playfair Display', serif; font-size:1.8rem; margin:0;">
+                                Bill &amp; Receipt Settings
+                            </h3>
+                            <p style="color:var(--text-dim); font-size:0.85rem; margin-top:2px;">
+                                Customize restaurant details, GST rates, FSSAI, header &amp; refund policy printed on bills
+                            </p>
+                        </div>
+                        <button onclick="saveBillSettings()" style="background:linear-gradient(135deg, #E0115F, #b80d4c); color:white; border:none; padding:0.65rem 1.4rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; gap:0.4rem; box-shadow:0 4px 15px rgba(224,17,95,0.3);">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+
+                    <div style="display:flex; flex-direction:column; gap:1.2rem;">
+                        <!-- Restaurant Basic Info -->
+                        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:1.2rem;">
+                            <h4 style="color:white; font-size:1rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i class="fas fa-store" style="color:var(--primary);"></i> Restaurant Information
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:0.8rem;">
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Restaurant Name</label>
+                                    <input id="bsRestName" class="premium-input" oninput="updateThermalPreview()" placeholder="Aurous Restro & Cafe" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Tagline</label>
+                                    <input id="bsTagline" class="premium-input" oninput="updateThermalPreview()" placeholder="Fine Dining & Aesthetic Vibes" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:2fr 1fr; gap:0.8rem;">
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Address</label>
+                                    <input id="bsAddress" class="premium-input" oninput="updateThermalPreview()" placeholder="123 Gourmet Boulevard, Food District" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Phone Number</label>
+                                    <input id="bsPhone" class="premium-input" oninput="updateThermalPreview()" placeholder="+91 98765 43210" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tax & License Numbers -->
+                        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:1.2rem;">
+                            <h4 style="color:white; font-size:1rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i class="fas fa-percent" style="color:var(--primary);"></i> GST &amp; Licenses
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:0.8rem;">
+                                <div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                                        <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase;">GSTIN / Tax ID</label>
+                                        <label style="font-size:0.75rem; color:var(--text-dim); cursor:pointer;"><input type="checkbox" id="bsShowGstin" onchange="updateThermalPreview()" checked> Show on Bill</label>
+                                    </div>
+                                    <input id="bsGstin" class="premium-input" oninput="updateThermalPreview()" placeholder="07AAAAA0000A1Z5" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                                        <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase;">FSSAI Lic. Number</label>
+                                        <label style="font-size:0.75rem; color:var(--text-dim); cursor:pointer;"><input type="checkbox" id="bsShowFssai" onchange="updateThermalPreview()" checked> Show on Bill</label>
+                                    </div>
+                                    <input id="bsFssai" class="premium-input" oninput="updateThermalPreview()" placeholder="10020011000123" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.8rem;">
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">CGST Rate (%)</label>
+                                    <input type="number" step="0.1" id="bsCgstRate" class="premium-input" oninput="updateThermalPreview()" value="2.5" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">SGST Rate (%)</label>
+                                    <input type="number" step="0.1" id="bsSgstRate" class="premium-input" oninput="updateThermalPreview()" value="2.5" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Service Charge (%)</label>
+                                    <input type="number" step="0.1" id="bsServiceChargeRate" class="premium-input" oninput="updateThermalPreview()" value="0" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bill Headers, Footers & Refund Policy -->
+                        <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:12px; padding:1.2rem;">
+                            <h4 style="color:white; font-size:1rem; margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                                <i class="fas fa-file-alt" style="color:var(--primary);"></i> Header, Footer &amp; Refund Policy
+                            </h4>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:0.8rem;">
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Header Note</label>
+                                    <input id="bsHeaderNote" class="premium-input" oninput="updateThermalPreview()" placeholder="TAX INVOICE" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                                <div>
+                                    <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Invoice Prefix</label>
+                                    <input id="bsInvoicePrefix" class="premium-input" oninput="updateThermalPreview()" placeholder="AUR-" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                                </div>
+                            </div>
+                            <div style="margin-bottom:0.8rem;">
+                                <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Footer Greeting Message</label>
+                                <input id="bsFooterMessage" class="premium-input" oninput="updateThermalPreview()" placeholder="Thank you for dining with us! Please visit again." style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem;">
+                            </div>
+                            <div>
+                                <label style="color:var(--text-dim); font-size:0.75rem; text-transform:uppercase; display:block; margin-bottom:0.3rem;">
+                                    Refund &amp; Cancellation Policy (Printed at Bottom of Bill)
+                                </label>
+                                <textarea id="bsRefundPolicy" rows="2" class="premium-textarea" oninput="updateThermalPreview()" placeholder="Goods / Food once sold will not be returned or refunded." style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:8px; padding:0.55rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.88rem; resize:vertical;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Live Thermal Receipt Preview -->
+                <div style="position:sticky; top:1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                        <span style="color:var(--text-dim); font-size:0.85rem; font-weight:600; text-transform:uppercase; letter-spacing:1px;">
+                            <i class="fas fa-eye" style="color:var(--primary);"></i> Live Thermal Receipt
+                        </span>
+                        <button onclick="printTestReceipt()" style="background:rgba(255,255,255,0.08); color:white; border:1px solid var(--border); padding:0.35rem 0.75rem; border-radius:8px; cursor:pointer; font-size:0.78rem; font-weight:600;">
+                            <i class="fas fa-print"></i> Test Print
+                        </button>
+                    </div>
+
+                    <!-- 80mm Thermal Receipt Preview Container -->
+                    <div id="thermalReceiptPreviewArea" class="thermal-receipt-wrap">
+                        <!-- Rendered live via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <section id="vibe-photosSection" class="content-section">
             <!-- Part 1: Vibe Banner Settings -->
@@ -1815,6 +2377,67 @@
     </div>
 
 
+    <!-- Thermal Receipt Modal (Print & Preview) -->
+    <div id="thermalReceiptModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); z-index:5000; align-items:center; justify-content:center;">
+        <div class="premium-modal-content"
+            style="background: linear-gradient(145deg, #161616, #0c0c0c); border:1px solid rgba(224, 17, 95, 0.3); border-radius:20px; padding:1.8rem; width:92%; max-width:440px; max-height:92vh; overflow-y:auto; box-shadow:0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(224,17,95,0.15); font-family:'Outfit', sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.8rem;">
+                <h3 style="color:white; font-size:1.25rem; font-weight:700; font-family:'Playfair Display', serif; display:flex; align-items:center; gap:0.5rem; margin:0;">
+                    <i class="fas fa-receipt" style="color:#E0115F;"></i> Bill Receipt
+                </h3>
+                <button type="button" onclick="closeThermalReceiptModal()"
+                    style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6); cursor:pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Receipt Content (Matches 80mm thermal receipt) -->
+            <div id="modalReceiptPaper" class="thermal-receipt-wrap" style="margin-bottom:1.2rem;">
+                <!-- Filled dynamically -->
+            </div>
+
+            <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+                <button onclick="printCurrentModalReceipt()" style="flex:1.2; min-width:120px; background:linear-gradient(135deg, #E0115F, #b80d4c); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.92rem; display:flex; align-items:center; justify-content:center; gap:0.4rem; box-shadow:0 4px 15px rgba(224,17,95,0.3);">
+                    <i class="fas fa-print"></i> Print Bill
+                </button>
+                <button onclick="closeThermalReceiptModal()" style="flex:1; min-width:110px; background:rgba(255,255,255,0.06); color:white; border:1px solid var(--border); padding:0.75rem; border-radius:10px; cursor:pointer; font-size:0.85rem; font-weight:600; display:flex; align-items:center; justify-content:center; gap:0.3rem;">
+                    <i class="fas fa-arrow-left"></i> Back to Cart
+                </button>
+                <button onclick="finishAndClearPosCart()" style="background:rgba(46,204,113,0.15); color:#2ecc71; border:1px solid rgba(46,204,113,0.3); padding:0.75rem 0.9rem; border-radius:10px; cursor:pointer; font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:0.3rem;">
+                    <i class="fas fa-plus"></i> New Bill
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Custom Item Modal (POS) -->
+    <div id="customItemModal"
+        style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); z-index:4500; align-items:center; justify-content:center;">
+        <div class="premium-modal-content"
+            style="background:linear-gradient(145deg, #141414, #0a0a0a); border:1px solid rgba(224, 17, 95, 0.25); border-radius:18px; padding:1.5rem; width:90%; max-width:380px; font-family:'Outfit', sans-serif;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                <h4 style="color:white; font-size:1.15rem; font-weight:700; display:flex; align-items:center; gap:0.4rem; margin:0;">
+                    <i class="fas fa-utensils" style="color:#E0115F;"></i> Add Custom Item
+                </h4>
+                <button onclick="closeCustomItemModal()" style="background:transparent; border:none; color:rgba(255,255,255,0.6); cursor:pointer; font-size:1.1rem;"><i class="fas fa-times"></i></button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.8rem;">
+                <input id="ciName" placeholder="Item Name (e.g. Special Mocktail)" class="premium-input" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
+                    <input id="ciPrice" type="number" placeholder="Price (₹)" class="premium-input" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none;">
+                    <input id="ciQty" type="number" value="1" min="1" placeholder="Quantity" class="premium-input" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:white; width:100%; box-sizing:border-box; outline:none; text-align:center;">
+                </div>
+                <button onclick="addCustomItemToPos()" style="background:linear-gradient(135deg, #E0115F, #b80d4c); color:white; border:none; padding:0.7rem; border-radius:10px; font-weight:700; cursor:pointer; margin-top:0.4rem;">
+                    <i class="fas fa-plus"></i> Add to Cart
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden area for clean native window.print() -->
+    <div id="printableReceiptArea"></div>
+
     <div id="alertContainer"
         style="position: fixed; top: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px;">
     </div>
@@ -2175,8 +2798,8 @@
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             document.querySelectorAll('.mobile-nav-item').forEach(l => l.classList.remove('active'));
 
-            document.getElementById(section + 'Section').classList.add('active');
-
+            const targetSection = document.getElementById(section + 'Section');
+            if (targetSection) targetSection.classList.add('active');
 
             const navLink = document.querySelector(`.nav-link[onclick*="${section}"]`);
             if (navLink) navLink.classList.add('active');
@@ -2187,9 +2810,12 @@
             let title = section.charAt(0).toUpperCase() + section.slice(1);
             if (section === 'vibe-photos') {
                 title = 'Vibe';
+            } else if (section === 'pos-billing') {
+                title = 'POS & Quick Billing';
+            } else if (section === 'bill-settings') {
+                title = 'Bill & Receipt Settings';
             }
             document.getElementById('sectionTitle').textContent = title;
-
 
             updateStatsCardsVisibility(section);
         }
@@ -2223,6 +2849,10 @@
                 totRes.style.display = 'block';
             } else if (section === 'menu') {
                 fetchMenuAdmin();
+            } else if (section === 'pos-billing') {
+                initPosBilling();
+            } else if (section === 'bill-settings') {
+                loadBillSettings();
             } else if (section === 'live-orders') {
                 fetchOrders();
             } else if (section === 'tables') {
@@ -3560,7 +4190,8 @@
                 return;
             }
             container.innerHTML = liveOrders.map(o => {
-                const guestName = o.reservation ? `<span style="color:#2ecc71; font-size:0.78rem;"><i class="fas fa-user"></i> ${o.reservation.name}</span>` : '';
+                const guestName = o.reservation ? `<span style="color:#2ecc71; font-size:0.78rem;"><i class="fas fa-user"></i> ${o.reservation.name}</span>` : (o.customer_name ? `<span style="color:#2ecc71; font-size:0.78rem;"><i class="fas fa-user"></i> ${o.customer_name}</span>` : '');
+                const typeLabel = o.order_type ? `<span style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:6px; font-size:0.72rem; color:var(--text-dim); text-transform:uppercase;">${o.order_type.replace('_',' ')}</span>` : '';
                 const borderColor = o.status === 'pending' ? 'var(--primary)' : (o.status === 'preparing' ? '#f39c12' : 'var(--border)');
                 const glowColor = o.status === 'pending' ? 'rgba(224,17,95,0.12)' : (o.status === 'preparing' ? 'rgba(243,156,18,0.08)' : 'none');
                 const statusColors = { pending: '#E0115F', preparing: '#f39c12', served: '#3498db' };
@@ -3568,8 +4199,11 @@
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid ${borderColor}; border-radius: 14px; padding: 1.5rem; box-shadow: 0 0 18px ${glowColor};">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; flex-wrap:wrap; gap:0.5rem;">
                         <div>
-                            <h4 style="font-size: 1.3rem; font-weight: bold; margin-bottom: 0.2rem;">Table ${o.table_number} ${guestName}</h4>
-                            <p style="font-size: 0.78rem; color: var(--text-dim);">Order #${o.id} &bull; ${new Date(o.created_at).toLocaleString()}</p>
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.2rem;">
+                                <h4 style="font-size: 1.3rem; font-weight: bold; margin:0;">${o.table_number > 0 ? 'Table ' + o.table_number : 'Takeaway / Delivery'} ${guestName}</h4>
+                                ${typeLabel}
+                            </div>
+                            <p style="font-size: 0.78rem; color: var(--text-dim);">Order #${o.id} ${o.invoice_number ? '&bull; ' + o.invoice_number : ''} &bull; ${new Date(o.created_at).toLocaleString()}</p>
                         </div>
                         <span style="display: inline-flex; align-items:center; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; background: rgba(${o.status === 'pending' ? '224,17,95' : o.status === 'preparing' ? '243,156,18' : '52,152,219'}, 0.18); color: ${statusColors[o.status] || 'white'}; border:1px solid ${borderColor};">${o.status}</span>
                     </div>
@@ -3577,11 +4211,15 @@
                         ${o.items.map(i => `<li style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.95rem;"><span>${i.quantity}x ${i.item_name}</span><span style="color:var(--primary);">₹${i.price_per_item * i.quantity}</span></li>`).join('')}
                     </ul>
                     <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 1rem; flex-wrap:wrap; gap:0.5rem;">
-                        <span style="font-size: 1.2rem; font-weight: bold;">Total: ₹${o.total_amount}</span>
+                        <div>
+                            <span style="font-size: 1.2rem; font-weight: bold; color:white;">Total: ₹${o.total_amount || o.grand_total}</span>
+                            <span style="font-size:0.75rem; color:var(--text-dim); margin-left:0.5rem; text-transform:uppercase;">[${o.payment_method || 'Cash'}]</span>
+                        </div>
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button onclick="openThermalReceiptModal(${o.id})" style="background: rgba(255,255,255,0.06); color: white; border: 1px solid var(--border); padding: 0.5rem 0.9rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-print"></i> Receipt</button>
                             ${o.status === 'pending' ? `<button onclick="updateOrderStatus(${o.id}, 'preparing')" style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-fire"></i> Start Prep</button>` : ''}
                             ${o.status === 'preparing' ? `<button onclick="updateOrderStatus(${o.id}, 'served')" style="background: #f39c12; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-concierge-bell"></i> Mark Served</button>` : ''}
-                            ${o.status === 'served' ? `<button onclick="updateOrderStatus(${o.id}, 'completed')" style="background: #2ecc71; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-check"></i> Complete (Paid)</button>` : ''}
+                            ${o.status === 'served' ? `<button onclick="updateOrderStatus(${o.id}, 'completed')" style="background: #2ecc71; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-weight:600;"><i class="fas fa-check"></i> Complete &amp; Settle</button>` : ''}
                         </div>
                     </div>
                 </div>`;
@@ -3599,28 +4237,44 @@
         let allOrdersData = [];
         let editingMenuItemId = null;
         let currentMenuCategory = 'all';
+        let menuSearchQuery = '';
 
         async function fetchMenuAdmin() {
             try {
                 const items = await apiFetch('/api/admin/menu');
                 allMenuData = items;
                 renderMenuGrid(items);
+                renderPosItemGrid();
             } catch (e) { console.error(e); }
         }
 
         function filterMenuByCategory(cat) {
             currentMenuCategory = cat;
-            document.querySelectorAll('.menu-cat-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'All' : cat)));
+            document.querySelectorAll('#menuCategoryFilter .menu-cat-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'All' : cat)));
+            renderMenuGrid(allMenuData);
+        }
+
+        function filterMenuSearch(val) {
+            menuSearchQuery = (val || '').toLowerCase().trim();
             renderMenuGrid(allMenuData);
         }
 
         function renderMenuGrid(items) {
-            const filtered = currentMenuCategory === 'all' ? items : items.filter(i => i.category === currentMenuCategory);
+            let filtered = currentMenuCategory === 'all' ? items : items.filter(i => i.category === currentMenuCategory);
+            if (menuSearchQuery) {
+                filtered = filtered.filter(i =>
+                    (i.name && i.name.toLowerCase().includes(menuSearchQuery)) ||
+                    (i.category && i.category.toLowerCase().includes(menuSearchQuery)) ||
+                    (i.description && i.description.toLowerCase().includes(menuSearchQuery)) ||
+                    String(i.price).includes(menuSearchQuery)
+                );
+            }
             const grid = document.getElementById('menuGrid');
-            if (!filtered.length) { grid.innerHTML = '<p style="color:var(--text-dim);">No items found.</p>'; return; }
+            if (!grid) return;
+            if (!filtered.length) { grid.innerHTML = '<p style="color:var(--text-dim); grid-column:1/-1; text-align:center; padding:2rem;">No items found matching search / category.</p>'; return; }
             grid.innerHTML = filtered.map(item => `
                 <div style="background:rgba(255,255,255,0.03); border:1px solid ${item.is_available ? 'var(--border)' : 'rgba(231,76,60,0.3)'}; border-radius:12px; overflow:hidden; transition:0.3s; position:relative;">
-                    ${!item.is_available ? '<div style="position:absolute;top:6px;right:6px;background:rgba(231,76,60,0.9);color:white;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:12px;text-transform:uppercase;">Unavailable</div>' : ''}
+                    ${!item.is_available ? '<div style="position:absolute;top:6px;right:6px;background:rgba(231,76,60,0.9);color:white;font-size:0.6rem;font-weight:700;padding:2px 6px;border-radius:12px;text-transform:uppercase;z-index:2;">Unavailable</div>' : ''}
                     ${item.image_url ? `<img src="${item.image_url}" alt="${item.name}" style="width:100%;height:100px;object-fit:cover;">` : '<div style="width:100%;height:80px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;"><i class="fas fa-utensils" style="font-size:1.5rem;color:var(--text-dim);"></i></div>'}
                     <div style="padding:0.75rem;">
                         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.3rem;">
@@ -3630,6 +4284,7 @@
                         <div style="display:flex;gap:0.3rem;margin-bottom:0.4rem;flex-wrap:wrap;">
                             <span style="font-size:0.6rem;padding:2px 6px;border-radius:12px;background:${item.is_veg ? 'rgba(46,204,113,0.12)' : 'rgba(231,76,60,0.12)'};color:${item.is_veg ? '#2ecc71' : '#e74c3c'};border:1px solid ${item.is_veg ? 'rgba(46,204,113,0.3)' : 'rgba(231,76,60,0.3)'};">${item.is_veg ? '🟢 Veg' : '🔴 Non'}</span>
                             <span style="font-size:0.6rem;padding:2px 6px;border-radius:12px;background:rgba(255,255,255,0.05);color:var(--text-dim);">${item.category}</span>
+                            ${item.is_signature ? '<span style="font-size:0.6rem;padding:2px 6px;border-radius:12px;background:rgba(243,156,18,0.15);color:#f39c12;border:1px solid rgba(243,156,18,0.3);">⭐ Signature</span>' : ''}
                         </div>
                         ${item.description ? `<p style="font-size:0.7rem;color:var(--text-dim);margin-bottom:0.6rem;line-height:1.3;">${item.description}</p>` : ''}
                         <div style="display:flex;gap:0.4rem;">
@@ -3711,7 +4366,7 @@
                 is_available: document.getElementById('menuItemAvailable').checked,
                 is_signature: document.getElementById('menuItemSignature').checked
             };
-            if (!payload.name || !payload.price) { showToast('Name and price are required'); return; }
+            if (!payload.name || isNaN(payload.price)) { showToast('Name and price are required'); return; }
             const url = editingMenuItemId ? `/api/admin/menu/${editingMenuItemId}` : '/api/admin/menu';
             const method = editingMenuItemId ? 'PUT' : 'POST';
             const result = await apiFetch(url, method, payload);
@@ -3734,66 +4389,702 @@
             if (result.ok) { fetchMenuAdmin(); showToast('Item deleted'); }
         }
 
-        // ── MANUAL ORDER ENTRY ────────────────────────────────────────────
+        // ── BILL & RECEIPT SETTINGS ───────────────────────────────────────
+        let activeBillSettings = {
+            restaurant_name: 'Aurous Restro & Cafe',
+            tagline: 'Fine Dining & Aesthetic Vibes',
+            address: '123 Gourmet Boulevard, Food District',
+            phone: '+91 98765 43210',
+            gstin: '07AAAAA0000A1Z5',
+            fssai_number: '10020011000123',
+            cgst_rate: 2.5,
+            sgst_rate: 2.5,
+            service_charge_rate: 0.0,
+            enable_gst: true,
+            enable_service_charge: false,
+            invoice_prefix: 'AUR-',
+            header_note: 'TAX INVOICE',
+            footer_message: 'Thank you for dining with us! Please visit again.',
+            refund_policy: 'Goods / Food once sold will not be returned or refunded.',
+            show_fssai: true,
+            show_gstin: true
+        };
+
+        async function loadBillSettings() {
+            try {
+                const settings = await apiFetch('/api/bill-settings');
+                if (settings) {
+                    activeBillSettings = { ...activeBillSettings, ...settings };
+                    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val !== null && val !== undefined ? val : ''; };
+                    const setChk = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+
+                    setVal('bsRestName', activeBillSettings.restaurant_name);
+                    setVal('bsTagline', activeBillSettings.tagline);
+                    setVal('bsAddress', activeBillSettings.address);
+                    setVal('bsPhone', activeBillSettings.phone);
+                    setVal('bsGstin', activeBillSettings.gstin);
+                    setVal('bsFssai', activeBillSettings.fssai_number);
+                    setVal('bsCgstRate', activeBillSettings.cgst_rate);
+                    setVal('bsSgstRate', activeBillSettings.sgst_rate);
+                    setVal('bsServiceChargeRate', activeBillSettings.service_charge_rate);
+                    setVal('bsHeaderNote', activeBillSettings.header_note);
+                    setVal('bsInvoicePrefix', activeBillSettings.invoice_prefix);
+                    setVal('bsFooterMessage', activeBillSettings.footer_message);
+                    setVal('bsRefundPolicy', activeBillSettings.refund_policy);
+                    setChk('bsShowGstin', activeBillSettings.show_gstin);
+                    setChk('bsShowFssai', activeBillSettings.show_fssai);
+
+                    updateThermalPreview();
+                    recalcPosBill();
+                }
+            } catch (err) {
+                console.error('Failed to load bill settings:', err);
+            }
+        }
+
+        async function saveBillSettings() {
+            const getVal = (id, def = '') => { const el = document.getElementById(id); return el ? el.value.trim() : def; };
+            const getNum = (id, def = 0) => { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : def; };
+            const getChk = (id) => { const el = document.getElementById(id); return el ? el.checked : false; };
+
+            const payload = {
+                restaurant_name: getVal('bsRestName', 'Aurous Restro & Cafe'),
+                tagline: getVal('bsTagline', ''),
+                address: getVal('bsAddress', ''),
+                phone: getVal('bsPhone', ''),
+                gstin: getVal('bsGstin', ''),
+                fssai_number: getVal('bsFssai', ''),
+                cgst_rate: getNum('bsCgstRate', 2.5),
+                sgst_rate: getNum('bsSgstRate', 2.5),
+                service_charge_rate: getNum('bsServiceChargeRate', 0),
+                enable_gst: true,
+                enable_service_charge: getNum('bsServiceChargeRate', 0) > 0,
+                header_note: getVal('bsHeaderNote', 'TAX INVOICE'),
+                invoice_prefix: getVal('bsInvoicePrefix', 'AUR-'),
+                footer_message: getVal('bsFooterMessage', 'Thank you for dining with us!'),
+                refund_policy: getVal('bsRefundPolicy', 'Goods once sold will not be refunded.'),
+                show_fssai: getChk('bsShowFssai'),
+                show_gstin: getChk('bsShowGstin')
+            };
+
+            const result = await apiFetch('/api/admin/bill-settings', 'PUT', payload);
+            if (result) {
+                activeBillSettings = { ...activeBillSettings, ...result };
+                showToast('🧾 Bill & Receipt Settings saved!');
+                updateThermalPreview();
+                recalcPosBill();
+            } else {
+                showToast('Failed to save settings');
+            }
+        }
+
+        function generateReceiptHtml(options = {}) {
+            const cfg = { ...activeBillSettings, ...options.settings };
+            const isSample = !options.items;
+            const items = options.items || [
+                { name: 'Crispy Paneer Tikka', qty: 2, price: 280 },
+                { name: 'Butter Chicken Gravy', qty: 1, price: 420 },
+                { name: 'Butter Naan / Roti', qty: 4, price: 50 },
+                { name: 'Berry Blast Mocktail', qty: 2, price: 190 }
+            ];
+
+            const subtotal = options.subtotal !== undefined ? options.subtotal : items.reduce((s, i) => s + (i.qty * i.price), 0);
+            const discount = options.discount !== undefined ? options.discount : 0;
+            const taxable = Math.max(0, subtotal - discount);
+
+            const cgstRate = cfg.cgst_rate !== undefined ? cfg.cgst_rate : 2.5;
+            const sgstRate = cfg.sgst_rate !== undefined ? cfg.sgst_rate : 2.5;
+            const cgstAmount = options.cgst !== undefined ? options.cgst : Math.round((taxable * cgstRate) / 100);
+            const sgstAmount = options.sgst !== undefined ? options.sgst : Math.round((taxable * sgstRate) / 100);
+            const serviceCharge = options.serviceCharge !== undefined ? options.serviceCharge : 0;
+            const grandTotal = options.grandTotal !== undefined ? options.grandTotal : Math.round(taxable + cgstAmount + sgstAmount + serviceCharge);
+
+            const invNo = options.invoice_number || (cfg.invoice_prefix || 'AUR-') + (new Date().toISOString().slice(0,10).replace(/-/g,'')) + '-0124';
+            const dateStr = options.created_at ? new Date(options.created_at).toLocaleString() : new Date().toLocaleString();
+            const tableStr = options.table_number ? `Table: ${options.table_number}` : (options.order_type ? options.order_type.toUpperCase().replace('_',' ') : 'DINE-IN');
+            const guestStr = options.customer_name ? `Guest: ${options.customer_name}` : '';
+            const paymentStr = options.payment_method ? `PAID VIA: ${options.payment_method.toUpperCase()}` : 'PAID VIA: CASH / UPI';
+
+            return `
+                <div style="text-align:center; margin-bottom:10px;">
+                    <h2 style="font-size:18px; font-weight:bold; margin:0 0 2px 0; letter-spacing:1px; text-transform:uppercase; color:#000;">${cfg.restaurant_name || 'Aurous Restro &amp; Cafe'}</h2>
+                    ${cfg.tagline ? `<div style="font-size:11px; color:#444; margin-bottom:3px;">${cfg.tagline}</div>` : ''}
+                    ${cfg.address ? `<div style="font-size:11px; color:#333;">${cfg.address}</div>` : ''}
+                    ${cfg.phone ? `<div style="font-size:11px; color:#333;">Ph: ${cfg.phone}</div>` : ''}
+                    ${cfg.show_gstin && cfg.gstin ? `<div style="font-size:11px; font-weight:bold; margin-top:2px;">GSTIN: ${cfg.gstin}</div>` : ''}
+                    ${cfg.show_fssai && cfg.fssai_number ? `<div style="font-size:10px; color:#333;">FSSAI: ${cfg.fssai_number}</div>` : ''}
+                </div>
+
+                <div class="thermal-double-divider"></div>
+                <div style="text-align:center; font-weight:bold; font-size:12px; letter-spacing:1px; margin:4px 0;">${cfg.header_note || 'TAX INVOICE'}</div>
+                <div class="thermal-divider"></div>
+
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:2px;">
+                    <span>Bill No: <b>${invNo}</b></span>
+                    <span>${tableStr}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:4px;">
+                    <span>Date: ${dateStr}</span>
+                    <span>${guestStr}</span>
+                </div>
+
+                <div class="thermal-divider"></div>
+                <table style="width:100%; font-size:11px; border-collapse:collapse; text-align:left;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #333;">
+                            <th style="padding:4px 0; width:50%;">ITEM</th>
+                            <th style="padding:4px 0; text-align:center; width:15%;">QTY</th>
+                            <th style="padding:4px 0; text-align:right; width:15%;">RATE</th>
+                            <th style="padding:4px 0; text-align:right; width:20%;">AMT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${items.map(item => `
+                            <tr>
+                                <td style="padding:3px 0;">${item.name || item.item_name}</td>
+                                <td style="padding:3px 0; text-align:center;">${item.qty || item.quantity}</td>
+                                <td style="padding:3px 0; text-align:right;">₹${item.price || item.price_per_item}</td>
+                                <td style="padding:3px 0; text-align:right; font-weight:600;">₹${(item.qty || item.quantity) * (item.price || item.price_per_item)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <div class="thermal-divider"></div>
+
+                <div style="font-size:11px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                        <span>Sub Total</span>
+                        <span>₹${subtotal}</span>
+                    </div>
+                    ${discount > 0 ? `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span>Discount</span>
+                            <span>-₹${discount}</span>
+                        </div>
+                    ` : ''}
+                    ${cgstAmount > 0 ? `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px; color:#333;">
+                            <span>CGST (${cgstRate}%)</span>
+                            <span>₹${cgstAmount}</span>
+                        </div>
+                    ` : ''}
+                    ${sgstAmount > 0 ? `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px; color:#333;">
+                            <span>SGST (${sgstRate}%)</span>
+                            <span>₹${sgstAmount}</span>
+                        </div>
+                    ` : ''}
+                    ${serviceCharge > 0 ? `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span>Service Charge</span>
+                            <span>₹${serviceCharge}</span>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="thermal-double-divider"></div>
+                <div style="display:flex; justify-content:space-between; font-size:15px; font-weight:bold; margin:6px 0;">
+                    <span>GRAND TOTAL</span>
+                    <span>₹${grandTotal}</span>
+                </div>
+                <div class="thermal-double-divider"></div>
+
+                <div style="text-align:center; font-size:11px; font-weight:bold; margin:6px 0; letter-spacing:0.5px;">
+                    ${paymentStr}
+                </div>
+
+                ${cfg.footer_message ? `
+                    <div style="text-align:center; font-size:11px; margin-top:10px; color:#222; font-style:italic;">
+                        ${cfg.footer_message}
+                    </div>
+                ` : ''}
+
+                ${cfg.refund_policy ? `
+                    <div style="text-align:center; font-size:9.5px; margin-top:8px; padding-top:6px; border-top:1px dashed #666; color:#444; line-height:1.2;">
+                        * ${cfg.refund_policy} *
+                    </div>
+                ` : ''}
+
+                <div style="text-align:center; margin-top:8px; font-size:10px; opacity:0.6; letter-spacing:2px;">
+                    |||||| | |||||||| |||| | ||||
+                </div>
+            `;
+        }
+
+        function updateThermalPreview() {
+            const container = document.getElementById('thermalReceiptPreviewArea');
+            if (!container) return;
+
+            const liveInputs = {
+                restaurant_name: document.getElementById('bsRestName')?.value || activeBillSettings.restaurant_name,
+                tagline: document.getElementById('bsTagline')?.value || activeBillSettings.tagline,
+                address: document.getElementById('bsAddress')?.value || activeBillSettings.address,
+                phone: document.getElementById('bsPhone')?.value || activeBillSettings.phone,
+                gstin: document.getElementById('bsGstin')?.value || activeBillSettings.gstin,
+                fssai_number: document.getElementById('bsFssai')?.value || activeBillSettings.fssai_number,
+                cgst_rate: parseFloat(document.getElementById('bsCgstRate')?.value) || 0,
+                sgst_rate: parseFloat(document.getElementById('bsSgstRate')?.value) || 0,
+                service_charge_rate: parseFloat(document.getElementById('bsServiceChargeRate')?.value) || 0,
+                header_note: document.getElementById('bsHeaderNote')?.value || activeBillSettings.header_note,
+                invoice_prefix: document.getElementById('bsInvoicePrefix')?.value || activeBillSettings.invoice_prefix,
+                footer_message: document.getElementById('bsFooterMessage')?.value || activeBillSettings.footer_message,
+                refund_policy: document.getElementById('bsRefundPolicy')?.value || activeBillSettings.refund_policy,
+                show_gstin: document.getElementById('bsShowGstin')?.checked,
+                show_fssai: document.getElementById('bsShowFssai')?.checked
+            };
+
+            container.innerHTML = generateReceiptHtml({ settings: liveInputs });
+        }
+
+        function printTestReceipt() {
+            updateThermalPreview();
+            const html = generateReceiptHtml();
+            openPrintWindow(html);
+        }
+
+        function openPrintWindow(receiptHtml) {
+            const win = window.open('', '_blank', 'width=420,height=750,toolbar=0,menubar=0,location=0,scrollbars=0');
+            if (!win) { showToast('Popup blocked! Allow popups for this site.'); return; }
+            win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Bill Receipt</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #fff;
+    width: 100%;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .thermal-receipt-wrap {
+    background: #fff;
+    color: #111;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 18px 16px 24px 16px;
+    width: 302px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .thermal-divider {
+    border: none;
+    border-top: 1px dashed #555;
+    margin: 7px 0;
+  }
+
+  .thermal-double-divider {
+    border-top: 2px double #111;
+    border-bottom: 2px double #111;
+    height: 4px;
+    margin: 7px 0;
+  }
+
+  table { border-collapse: collapse; }
+
+  @page {
+    size: 80mm auto;
+    margin: 6mm 4mm;
+  }
+
+  @media print {
+    html, body {
+      width: 80mm;
+      background: #fff;
+    }
+    .thermal-receipt-wrap {
+      width: 100%;
+      padding: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="thermal-receipt-wrap">
+${receiptHtml}
+</div>
+</body>
+</html>`);
+            win.document.close();
+            win.focus();
+            setTimeout(() => { win.print(); win.close(); }, 500);
+        }
+
+        // ── POS TERMINAL STATE & LOGIC ────────────────────────────────────
+        let posCart = [];
+        let currentPosCategory = 'all';
+        let currentPosVegFilter = 'all';
+        let currentPosOrderType = 'dine_in';
+        let currentPosPayment = 'cash';
+        let currentPosSearchQuery = '';
+
+        async function initPosBilling() {
+            if (!allMenuData.length) await fetchMenuAdmin();
+            if (!activeBillSettings.restaurant_name) await loadBillSettings();
+
+            // Populate table selector
+            try {
+                const tables = await apiFetch('/api/admin/tables');
+                const sel = document.getElementById('posTableSelect');
+                if (sel) {
+                    sel.innerHTML = '<option value="0">Select Table (or 0 for General / Takeaway)...</option>' +
+                        tables.map(t => `<option value="${t.table_number}" ${t.is_active ? 'style="color:#2ecc71;font-weight:bold;"' : ''}>Table ${t.table_number} ${t.is_active ? '(Active' + (t.reservation ? ' - ' + t.reservation.name : '') + ')' : '(Vacant)'}</option>`).join('');
+                }
+            } catch (err) { console.error(err); }
+
+            renderPosItemGrid();
+            renderPosCart();
+        }
+
+        function setPosCategory(cat) {
+            currentPosCategory = cat;
+            document.querySelectorAll('#posCategoryFilter .menu-cat-btn').forEach(b => {
+                b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'All' : cat));
+            });
+            renderPosItemGrid();
+        }
+
+        function setPosVegFilter(filter) {
+            currentPosVegFilter = filter;
+            document.getElementById('posVegAll').classList.toggle('active', filter === 'all');
+            document.getElementById('posVegOnly').classList.toggle('active', filter === 'veg');
+            document.getElementById('posNonVegOnly').classList.toggle('active', filter === 'nonveg');
+            renderPosItemGrid();
+        }
+
+        function filterPosItems() {
+            currentPosSearchQuery = (document.getElementById('posSearchInput')?.value || '').toLowerCase().trim();
+            renderPosItemGrid();
+        }
+
+        function setPosOrderType(type) {
+            currentPosOrderType = type;
+            document.getElementById('posTypeDineIn').classList.toggle('active', type === 'dine_in');
+            document.getElementById('posTypeTakeaway').classList.toggle('active', type === 'takeaway');
+            document.getElementById('posTypeDelivery').classList.toggle('active', type === 'delivery');
+
+            const tableWrap = document.getElementById('posTableSelectWrap');
+            if (tableWrap) {
+                tableWrap.style.display = (type === 'dine_in') ? 'block' : 'none';
+            }
+        }
+
+        function setPosPayment(pay) {
+            currentPosPayment = pay;
+            document.getElementById('posPayCash').classList.toggle('active', pay === 'cash');
+            document.getElementById('posPayUpi').classList.toggle('active', pay === 'upi');
+            document.getElementById('posPayCard').classList.toggle('active', pay === 'card');
+            document.getElementById('posPayDue').classList.toggle('active', pay === 'due');
+        }
+
+        function handlePosTableChange() {
+            const tableNum = parseInt(document.getElementById('posTableSelect')?.value || 0);
+            if (tableNum > 0 && allReservationsData) {
+                const todayStr = getLocalDateString(0);
+                const res = allReservationsData.find(r => r.date === todayStr && r.status !== 'cancelled');
+                // Auto pre-fill guest name if linked
+            }
+        }
+
+        function renderPosItemGrid() {
+            const grid = document.getElementById('posItemGrid');
+            if (!grid) return;
+
+            let items = allMenuData.filter(i => i.is_available);
+            if (currentPosCategory !== 'all') {
+                items = items.filter(i => i.category === currentPosCategory);
+            }
+            if (currentPosVegFilter === 'veg') {
+                items = items.filter(i => i.is_veg);
+            } else if (currentPosVegFilter === 'nonveg') {
+                items = items.filter(i => !i.is_veg);
+            }
+            if (currentPosSearchQuery) {
+                items = items.filter(i =>
+                    (i.name && i.name.toLowerCase().includes(currentPosSearchQuery)) ||
+                    (i.category && i.category.toLowerCase().includes(currentPosSearchQuery)) ||
+                    String(i.price).includes(currentPosSearchQuery)
+                );
+            }
+
+            if (!items.length) {
+                grid.innerHTML = '<p style="color:var(--text-dim); grid-column:1/-1; text-align:center; padding:3rem 0;">No dishes found matching selection.</p>';
+                return;
+            }
+
+            grid.innerHTML = items.map(item => {
+                const inCart = posCart.find(c => c.id === item.id);
+                const cartQty = inCart ? inCart.qty : 0;
+                return `
+                    <div class="pos-item-card" onclick="addToPosCartById(${item.id})">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.4rem;">
+                            <span style="font-size:0.7rem; padding:2px 6px; border-radius:10px; background:${item.is_veg ? 'rgba(46,204,113,0.15)' : 'rgba(231,76,60,0.15)'}; color:${item.is_veg ? '#2ecc71' : '#e74c3c'}; font-weight:700;">
+                                ${item.is_veg ? '🟢 Veg' : '🔴 Non-Veg'}
+                            </span>
+                            ${cartQty > 0 ? `<span style="background:var(--primary); color:white; font-size:0.75rem; font-weight:800; padding:2px 8px; border-radius:12px;">${cartQty} in cart</span>` : ''}
+                        </div>
+                        <div style="font-weight:700; color:white; font-size:0.92rem; margin-bottom:0.4rem; line-height:1.3;">${item.name}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:auto;">
+                            <span style="color:var(--primary); font-weight:800; font-size:1.05rem;">₹${item.price}</span>
+                            <button style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:white; border-radius:8px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                                <i class="fas fa-plus" style="font-size:0.75rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addToPosCartById(itemId) {
+            const item = allMenuData.find(i => i.id === itemId);
+            if (!item) return;
+            const existing = posCart.find(c => c.id === itemId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                posCart.push({ id: item.id, name: item.name, price: item.price, qty: 1, is_veg: item.is_veg });
+            }
+            renderPosCart();
+            renderPosItemGrid();
+        }
+
+        function updatePosCartQty(index, delta) {
+            if (!posCart[index]) return;
+            posCart[index].qty += delta;
+            if (posCart[index].qty <= 0) {
+                posCart.splice(index, 1);
+            }
+            renderPosCart();
+            renderPosItemGrid();
+        }
+
+        function removePosCartItem(index) {
+            posCart.splice(index, 1);
+            renderPosCart();
+            renderPosItemGrid();
+        }
+
+        function clearPosCart() {
+            posCart = [];
+            document.getElementById('posDiscountInput').value = 0;
+            renderPosCart();
+            renderPosItemGrid();
+        }
+
+        function recalcPosBill() {
+            const subtotal = posCart.reduce((s, i) => s + (i.qty * i.price), 0);
+            const discountInput = parseFloat(document.getElementById('posDiscountInput')?.value || 0) || 0;
+            const discountType = document.getElementById('posDiscountType')?.value || 'flat';
+
+            let discountAmount = 0;
+            if (discountType === 'percent') {
+                discountAmount = Math.round((subtotal * Math.min(100, discountInput)) / 100);
+            } else {
+                discountAmount = Math.min(subtotal, discountInput);
+            }
+
+            const taxable = Math.max(0, subtotal - discountAmount);
+            const cgstRate = activeBillSettings.cgst_rate !== undefined ? activeBillSettings.cgst_rate : 2.5;
+            const sgstRate = activeBillSettings.sgst_rate !== undefined ? activeBillSettings.sgst_rate : 2.5;
+            const totalGstRate = cgstRate + sgstRate;
+
+            const cgstAmount = Math.round((taxable * cgstRate) / 100);
+            const sgstAmount = Math.round((taxable * sgstRate) / 100);
+            const totalGst = cgstAmount + sgstAmount;
+
+            const serviceRate = activeBillSettings.service_charge_rate || 0;
+            const serviceCharge = Math.round((taxable * serviceRate) / 100);
+
+            const grandTotal = Math.round(taxable + totalGst + serviceCharge);
+
+            // Update UI elements
+            const subtotalEl = document.getElementById('posBillSubtotal');
+            const discountEl = document.getElementById('posBillDiscount');
+            const gstEl = document.getElementById('posBillGst');
+            const gstRateLabel = document.getElementById('posGstRateLabel');
+            const serviceEl = document.getElementById('posBillServiceCharge');
+            const grandTotalEl = document.getElementById('posBillGrandTotal');
+            const countBadge = document.getElementById('posCartItemCount');
+
+            if (subtotalEl) subtotalEl.textContent = `₹${subtotal}`;
+            if (discountEl) discountEl.textContent = `-₹${discountAmount}`;
+            if (gstEl) gstEl.textContent = `₹${totalGst}`;
+            if (gstRateLabel) gstRateLabel.textContent = `${totalGstRate}%`;
+            if (serviceEl) serviceEl.textContent = `₹${serviceCharge}`;
+            if (grandTotalEl) grandTotalEl.textContent = `₹${grandTotal}`;
+            if (countBadge) countBadge.textContent = `${posCart.reduce((s, i) => s + i.qty, 0)} Items`;
+
+            return { subtotal, discountAmount, cgstAmount, sgstAmount, serviceCharge, grandTotal };
+        }
+
+        function renderPosCart() {
+            const list = document.getElementById('posCartItemsList');
+            if (!list) return;
+
+            if (posCart.length === 0) {
+                list.innerHTML = `<p style="color:var(--text-dim); text-align:center; padding:1.5rem 0; font-size:0.85rem;">No items in cart.<br>Click any item on the left to add.</p>`;
+                recalcPosBill();
+                return;
+            }
+
+            list.innerHTML = posCart.map((item, idx) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.45rem 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <div style="flex:1; padding-right:0.5rem;">
+                        <div style="font-weight:600; color:white; font-size:0.88rem;">${item.name}</div>
+                        <div style="font-size:0.75rem; color:var(--primary);">₹${item.price} each</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.4rem;">
+                        <button onclick="updatePosCartQty(${idx}, -1)" style="background:rgba(255,255,255,0.08); border:none; color:white; width:24px; height:24px; border-radius:6px; cursor:pointer; font-weight:bold;">-</button>
+                        <span style="font-weight:700; color:white; font-size:0.88rem; min-width:18px; text-align:center;">${item.qty}</span>
+                        <button onclick="updatePosCartQty(${idx}, 1)" style="background:rgba(255,255,255,0.08); border:none; color:white; width:24px; height:24px; border-radius:6px; cursor:pointer; font-weight:bold;">+</button>
+                        <span style="font-weight:700; color:white; font-size:0.88rem; min-width:45px; text-align:right;">₹${item.qty * item.price}</span>
+                        <button onclick="removePosCartItem(${idx})" style="background:transparent; border:none; color:#ff4d4d; cursor:pointer; padding:2px 4px; font-size:0.8rem; margin-left:0.2rem;"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            recalcPosBill();
+        }
+
+        async function posCheckoutAndPrint(settleImmediately = true) {
+            if (posCart.length === 0) {
+                showToast('Cart is empty. Please add items first.');
+                return;
+            }
+
+            const tableNum = parseInt(document.getElementById('posTableSelect')?.value || 0);
+            const customerName = document.getElementById('posCustomerName')?.value.trim() || null;
+            const customerPhone = document.getElementById('posCustomerPhone')?.value.trim() || null;
+            const calc = recalcPosBill();
+
+            const itemsPayload = posCart.map(i => ({
+                item_name: i.name,
+                quantity: i.qty,
+                price_per_item: i.price
+            }));
+
+            const payload = {
+                table_number: tableNum,
+                order_type: currentPosOrderType,
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                items: itemsPayload,
+                subtotal: calc.subtotal,
+                discount_amount: calc.discountAmount,
+                cgst_amount: calc.cgstAmount,
+                sgst_amount: calc.sgstAmount,
+                service_charge: calc.serviceCharge,
+                grand_total: calc.grandTotal,
+                payment_method: currentPosPayment,
+                status: settleImmediately ? 'completed' : 'pending'
+            };
+
+            const result = await apiFetch('/api/orders', 'POST', payload);
+            if (result && result.id) {
+                showToast(settleImmediately ? '✅ Bill Generated & Settled!' : '🍳 Order Sent to Kitchen!');
+                openThermalReceiptModal(result);
+                fetchOrders();
+            } else {
+                showToast('Failed to generate bill.');
+            }
+        }
+
+        function posSaveToKitchen() {
+            posCheckoutAndPrint(false);
+        }
+
+        // Custom unlisted Item
+        function openCustomItemModal() {
+            document.getElementById('ciName').value = '';
+            document.getElementById('ciPrice').value = '';
+            document.getElementById('ciQty').value = '1';
+            document.getElementById('customItemModal').style.display = 'flex';
+        }
+
+        function closeCustomItemModal() {
+            document.getElementById('customItemModal').style.display = 'none';
+        }
+
+        function addCustomItemToPos() {
+            const name = document.getElementById('ciName').value.trim();
+            const price = parseInt(document.getElementById('ciPrice').value);
+            const qty = parseInt(document.getElementById('ciQty').value) || 1;
+
+            if (!name || isNaN(price) || price <= 0) {
+                showToast('Please enter valid item name and price');
+                return;
+            }
+
+            posCart.push({ id: 'c_' + Date.now(), name, price, qty, is_custom: true });
+            closeCustomItemModal();
+            renderPosCart();
+            showToast('Custom item added to bill');
+        }
+
+        // Thermal Receipt Print Modal
+        let currentModalOrder = null;
+
+        function openThermalReceiptModal(orderOrId) {
+            let order = typeof orderOrId === 'object' ? orderOrId : allOrdersData.find(o => o.id === orderOrId);
+            if (!order) return;
+            currentModalOrder = order;
+
+            const modalPaper = document.getElementById('modalReceiptPaper');
+            modalPaper.innerHTML = generateReceiptHtml({
+                settings: activeBillSettings,
+                items: order.items,
+                invoice_number: order.invoice_number || `AUR-${order.id}`,
+                table_number: order.table_number,
+                customer_name: order.customer_name || (order.reservation ? order.reservation.name : ''),
+                order_type: order.order_type,
+                subtotal: order.subtotal || order.total_amount,
+                cgst: order.cgst_amount,
+                sgst: order.sgst_amount,
+                discount: order.discount_amount,
+                serviceCharge: order.service_charge,
+                grandTotal: order.grand_total || order.total_amount,
+                payment_method: order.payment_method,
+                created_at: order.created_at
+            });
+
+            document.getElementById('thermalReceiptModal').style.display = 'flex';
+        }
+
+        function closeThermalReceiptModal() {
+            document.getElementById('thermalReceiptModal').style.display = 'none';
+            currentModalOrder = null;
+        }
+
+        function finishAndClearPosCart() {
+            clearPosCart();
+            closeThermalReceiptModal();
+            showToast('Ready for new bill');
+        }
+
+        function printCurrentModalReceipt() {
+            if (!currentModalOrder) return;
+            const html = document.getElementById('modalReceiptPaper').innerHTML;
+            openPrintWindow(html);
+        }
+
+        // ── MANUAL ORDER ENTRY (LEGACY COMPATIBILITY) ──────────────────────
         let manualOrderItems = [];
 
         async function openManualOrderModal() {
-            manualOrderItems = [{ name: '', qty: 1, price: 0 }];
-            const modal = document.getElementById('manualOrderModal');
-            // populate active tables
-            const tables = await apiFetch('/api/admin/tables');
-            const sel = document.getElementById('moTableNumber');
-            sel.innerHTML = '<option value="">Select Active Table...</option>' +
-                tables.filter(t => t.is_active).map(t => `<option value="${t.table_number}">Table ${t.table_number}${t.reservation ? ' — ' + t.reservation.name : ''}</option>`).join('');
-            renderManualOrderItems();
-            modal.style.display = 'flex';
+            showSection('pos-billing');
         }
 
         function closeManualOrderModal() {
-            document.getElementById('manualOrderModal').style.display = 'none';
-        }
-
-        function renderManualOrderItems() {
-            const list = document.getElementById('moItemsList');
-            list.innerHTML = manualOrderItems.map((item, idx) => `
-                <div style="display:grid;grid-template-columns:1fr 70px 90px 36px;gap:0.6rem;align-items:center;margin-bottom:0.4rem;">
-                    <input placeholder="Item name" value="${item.name}" oninput="manualOrderItems[${idx}].name=this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;">
-                    <input type="number" placeholder="Qty" value="${item.qty}" min="1" oninput="manualOrderItems[${idx}].qty=+this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;text-align:center;">
-                    <input type="number" placeholder="₹ Price" value="${item.price || ''}" min="0" oninput="manualOrderItems[${idx}].price=+this.value;calcManualTotal()" class="premium-input" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:0.6rem 0.8rem;color:white;outline:none;font-size:0.9rem;width:100%;box-sizing:border-box;text-align:center;">
-                    <button onclick="removeManualItem(${idx})" style="background:rgba(231,76,60,0.1);color:#e74c3c;border:1px solid rgba(231,76,60,0.25);border-radius:10px;height:36px;width:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(231,76,60,0.2)'" onmouseout="this.style.background='rgba(231,76,60,0.1)'"><i class="fas fa-times"></i></button>
-                </div>
-            `).join('');
-            calcManualTotal();
-        }
-
-        function addManualOrderItem() {
-            manualOrderItems.push({ name: '', qty: 1, price: 0 });
-            renderManualOrderItems();
-        }
-
-        function removeManualItem(idx) {
-            manualOrderItems.splice(idx, 1);
-            renderManualOrderItems();
-        }
-
-        function calcManualTotal() {
-            const total = manualOrderItems.reduce((s, i) => s + (i.qty * i.price), 0);
-            document.getElementById('moTotal').textContent = `Total: ₹${total}`;
-        }
-
-        async function submitManualOrder() {
-            const tableNum = parseInt(document.getElementById('moTableNumber').value);
-            if (!tableNum) { showToast('Please select a table'); return; }
-            const items = manualOrderItems.filter(i => i.name.trim() && i.price > 0).map(i => ({ item_name: i.name.trim(), quantity: i.qty, price_per_item: i.price }));
-            if (!items.length) { showToast('Add at least one item with name and price'); return; }
-            const result = await apiFetch('/api/orders', 'POST', { table_number: tableNum, items });
-            if (result && result.id) {
-                showToast('Manual order placed successfully!');
-                closeManualOrderModal();
-                fetchOrders();
-            } else {
-                showToast('Failed to place order. Is the table active?');
-            }
+            const m = document.getElementById('manualOrderModal');
+            if (m) m.style.display = 'none';
         }
 
         // ── HISTORY ORDERS TAB ────────────────────────────────────────────
@@ -3801,44 +5092,53 @@
             const completedOrders = orders.filter(o => o.status === 'completed');
             const histBody = document.getElementById('historyBody');
             const histCards = document.getElementById('historyCards');
+            if (!histBody || !histCards) return;
+
             if (completedOrders.length === 0) {
                 histBody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:3rem;">No completed orders yet.</td></tr>';
                 histCards.innerHTML = '<p style="color:var(--text-dim);padding:2rem;text-align:center;">No completed orders yet.</p>';
                 return;
             }
             histBody.innerHTML = completedOrders.map(o => {
-                const guest = o.reservation ? o.reservation.name : '—';
+                const guest = o.customer_name || (o.reservation ? o.reservation.name : 'Walk-in');
+                const tableStr = o.table_number > 0 ? `Table ${o.table_number}` : 'Takeaway';
                 return `<tr style="background:rgba(46,204,113,0.04);border-left:3px solid #2ecc71;">
                     <td></td>
-                    <td style="font-weight:500;">Table ${o.table_number}</td>
+                    <td style="font-weight:500;">${tableStr}</td>
                     <td>${new Date(o.created_at).toLocaleDateString()} ${new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                     <td style="color:var(--text-dim);font-size:0.85rem;">${o.items.length} Items</td>
                     <td style="color:#2ecc71;font-weight:600;text-transform:uppercase;font-size:0.8rem;">Completed</td>
                     <td>${guest}</td>
-                    <td style="color:var(--primary);font-weight:700;">₹${o.total_amount}</td>
-                    <td><button onclick="openOrderViewModal(${o.id})" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:white;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem;"><i class="fas fa-eye"></i> Order</button></td>
+                    <td style="color:var(--primary);font-weight:700;">₹${o.grand_total || o.total_amount}</td>
+                    <td>
+                        <button onclick="openThermalReceiptModal(${o.id})" style="background:rgba(224,17,95,0.15);border:1px solid var(--primary);color:white;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.75rem;"><i class="fas fa-print"></i> Bill</button>
+                    </td>
                 </tr>`;
             }).join('');
             histCards.innerHTML = completedOrders.map(o => {
-                const guest = o.reservation ? o.reservation.name : 'Walk-in';
+                const guest = o.customer_name || (o.reservation ? o.reservation.name : 'Walk-in');
+                const tableStr = o.table_number > 0 ? `Table ${o.table_number}` : 'Takeaway';
                 return `<div class="res-card" style="background:rgba(46,204,113,0.04);border-color:rgba(46,204,113,0.3);">
                     <div class="res-card-header">
-                        <span style="font-weight:700;color:white;">Table ${o.table_number} — ${guest}</span>
-                        <span style="color:#2ecc71;font-weight:700;">₹${o.total_amount}</span>
+                        <span style="font-weight:700;color:white;">${tableStr} — ${guest}</span>
+                        <span style="color:#2ecc71;font-weight:700;">₹${o.grand_total || o.total_amount}</span>
                     </div>
                     <div class="res-card-body" style="grid-template-columns:1fr;">
                         <div><div class="res-card-label">Items</div><div style="font-size:0.82rem;color:var(--text-dim);">${o.items.map(i => i.quantity + 'x ' + i.item_name).join(', ')}</div></div>
                         <div><div class="res-card-label">Time</div><div>${new Date(o.created_at).toLocaleString()}</div></div>
                     </div>
-                    <div style="margin-top:0.5rem; text-align:right;">
-                        <button onclick="openOrderViewModal(${o.id})" style="background:transparent;border:1px solid var(--border);color:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;">View Details</button>
+                    <div style="margin-top:0.5rem; text-align:right; display:flex; gap:0.5rem; justify-content:flex-end;">
+                        <button onclick="openThermalReceiptModal(${o.id})" style="background:rgba(224,17,95,0.15);border:1px solid var(--primary);color:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;"><i class="fas fa-print"></i> Print Bill</button>
+                        <button onclick="openOrderViewModal(${o.id})" style="background:transparent;border:1px solid var(--border);color:white;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;">Details</button>
                     </div>
                 </div>`;
             }).join('');
         }
 
         function buildOrderDetailsHtml(order) {
-            const guest = order.reservation ? order.reservation.name : 'Walk-in';
+            const guest = order.customer_name || (order.reservation ? order.reservation.name : 'Walk-in');
+            const sub = order.subtotal || order.total_amount;
+            const grand = order.grand_total || order.total_amount;
             return `
                 <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border); padding:1rem; border-radius:12px; margin-bottom:1rem;">
                     <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
@@ -3846,12 +5146,16 @@
                         <span style="font-weight:600;">${guest}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
-                        <span style="color:var(--text-dim);">Table</span>
-                        <span style="font-weight:600;">${order.table_number}</span>
+                        <span style="color:var(--text-dim);">Table / Type</span>
+                        <span style="font-weight:600;">${order.table_number > 0 ? 'Table ' + order.table_number : 'Takeaway / Delivery'}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
                         <span style="color:var(--text-dim);">Status</span>
                         <span style="font-weight:600; text-transform:uppercase;">${order.status}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                        <span style="color:var(--text-dim);">Payment</span>
+                        <span style="font-weight:600; text-transform:uppercase;">${order.payment_method || 'Cash'}</span>
                     </div>
                     <div style="display:flex; justify-content:space-between;">
                         <span style="color:var(--text-dim);">Time</span>
@@ -3867,10 +5171,13 @@
                         </li>`).join('')}
                     </ul>
                     <div style="border-top:1px solid rgba(255,255,255,0.1); margin-top:1rem; padding-top:1rem; display:flex; justify-content:space-between; font-weight:700; font-size:1.05rem; color:var(--primary);">
-                        <span>Total</span>
-                        <span>₹${order.total_amount}</span>
+                        <span>Total Amount</span>
+                        <span>₹${grand}</span>
                     </div>
                 </div>
+                <button onclick="openThermalReceiptModal(${order.id})" style="margin-top:1rem; width:100%; background:linear-gradient(135deg, #E0115F, #b80d4c); color:white; border:none; padding:0.75rem; border-radius:10px; font-weight:700; cursor:pointer;">
+                    <i class="fas fa-print"></i> Open Thermal Receipt / Print
+                </button>
             `;
         }
 
@@ -3884,7 +5191,7 @@
             if (orders.length === 0) {
                 html = `<p style="color:var(--text-dim); text-align:center; padding:1.5rem 0;">No orders recorded for this guest yet.</p>`;
             } else {
-                const grandTotal = orders.reduce((s, o) => s + o.total_amount, 0);
+                const grandTotal = orders.reduce((s, o) => s + (o.grand_total || o.total_amount), 0);
                 html = orders.map((o, idx) => `
                     <div style="margin-bottom:${idx < orders.length - 1 ? '1.25rem' : '0'}; padding-bottom:${idx < orders.length - 1 ? '1.25rem' : '0'}; border-bottom:${idx < orders.length - 1 ? '1px solid rgba(255,255,255,0.08)' : 'none'};">
                         <p style="font-size:0.75rem; color:var(--text-dim); margin-bottom:0.6rem; text-transform:uppercase; letter-spacing:0.05em;">Order #${o.id}</p>
@@ -3913,8 +5220,10 @@
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('orderViewModal').style.display === 'flex') {
-                closeOrderViewModal();
+            if (e.key === 'Escape') {
+                if (document.getElementById('orderViewModal')?.style.display === 'flex') closeOrderViewModal();
+                if (document.getElementById('thermalReceiptModal')?.style.display === 'flex') closeThermalReceiptModal();
+                if (document.getElementById('customItemModal')?.style.display === 'flex') closeCustomItemModal();
             }
         });
 
@@ -3965,16 +5274,36 @@
 
         function logout() {
             localStorage.removeItem('aurous_token');
-            window.location.href = '/';
+            window.location.replace('/login');
         }
 
+        async function verifyAdminSession() {
+            if (!token) {
+                window.location.replace('/login');
+                return;
+            }
+            try {
+                const res = await fetch('/api/admin/reservations', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (res.status === 401 || res.status === 403) {
+                    localStorage.removeItem('aurous_token');
+                    window.location.replace('/login');
+                }
+            } catch(e) {}
+        }
+
+        verifyAdminSession();
         loadData();
-        // Optional auto-refresh for live orders every 30 seconds
+        loadBillSettings();
+        fetchMenuAdmin();
+
+        // Auto-refresh for live orders every 20 seconds
         setInterval(() => {
-            if (document.getElementById('live-ordersSection').classList.contains('active')) {
+            if (document.getElementById('live-ordersSection')?.classList.contains('active')) {
                 fetchOrders();
             }
-        }, 30000);
+        }, 20000);
     </script>
 </body>
 
