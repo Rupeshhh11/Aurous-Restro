@@ -99,6 +99,18 @@ class Order(Base):
     status: Mapped[str] = mapped_column(String, default="pending")
     total_amount: Mapped[int] = mapped_column(Integer, default=0)
     reservation_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("reservations.id"), nullable=True)
+    order_type: Mapped[str] = mapped_column(String, default="dine_in")
+    customer_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    customer_phone: Mapped[str | None] = mapped_column(String, nullable=True)
+    subtotal: Mapped[int] = mapped_column(Integer, default=0)
+    cgst_amount: Mapped[float] = mapped_column(Float, default=0.0)
+    sgst_amount: Mapped[float] = mapped_column(Float, default=0.0)
+    discount_amount: Mapped[float] = mapped_column(Float, default=0.0)
+    service_charge: Mapped[float] = mapped_column(Float, default=0.0)
+    grand_total: Mapped[float] = mapped_column(Float, default=0.0)
+    payment_method: Mapped[str] = mapped_column(String, default="cash")
+    invoice_number: Mapped[str | None] = mapped_column(String, nullable=True)
+    notes: Mapped[str | None] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow)
     
     reservation: Mapped["Reservation"] = relationship("Reservation", back_populates="orders")
@@ -114,3 +126,27 @@ class OrderItem(Base):
     price_per_item: Mapped[int] = mapped_column(Integer)
 
     order: Mapped["Order"] = relationship("Order", back_populates="items")
+
+class BillSetting(Base):
+    __tablename__ = "bill_settings"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    restaurant_name: Mapped[str] = mapped_column(String, default="Aurous Restro & Cafe")
+    tagline: Mapped[str | None] = mapped_column(String, default="Fine Dining & Aesthetic Vibes", nullable=True)
+    address: Mapped[str | None] = mapped_column(String, default="123 Gourmet Boulevard, Food District", nullable=True)
+    phone: Mapped[str | None] = mapped_column(String, default="+91 98765 43210", nullable=True)
+    gstin: Mapped[str | None] = mapped_column(String, default="07AAAAA0000A1Z5", nullable=True)
+    fssai_number: Mapped[str | None] = mapped_column(String, default="10020011000123", nullable=True)
+    cgst_rate: Mapped[float] = mapped_column(Float, default=2.5)
+    sgst_rate: Mapped[float] = mapped_column(Float, default=2.5)
+    service_charge_rate: Mapped[float] = mapped_column(Float, default=0.0)
+    enable_gst: Mapped[bool] = mapped_column(Boolean, default=True)
+    enable_service_charge: Mapped[bool] = mapped_column(Boolean, default=False)
+    invoice_prefix: Mapped[str] = mapped_column(String, default="AUR-")
+    header_note: Mapped[str | None] = mapped_column(String, default="TAX INVOICE", nullable=True)
+    footer_message: Mapped[str | None] = mapped_column(Text, default="Thank you for dining with us! Please visit again.", nullable=True)
+    refund_policy: Mapped[str | None] = mapped_column(Text, default="Goods / Food once sold will not be returned or exchanged.", nullable=True)
+    show_fssai: Mapped[bool] = mapped_column(Boolean, default=True)
+    show_gstin: Mapped[bool] = mapped_column(Boolean, default=True)
+    updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
