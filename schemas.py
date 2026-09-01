@@ -152,8 +152,21 @@ class OrderItemCreate(BaseModel):
     price_per_item: int = Field(..., ge=0, le=100000)
 
 class OrderCreate(BaseModel):
-    table_number: int = Field(..., ge=1, le=200)
+    table_number: int = Field(..., ge=0, le=500)
     items: list[OrderItemCreate] = Field(..., min_length=1, max_length=100)
+    order_type: Optional[str] = "dine_in"
+    customer_name: Optional[str] = None
+    customer_phone: Optional[str] = None
+    subtotal: Optional[int] = None
+    cgst_amount: Optional[float] = 0.0
+    sgst_amount: Optional[float] = 0.0
+    discount_amount: Optional[float] = 0.0
+    service_charge: Optional[float] = 0.0
+    grand_total: Optional[float] = None
+    payment_method: Optional[str] = "cash"
+    invoice_number: Optional[str] = None
+    notes: Optional[str] = None
+    status: Optional[str] = "pending"
 
 class OrderItemResponse(BaseModel):
     id: int
@@ -168,6 +181,18 @@ class OrderSummaryResponse(BaseModel):
     table_number: int
     status: str
     total_amount: int
+    order_type: Optional[str] = "dine_in"
+    customer_name: Optional[str] = None
+    customer_phone: Optional[str] = None
+    subtotal: Optional[int] = 0
+    cgst_amount: Optional[float] = 0.0
+    sgst_amount: Optional[float] = 0.0
+    discount_amount: Optional[float] = 0.0
+    service_charge: Optional[float] = 0.0
+    grand_total: Optional[float] = 0.0
+    payment_method: Optional[str] = "cash"
+    invoice_number: Optional[str] = None
+    notes: Optional[str] = None
     created_at: datetime
     items: list[OrderItemResponse]
     class Config:
@@ -178,6 +203,18 @@ class OrderResponse(BaseModel):
     table_number: int
     status: str
     total_amount: int
+    order_type: Optional[str] = "dine_in"
+    customer_name: Optional[str] = None
+    customer_phone: Optional[str] = None
+    subtotal: Optional[int] = 0
+    cgst_amount: Optional[float] = 0.0
+    sgst_amount: Optional[float] = 0.0
+    discount_amount: Optional[float] = 0.0
+    service_charge: Optional[float] = 0.0
+    grand_total: Optional[float] = 0.0
+    payment_method: Optional[str] = "cash"
+    invoice_number: Optional[str] = None
+    notes: Optional[str] = None
     created_at: datetime
     items: list[OrderItemResponse]
     reservation_id: Optional[int] = None
@@ -192,5 +229,30 @@ class ActiveTableResponse(BaseModel):
     is_active: bool
     reservation_id: Optional[int] = None
     reservation: Optional[ReservationResponse] = None
+    class Config:
+        from_attributes = True
+
+class BillSettingUpdate(BaseModel):
+    restaurant_name: Optional[str] = "Aurous Restro & Cafe"
+    tagline: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+    gstin: Optional[str] = None
+    fssai_number: Optional[str] = None
+    cgst_rate: Optional[float] = 2.5
+    sgst_rate: Optional[float] = 2.5
+    service_charge_rate: Optional[float] = 0.0
+    enable_gst: Optional[bool] = True
+    enable_service_charge: Optional[bool] = False
+    invoice_prefix: Optional[str] = "AUR-"
+    header_note: Optional[str] = "TAX INVOICE"
+    footer_message: Optional[str] = "Thank you for dining with us! Please visit again."
+    refund_policy: Optional[str] = "Goods / Food once sold will not be returned or exchanged."
+    show_fssai: Optional[bool] = True
+    show_gstin: Optional[bool] = True
+
+class BillSettingResponse(BillSettingUpdate):
+    id: int
+    updated_at: Optional[datetime] = None
     class Config:
         from_attributes = True
