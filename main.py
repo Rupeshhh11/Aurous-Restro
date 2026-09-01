@@ -43,19 +43,59 @@ with engine.connect() as conn:
         conn.execute(text("ALTER TABLE reservations ADD COLUMN cancelled_at VARCHAR"))
         conn.commit()
     except Exception:
-
         pass
     try:
         conn.execute(text("ALTER TABLE reservations ADD COLUMN arriving_confirmed INTEGER DEFAULT 0"))
         conn.commit()
     except Exception:
-
         pass
     try:
         conn.execute(text("ALTER TABLE vibe_photos ADD COLUMN approved BOOLEAN DEFAULT FALSE"))
         conn.commit()
     except Exception:
         pass
+    # Orders table migrations
+    for col_def in [
+        "order_type VARCHAR DEFAULT 'dine_in'",
+        "customer_name VARCHAR",
+        "customer_phone VARCHAR",
+        "subtotal INTEGER DEFAULT 0",
+        "cgst_amount FLOAT DEFAULT 0.0",
+        "sgst_amount FLOAT DEFAULT 0.0",
+        "discount_amount FLOAT DEFAULT 0.0",
+        "service_charge FLOAT DEFAULT 0.0",
+        "grand_total FLOAT DEFAULT 0.0",
+        "payment_method VARCHAR DEFAULT 'cash'",
+        "invoice_number VARCHAR",
+        "notes VARCHAR"
+    ]:
+        try:
+            conn.execute(text(f"ALTER TABLE orders ADD COLUMN {col_def}"))
+            conn.commit()
+        except Exception:
+            pass
+
+# Seed default bill settings if not present
+with engine.connect() as conn:
+    try:
+        res = conn.execute(text("SELECT COUNT(*) FROM bill_settings")).scalar()
+        if res == 0:
+            conn.execute(text("""
+                INSERT INTO bill_settings (
+                    restaurant_name, tagline, address, phone, gstin, fssai_number,
+                    cgst_rate, sgst_rate, service_charge_rate, enable_gst, enable_service_charge,
+                    invoice_prefix, header_note, footer_message, refund_policy, show_fssai, show_gstin, updated_at
+                ) VALUES (
+                    'Aurous Restro & Cafe', 'Fine Dining & Aesthetic Vibes', '123 Gourmet Boulevard, Food District',
+                    '+91 98765 43210', '07AAAAA0000A1Z5', '10020011000123', 2.5, 2.5, 0.0, true, false,
+                    'AUR-', 'TAX INVOICE', 'Thank you for dining with us! Please visit again.',
+                    'Goods / Food once sold will not be returned or refunded.', true, true, CURRENT_TIMESTAMP
+                )
+            """))
+            conn.commit()
+    except Exception as e:
+        pass
+
 
 
 app = FastAPI(title="Aurous Restro API")
@@ -424,25 +464,95 @@ def table_auth(req: schemas.TableAuthRequest, db: Session = Depends(get_db)):
 def get_menu(db: Session = Depends(get_db)):
     return db.query(models.MenuItem).filter(models.MenuItem.is_available == True).all()
 
+@app.get("/api/bill-settings", response_model=schemas.BillSettingResponse)
+def get_bill_settings(db: Session = Depends(get_db)):
+    setting = db.query(models.BillSetting).first()
+    if not setting:
+        setting = models.BillSetting()
+        db.add(setting)
+        db.commit()
+        db.refresh(setting)
+    return setting
+
+@app.put("/api/admin/bill-settings", response_model=schemas.BillSettingResponse)
+def update_bill_settings(
+    req: schemas.BillSettingUpdate,
+    current_member: models.Member = Depends(get_current_member),
+    db: Session = Depends(get_db)
+):
+    setting = db.query(models.BillSetting).first()
+    if not setting:
+        setting = models.BillSetting()
+        db.add(setting)
+        db.flush()
+
+    for key, value in req.model_dump(exclude_unset=True).items():
+        setattr(setting, key, value)
+    
+    setting.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(setting)
+    return setting
+
 @app.post("/api/orders", response_model=schemas.OrderResponse)
 def create_order(req: schemas.OrderCreate, db: Session = Depends(get_db)):
-    table = db.query(models.ActiveTable).filter(models.ActiveTable.table_number == req.table_number).first()
-    if not table or not table.is_active:
-        raise HTTPException(status_code=400, detail="Table is not active")
+    reservation_id = None
+    if req.table_number > 0:
+        table = db.query(models.ActiveTable).filter(models.ActiveTable.table_number == req.table_number).first()
+        if table and table.is_active:
+            reservation_id = table.reservation_id
+
+    subtotal = sum([item.quantity * item.price_per_item for item in req.items])
+    grand_total = req.grand_total if req.grand_total is not None and req.grand_total > 0 else float(subtotal)
     
-    total = sum([item.quantity * item.price_per_item for item in req.items])
-    db_order = models.Order(table_number=req.table_number, total_amount=total, status="pending", reservation_id=table.reservation_id)
+    # Generate sequential/timestamped invoice number
+    today_str = datetime.utcnow().strftime("%Y%m%d")
+    rand_suffix = ''.join(random.choices(string.digits, k=4))
+    invoice_no = req.invoice_number or f"AUR-{today_str}-{rand_suffix}"
+
+    db_order = models.Order(
+        table_number=req.table_number,
+        status=req.status or "pending",
+        total_amount=int(grand_total),
+        reservation_id=reservation_id,
+        order_type=req.order_type or "dine_in",
+        customer_name=req.customer_name,
+        customer_phone=req.customer_phone,
+        subtotal=subtotal,
+        cgst_amount=req.cgst_amount or 0.0,
+        sgst_amount=req.sgst_amount or 0.0,
+        discount_amount=req.discount_amount or 0.0,
+        service_charge=req.service_charge or 0.0,
+        grand_total=grand_total,
+        payment_method=req.payment_method or "cash",
+        invoice_number=invoice_no,
+        notes=req.notes
+    )
     db.add(db_order)
     db.commit()
     db.refresh(db_order)
     
     for item in req.items:
-        db_item = models.OrderItem(order_id=db_order.id, **item.model_dump())
+        db_item = models.OrderItem(
+            order_id=db_order.id,
+            item_name=item.item_name,
+            quantity=item.quantity,
+            price_per_item=item.price_per_item
+        )
         db.add(db_item)
     
     db.commit()
     db.refresh(db_order)
     return db_order
+
+@app.post("/api/admin/orders/pos", response_model=schemas.OrderResponse)
+def admin_pos_create_order(
+    req: schemas.OrderCreate,
+    current_member: models.Member = Depends(get_current_member),
+    db: Session = Depends(get_db)
+):
+    return create_order(req, db)
+
 
 @app.get("/api/admin/tables", response_model=List[schemas.ActiveTableResponse])
 def get_tables(current_member: models.Member = Depends(get_current_member), db: Session = Depends(get_db)):
