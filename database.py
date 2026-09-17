@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 raw_db_url = os.getenv(
     "DATABASE_URL",
-    "postgresql://aurous_db_user:6McWJSyrRf7eIoaFK6ewPM6hs3Bez3WF@dpg-d9bv0b57vvec73ffjl0g-a.oregon-postgres.render.com/aurous_db"
+    "postgresql://aurous_db1_user:2GS1JBtgYpsrrvnsuBvJOUNZ2pxbTUL3@dpg-dalqnim1egvs73fhq9qg-a.oregon-postgres.render.com/aurous_db1"
 )
 
 if raw_db_url.startswith("postgres://"):
