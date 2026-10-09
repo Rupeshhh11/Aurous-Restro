@@ -259,13 +259,15 @@ async def startup_event():
 
 @app.get("/api/db-status")
 def get_db_status():
-    from database import is_postgres, db_connection_info
+    from database import is_postgres, db_connection_info, last_error_str, tested_candidates
     return {
         "status": "connected",
         "is_postgres": is_postgres,
         "database": "PostgreSQL (Render Persistent)" if is_postgres else "SQLite (Ephemeral Fallback)",
         "info": db_connection_info,
-        "is_render": "RENDER" in os.environ
+        "is_render": "RENDER" in os.environ,
+        "candidates": tested_candidates,
+        "last_error": last_error_str
     }
 
 @app.post("/api/reservations", response_model=schemas.ReservationResponse)

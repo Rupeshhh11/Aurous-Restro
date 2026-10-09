@@ -57,6 +57,9 @@ engine = None
 is_postgres = False
 db_connection_info = ""
 
+last_error_str = ""
+tested_candidates = []
+
 if raw_db_url.startswith("sqlite"):
     print("[Database] Using SQLite database as requested by URL.")
     engine = create_engine(raw_db_url, connect_args={"check_same_thread": False})
@@ -67,6 +70,7 @@ else:
     
     for candidate_url in candidates:
         masked_host = candidate_url.split("@")[-1] if "@" in candidate_url else "unknown"
+        tested_candidates.append(masked_host)
         # Try up to 2 attempts per candidate with small backoff
         for attempt in range(1, 3):
             try:
@@ -90,6 +94,7 @@ else:
             break
 
     if not is_postgres:
+        last_error_str = str(last_error)
         print(f"[Database] All PostgreSQL connection attempts failed ({last_error}). Falling back to SQLite ({sqlite_file_path})...")
         engine = create_engine(sqlite_url, connect_args={"check_same_thread": False})
         db_connection_info = f"SQLite Fallback ({sqlite_file_path})"
