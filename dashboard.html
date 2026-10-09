@@ -31,6 +31,21 @@
             --border: rgba(255, 255, 255, 0.1);
         }
 
+        /* Prevent browser autofill from making inputs white or light blue */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active,
+        textarea:-webkit-autofill,
+        select:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px #181818 inset !important;
+            box-shadow: 0 0 0 1000px #181818 inset !important;
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff !important;
+            transition: background-color 50000s ease-in-out 0s !important;
+            color: #ffffff !important;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -2073,7 +2088,7 @@
             .premium-textarea:focus {
                 border-color: #E0115F !important;
                 box-shadow: 0 0 10px rgba(224, 17, 95, 0.25) !important;
-                background: rgba(255, 255, 255, 0.05) !important;
+                background: #181818 !important;
                 outline: none;
             }
 
@@ -2081,6 +2096,24 @@
             .premium-select,
             .premium-textarea {
                 transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+
+            /* Prevent Chrome / Safari / Edge Autofill from turning inputs white */
+            #menuItemModal input:-webkit-autofill,
+            #menuItemModal input:-webkit-autofill:hover,
+            #menuItemModal input:-webkit-autofill:focus,
+            #menuItemModal input:-webkit-autofill:active,
+            #menuItemModal textarea:-webkit-autofill,
+            .premium-input:-webkit-autofill,
+            .premium-input:-webkit-autofill:hover,
+            .premium-input:-webkit-autofill:focus,
+            .premium-input:-webkit-autofill:active {
+                -webkit-box-shadow: 0 0 0 1000px #181818 inset !important;
+                box-shadow: 0 0 0 1000px #181818 inset !important;
+                -webkit-text-fill-color: #ffffff !important;
+                caret-color: #ffffff !important;
+                transition: background-color 50000s ease-in-out 0s !important;
+                color: #ffffff !important;
             }
 
             /* Custom Scrollbar for Modal content if overflow */
@@ -2126,22 +2159,22 @@
                 <!-- Item Name Input -->
                 <div style="position:relative; display:flex; align-items:center;">
                     <i class="fas fa-signature"
-                        style="position:absolute; left:0.85rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
-                    <input id="menuItemName" placeholder="Item Name" class="premium-input"
-                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
+                        style="position:absolute; left:0.85rem; color:rgba(255,255,255,0.4); font-size:0.85rem; pointer-events:none; z-index:2;"></i>
+                    <input id="menuItemName" placeholder="Item Name" class="premium-input" autocomplete="off"
+                        style="background:#181818 !important; border:1px solid rgba(255,255,255,0.09) !important; border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:#ffffff !important; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
                 </div>
 
                 <!-- Category Select -->
                 <div style="position: relative; width: 100%;">
                     <i class="fas fa-tags"
-                        style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
+                        style="position:absolute; left:0.85rem; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.4); font-size:0.85rem; pointer-events:none; z-index: 10;"></i>
                     <select id="menuItemCategory" class="premium-select"
-                        style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 0.55rem 2.2rem; color: white; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
-                        <option value="Starters" style="background:#111; color:white;">Starters</option>
-                        <option value="Main Course" style="background:#111; color:white;">Main Course</option>
-                        <option value="Drinks" style="background:#111; color:white;">Drinks</option>
-                        <option value="Roti" style="background:#111; color:white;">Roti</option>
-                        <option value="Desserts" style="background:#111; color:white;">Desserts</option>
+                        style="background: #181818 !important; border: 1px solid rgba(255, 255, 255, 0.09) !important; border-radius: 10px; padding: 0.55rem 2.2rem; color: #ffffff !important; width: 100%; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; -moz-appearance: none; font-size:0.88rem;">
+                        <option value="Starters" style="background:#181818; color:white;">Starters</option>
+                        <option value="Main Course" style="background:#181818; color:white;">Main Course</option>
+                        <option value="Drinks" style="background:#181818; color:white;">Drinks</option>
+                        <option value="Roti" style="background:#181818; color:white;">Roti</option>
+                        <option value="Desserts" style="background:#181818; color:white;">Desserts</option>
                     </select>
                     <i class="fas fa-chevron-down"
                         style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.4); pointer-events: none; font-size: 0.75rem;"></i>
@@ -2150,34 +2183,71 @@
                 <!-- Price Input -->
                 <div style="position:relative; display:flex; align-items:center;">
                     <i class="fas fa-rupee-sign"
-                        style="position:absolute; left:0.95rem; color:rgba(255,255,255,0.3); font-size:0.88rem; pointer-events:none;"></i>
-                    <input id="menuItemPrice" type="number" placeholder="Price (₹)" class="premium-input"
-                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
+                        style="position:absolute; left:0.95rem; color:rgba(255,255,255,0.4); font-size:0.88rem; pointer-events:none; z-index:2;"></i>
+                    <input id="menuItemPrice" type="number" placeholder="Price (₹)" class="premium-input" autocomplete="off"
+                        style="background:#181818 !important; border:1px solid rgba(255,255,255,0.09) !important; border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:#ffffff !important; width:100%; box-sizing:border-box; font-size:0.88rem; outline:none;">
                 </div>
 
                 <!-- Description Textarea -->
                 <div style="position:relative; display:flex;">
                     <i class="fas fa-align-left"
-                        style="position:absolute; left:0.85rem; top:0.75rem; color:rgba(255,255,255,0.3); font-size:0.85rem; pointer-events:none;"></i>
-                    <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" class="premium-textarea"
-                        style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:white; width:100%; box-sizing:border-box; resize:vertical; font-size:0.88rem; outline:none; min-height:55px;"></textarea>
+                        style="position:absolute; left:0.85rem; top:0.75rem; color:rgba(255,255,255,0.4); font-size:0.85rem; pointer-events:none; z-index:2;"></i>
+                    <textarea id="menuItemDesc" placeholder="Description (optional)" rows="2" class="premium-textarea" autocomplete="off"
+                        style="background:#181818 !important; border:1px solid rgba(255,255,255,0.09) !important; border-radius:10px; padding:0.55rem 0.8rem 0.55rem 2.2rem; color:#ffffff !important; width:100%; box-sizing:border-box; resize:vertical; font-size:0.88rem; outline:none; min-height:55px;"></textarea>
                 </div>
 
-                <!-- Image Upload & URL input -->
-                <div
-                    style="display:flex; align-items:center; gap:0.6rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; padding:0.4rem; position:relative;">
+                <!-- Image Upload & Mini Preview Thumbnail Section -->
+                <div style="display:flex; flex-direction:column; gap:0.4rem;">
                     <input type="file" id="menuItemImageFile" accept="image/*" style="display:none;"
                         onchange="handleMenuImageUpload(event)">
 
-                    <button type="button" onclick="document.getElementById('menuItemImageFile').click()"
-                        style="background:linear-gradient(135deg, rgba(224, 17, 95, 0.12), rgba(224, 17, 95, 0.04)); border:1px solid rgba(224, 17, 95, 0.25); padding:0.45rem 0.8rem; border-radius:8px; color:white; cursor:pointer; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; white-space:nowrap;"
-                        onmouseover="this.style.background='rgba(224, 17, 95, 0.2)'; this.style.borderColor='rgba(224, 17, 95, 0.45)'; this.style.transform='translateY(-1px)'"
-                        onmouseout="this.style.background='rgba(224, 17, 95, 0.12)'; this.style.borderColor='rgba(224, 17, 95, 0.25)'; this.style.transform='none'">
-                        <i class="fas fa-cloud-upload-alt" style="color:#E0115F; font-size: 0.85rem;"></i> Upload Photo
-                    </button>
+                    <!-- Upload Input Row (shown when no image is selected) -->
+                    <div id="menuImageUploadContainer"
+                        style="display:flex; align-items:center; gap:0.6rem; background:#181818; border:1px solid rgba(255,255,255,0.09); border-radius:10px; padding:0.4rem; position:relative;">
+                        <button type="button" id="menuUploadBtn" onclick="document.getElementById('menuItemImageFile').click()"
+                            style="background:linear-gradient(135deg, rgba(224, 17, 95, 0.22), rgba(224, 17, 95, 0.08)); border:1px solid rgba(224, 17, 95, 0.4); padding:0.45rem 0.8rem; border-radius:8px; color:white; cursor:pointer; font-weight:600; font-size:0.8rem; display:flex; align-items:center; gap:0.35rem; transition:all 0.2s; white-space:nowrap;"
+                            onmouseover="this.style.background='rgba(224, 17, 95, 0.3)'; this.style.borderColor='rgba(224, 17, 95, 0.6)'; this.style.transform='translateY(-1px)'"
+                            onmouseout="this.style.background='rgba(224, 17, 95, 0.22)'; this.style.borderColor='rgba(224, 17, 95, 0.4)'; this.style.transform='none'">
+                            <i class="fas fa-cloud-upload-alt" style="color:#E0115F; font-size: 0.85rem;"></i>
+                            <span id="menuUploadBtnText">Upload Photo</span>
+                        </button>
 
-                    <input id="menuItemImage" placeholder="Or enter Image URL" class="premium-input"
-                        style="background:transparent; border:none; color:white; width:100%; box-sizing:border-box; outline:none; font-size:0.85rem; padding:0.3rem 0.4rem;">
+                        <input id="menuItemImage" placeholder="Or enter Image URL" class="premium-input" autocomplete="off"
+                            oninput="setMenuImagePreview(this.value)"
+                            style="background:transparent !important; border:none !important; color:#ffffff !important; width:100%; box-sizing:border-box; outline:none; font-size:0.83rem; padding:0.3rem 0.4rem;">
+                    </div>
+
+                    <!-- Mini Preview Box (shown when image is present) -->
+                    <div id="menuImagePreviewBox"
+                        style="display:none; align-items:center; justify-content:space-between; background:#181818; border:1px solid rgba(224,17,95,0.35); border-radius:10px; padding:0.45rem 0.7rem;">
+                        <div style="display:flex; align-items:center; gap:0.65rem; min-width:0;">
+                            <img id="menuImagePreviewThumb" src="" alt="Menu preview"
+                                style="width:44px; height:44px; object-fit:cover; border-radius:8px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 3px 8px rgba(0,0,0,0.5); flex-shrink:0;">
+                            <div style="display:flex; flex-direction:column; min-width:0;">
+                                <span style="color:#2ecc71; font-size:0.78rem; font-weight:600; display:flex; align-items:center; gap:0.3rem;">
+                                    <i class="fas fa-check-circle"></i> Image Attached
+                                </span>
+                                <span id="menuImagePreviewSub"
+                                    style="color:rgba(255,255,255,0.5); font-size:0.7rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:170px;"></span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:0.35rem; flex-shrink:0;">
+                            <button type="button" onclick="document.getElementById('menuItemImageFile').click()"
+                                style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#ffffff; font-size:0.75rem; padding:0.32rem 0.6rem; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:0.3rem; transition:0.2s;"
+                                onmouseover="this.style.background='rgba(255,255,255,0.14)'"
+                                onmouseout="this.style.background='rgba(255,255,255,0.06)'"
+                                title="Change photo">
+                                <i class="fas fa-sync-alt" style="font-size:0.7rem;"></i> Change
+                            </button>
+                            <button type="button" onclick="removeMenuImage()"
+                                style="background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.3); color:#ff4d4d; font-size:0.75rem; padding:0.32rem 0.6rem; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:0.3rem; transition:0.2s;"
+                                onmouseover="this.style.background='rgba(231,76,60,0.25)'"
+                                onmouseout="this.style.background='rgba(231,76,60,0.12)'"
+                                title="Remove photo">
+                                <i class="fas fa-trash" style="font-size:0.7rem;"></i> Remove
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Veg/Non-Veg Dropdown Select -->
@@ -4337,6 +4407,7 @@
                     document.getElementById('menuItemPrice').value = item.price;
                     document.getElementById('menuItemDesc').value = item.description || '';
                     document.getElementById('menuItemImage').value = item.image_url || '';
+                    setMenuImagePreview(item.image_url || '');
                     document.getElementById('menuItemVeg').value = item.is_veg ? 'true' : 'false';
                     document.getElementById('menuItemAvailable').checked = item.is_available;
                     document.getElementById('menuItemSignature').checked = item.is_signature || false;
@@ -4347,6 +4418,7 @@
                 document.getElementById('menuItemPrice').value = '';
                 document.getElementById('menuItemDesc').value = '';
                 document.getElementById('menuItemImage').value = '';
+                setMenuImagePreview('');
                 document.getElementById('menuItemVeg').value = 'true';
                 document.getElementById('menuItemAvailable').checked = true;
                 document.getElementById('menuItemSignature').checked = false;
@@ -4354,9 +4426,43 @@
             modal.style.display = 'flex';
         }
 
+        function setMenuImagePreview(url) {
+            const box = document.getElementById('menuImagePreviewBox');
+            const thumb = document.getElementById('menuImagePreviewThumb');
+            const sub = document.getElementById('menuImagePreviewSub');
+            const uploadContainer = document.getElementById('menuImageUploadContainer');
+            if (!box || !thumb) return;
+
+            if (url && url.trim()) {
+                const clean = url.trim();
+                thumb.src = clean;
+                if (sub) {
+                    sub.textContent = clean.includes('cloudinary.com') ? 'Cloudinary Hosted' : clean.split('/').pop() || 'Image Attached';
+                }
+                box.style.display = 'flex';
+                if (uploadContainer) uploadContainer.style.display = 'none';
+            } else {
+                box.style.display = 'none';
+                thumb.src = '';
+                if (uploadContainer) uploadContainer.style.display = 'flex';
+            }
+        }
+
+        function removeMenuImage() {
+            document.getElementById('menuItemImage').value = '';
+            const fInput = document.getElementById('menuItemImageFile');
+            if (fInput) fInput.value = '';
+            setMenuImagePreview('');
+        }
+
         async function handleMenuImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
+
+            const btnText = document.getElementById('menuUploadBtnText');
+            const origHtml = btnText ? btnText.innerHTML : 'Upload Photo';
+            if (btnText) btnText.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
             const formData = new FormData();
             formData.append('file', file);
             try {
@@ -4368,6 +4474,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById('menuItemImage').value = data.image_url;
+                    setMenuImagePreview(data.image_url);
                     showToast('Image uploaded successfully');
                 } else {
                     showToast('Failed to upload image');
@@ -4375,11 +4482,15 @@
             } catch (err) {
                 console.error(err);
                 showToast('Upload error');
+            } finally {
+                if (btnText) btnText.innerHTML = origHtml;
+                event.target.value = '';
             }
         }
 
         function closeMenuItemModal() {
             document.getElementById('menuItemModal').style.display = 'none';
+            setMenuImagePreview('');
             editingMenuItemId = null;
         }
 

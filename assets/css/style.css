@@ -2077,4 +2077,9 @@ input:-webkit-autofill:active {
 #counter {
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.22em;
+}
+
+/* Upload Success Popup - Always Topmost over expanded gallery & modals */
+#upload-success-popup {
+    z-index: 999999 !important;
 }
