@@ -185,12 +185,14 @@
                             id="vibe-banner-card" onclick="openBannerLightbox(0)">
 
                             <!-- Slides wrapper -->
-                            <div id="vibe-banner-slides" class="flex transition-transform duration-500 ease-in-out" style="will-change:transform">
+                            <div id="vibe-banner-slides" class="flex transition-transform duration-500 ease-in-out"
+                                style="will-change:transform">
                                 <!-- Slides are injected by JS -->
                             </div>
 
                             <!-- Dots -->
-                            <div id="vibe-banner-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+                            <div id="vibe-banner-dots"
+                                class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                                 <!-- Dots injected by JS -->
                             </div>
 
@@ -210,7 +212,8 @@
                             <div id="vibe-banner-hand-hint"
                                 class="absolute left-1/2 -translate-x-1/2 bottom-10 z-30 pointer-events-none flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-[0_8px_25px_rgba(0,0,0,0.7)] animate-bounce">
                                 <span class="flex h-2 w-2 relative">
-                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-[#E0115F]"></span>
                                 </span>
                                 <i class="fa-solid fa-hand-pointer text-[#E0115F] text-sm animate-pulse"></i>
@@ -246,8 +249,7 @@
                             <img id="vibe-bg-blur" src=""
                                 class="absolute inset-0 w-full h-full object-cover blur-xl opacity-15 scale-105 pointer-events-none"
                                 alt="" decoding="async" aria-hidden="true" />
-                            <img id="vibe-active-img" src=""
-                                class="relative w-full h-full object-cover select-none"
+                            <img id="vibe-active-img" src="" class="relative w-full h-full object-cover select-none"
                                 alt="Aurous photo" decoding="async" />
 
                             <!-- Top Overlay -->
@@ -278,7 +280,8 @@
                                 <!-- Caption Text -->
                                 <div class="flex flex-col text-left flex-1 min-w-0 pr-2">
                                     <div class="flex items-center gap-2 mb-1">
-                                        <span class="text-white/50 text-[10px]" id="vibe-active-sub">✨ Featured Memory</span>
+                                        <span class="text-white/50 text-[10px]" id="vibe-active-sub">✨ Featured
+                                            Memory</span>
                                     </div>
                                     <p id="vibe-caption-text"
                                         class="text-white/90 text-xs md:text-sm font-medium leading-snug drop-shadow-md line-clamp-2 max-w-lg italic">
@@ -289,14 +292,17 @@
                                 <!-- Like Button -->
                                 <button id="like-vibe-btn" type="button"
                                     class="flex-shrink-0 flex items-center gap-2 bg-black/60 hover:bg-[#E0115F]/20 backdrop-blur-md border border-white/20 text-white px-3.5 py-2 rounded-full transition-all duration-300 cursor-pointer select-none active:scale-90 shadow-xl group">
-                                    <i id="vibe-heart-icon" class="fa-regular fa-heart text-base text-white transition-all group-hover:scale-110"></i>
+                                    <i id="vibe-heart-icon"
+                                        class="fa-regular fa-heart text-base text-white transition-all group-hover:scale-110"></i>
                                     <span id="vibe-likes-count" class="font-extrabold text-xs md:text-sm">0</span>
                                 </button>
                             </div>
 
                             <!-- Big Heart on Double Tap (Instagram Center Pop) -->
-                            <div id="big-vibe-heart" class="pointer-events-none absolute inset-0 z-40 flex items-center justify-center opacity-0">
-                                <i class="fa-solid fa-heart text-[#E0115F] text-7xl md:text-8xl drop-shadow-[0_0_40px_rgba(224,17,95,0.95)] transform scale-0"></i>
+                            <div id="big-vibe-heart"
+                                class="pointer-events-none absolute inset-0 z-40 flex items-center justify-center opacity-0">
+                                <i
+                                    class="fa-solid fa-heart text-[#E0115F] text-7xl md:text-8xl drop-shadow-[0_0_40px_rgba(224,17,95,0.95)] transform scale-0"></i>
                             </div>
                         </div>
 
@@ -311,7 +317,8 @@
                         <div id="vibe-hand-hint"
                             class="absolute left-1/2 -translate-x-1/2 bottom-20 z-30 pointer-events-none flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white text-xs font-semibold shadow-[0_8px_25px_rgba(0,0,0,0.6)] animate-bounce">
                             <span class="flex h-2 w-2 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0115F] opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-[#E0115F]"></span>
                             </span>
                             <i class="fa-solid fa-hand-pointer text-[#E0115F] text-sm animate-pulse"></i>
@@ -683,7 +690,7 @@
 
                 <!-- Date & Time Custom Wheel Picker (Dono PC aur Mobile ke liye) -->
                 <div class="flex flex-col gap-1.5 w-full">
-                    <label class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/40 font-bold">ðŸ“…
+                    <label class="text-[9px] md:text-[11px] uppercase tracking-widest text-white/40 font-bold">
                         Select
                         Date & Time</label>
                     <div class="flex justify-between items-center gap-1 relative w-full rounded-2xl overflow-hidden border border-white/5 bg-white/5 backdrop-blur-xl px-1 shadow-inner wheel-container-fixed"
@@ -988,8 +995,7 @@
             onclick="event.stopPropagation()">
 
             <!-- Slides -->
-            <div id="banner-lightbox-slides"
-                class="flex transition-transform duration-400 ease-in-out w-full"
+            <div id="banner-lightbox-slides" class="flex transition-transform duration-400 ease-in-out w-full"
                 style="will-change:transform">
                 <!-- injected by JS -->
             </div>

@@ -1601,8 +1601,8 @@
 
                     <!-- Dynamic Input (Table Selector or Customer Name) -->
                     <div id="posTableSelectWrap" style="margin-bottom:0.8rem;">
-                        <select id="posTableSelect" onchange="handlePosTableChange()" style="background:rgba(0,0,0,0.5); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:white; width:100%; font-family:inherit; font-size:0.88rem; outline:none;">
-                            <option value="0">Select Table (or 0 for General / Takeaway)...</option>
+                        <select id="posTableSelect" onchange="handlePosTableChange()" style="background:#141414; border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.8rem; color:#ffffff; width:100%; font-family:inherit; font-size:0.88rem; outline:none; cursor:pointer;">
+                            <option value="0" style="background:#181818; color:#ffffff;">Select Table (or 0 for General / Takeaway)...</option>
                         </select>
                     </div>
 
@@ -2546,6 +2546,7 @@
 
         let allReviewsData = [];
         let allReservationsData = [];
+        let allTablesData = [];
 
         function formatResDateOnly(dateStr) {
             if (!dateStr) return '';
@@ -4208,7 +4209,9 @@
         async function fetchTables() {
             try {
                 const tables = await apiFetch('/api/admin/tables');
+                allTablesData = tables;
                 renderTables(tables);
+                populatePosTableSelector(tables);
             } catch (e) { console.error(e); }
         }
 
@@ -4860,6 +4863,30 @@ ${receiptHtml}
         let currentPosPayment = 'cash';
         let currentPosSearchQuery = '';
 
+        function populatePosTableSelector(tables) {
+            const sel = document.getElementById('posTableSelect');
+            if (!sel || !tables) return;
+            const currentVal = sel.value;
+
+            let optionsHtml = '<option value="0" style="background:#181818; color:#ffffff;">Select Table (or 0 for General / Takeaway)...</option>';
+
+            tables.forEach(t => {
+                let label = `Table ${t.table_number}`;
+                if (t.is_active) {
+                    const guestName = t.reservation && t.reservation.name ? ` - ${t.reservation.name}` : '';
+                    label += ` (Active${guestName})`;
+                } else {
+                    label += ' (Vacant)';
+                }
+                optionsHtml += `<option value="${t.table_number}" style="background:#181818; color:#ffffff; font-weight:500;">${label}</option>`;
+            });
+
+            sel.innerHTML = optionsHtml;
+            if (currentVal && tables.some(t => String(t.table_number) === String(currentVal))) {
+                sel.value = currentVal;
+            }
+        }
+
         async function initPosBilling() {
             if (!allMenuData.length) await fetchMenuAdmin();
             if (!activeBillSettings.restaurant_name) await loadBillSettings();
@@ -4867,11 +4894,8 @@ ${receiptHtml}
             // Populate table selector
             try {
                 const tables = await apiFetch('/api/admin/tables');
-                const sel = document.getElementById('posTableSelect');
-                if (sel) {
-                    sel.innerHTML = '<option value="0">Select Table (or 0 for General / Takeaway)...</option>' +
-                        tables.map(t => `<option value="${t.table_number}" ${t.is_active ? 'style="color:#2ecc71;font-weight:bold;"' : ''}>Table ${t.table_number} ${t.is_active ? '(Active' + (t.reservation ? ' - ' + t.reservation.name : '') + ')' : '(Vacant)'}</option>`).join('');
-                }
+                allTablesData = tables;
+                populatePosTableSelector(tables);
             } catch (err) { console.error(err); }
 
             renderPosItemGrid();
@@ -4921,11 +4945,44 @@ ${receiptHtml}
 
         function handlePosTableChange() {
             const tableNum = parseInt(document.getElementById('posTableSelect')?.value || 0);
-            if (tableNum > 0 && allReservationsData) {
-                const todayStr = getLocalDateString(0);
-                const res = allReservationsData.find(r => r.date === todayStr && r.status !== 'cancelled');
-                // Auto pre-fill guest name if linked
+            const nameInput = document.getElementById('posCustomerName');
+            const phoneInput = document.getElementById('posCustomerPhone');
+
+            if (!nameInput || !phoneInput) return;
+
+            if (tableNum > 0 && Array.isArray(allTablesData)) {
+                const table = allTablesData.find(t => t.table_number === tableNum);
+
+                let matchedRes = table && table.reservation ? table.reservation : null;
+
+                if (!matchedRes && table && table.reservation_id && Array.isArray(allReservationsData)) {
+                    matchedRes = allReservationsData.find(r => r.id === table.reservation_id);
+                }
+
+                if (!matchedRes && table && table.is_active && Array.isArray(allReservationsData)) {
+                    const todayStr = getLocalDateString(0);
+                    matchedRes = allReservationsData.find(r => r.date === todayStr && r.status !== 'cancelled' && r.table_id === table.id);
+                }
+
+                if (matchedRes && matchedRes.name) {
+                    nameInput.value = matchedRes.name;
+                    phoneInput.value = matchedRes.phone || '';
+
+                    // Visual feedback highlighting auto-filled details
+                    nameInput.style.borderColor = '#E0115F';
+                    phoneInput.style.borderColor = '#E0115F';
+                    setTimeout(() => {
+                        nameInput.style.borderColor = 'var(--border)';
+                        phoneInput.style.borderColor = 'var(--border)';
+                    }, 1200);
+                    return;
+                }
             }
+
+            // For vacant table, General/Takeaway, or table without reservation:
+            // Clear so the user can enter walk-in customer details manually
+            nameInput.value = '';
+            phoneInput.value = '';
         }
 
         function renderPosItemGrid() {
