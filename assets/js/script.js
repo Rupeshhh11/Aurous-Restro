@@ -347,6 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resBadge.classList.add('hidden');
         }
     }
+    window.checkResStatus = checkResStatus; // expose for background polling
     checkResStatus();
 
     function buildBookingOrderList(resData) {
@@ -2609,5 +2610,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+// ─── Background: auto-sync user reservation status every 30s ───────────────
+(function startReservationStatusPolling() {
+    // Track previous statuses so we only notify on real changes
+    const _prevStatuses = {};
 
+    // Initialise from whatever is already in localStorage
+    try {
+        const stored = JSON.parse(localStorage.getItem('user_reservations') || '[]');
+        stored.forEach(r => { if (r.id) _prevStatuses[r.id] = r.status; });
+    } catch (e) {}
 
+    function showStatusToast(message, type) {
+        // type: 'success' | 'error' | 'info'
+        const colors = {
+            success: { bg: 'rgba(46,204,113,0.15)', border: 'rgba(46,204,113,0.35)', icon: '✓', color: '#2ecc71' },
+            error:   { bg: 'rgba(231,76,60,0.15)',  border: 'rgba(231,76,60,0.35)',  icon: '✕', color: '#e74c3c' },
+            info:    { bg: 'rgba(224,17,95,0.15)',  border: 'rgba(224,17,95,0.35)',  icon: 'ℹ', color: '#E0115F' },
+        };
+        const c = colors[type] || colors.info;
+        const container = document.getElementById('toast-container');
+        if (!container) { if (window.showToast) window.showToast(message); return; }
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.style.cssText = `background:${c.bg}; border:1px solid ${c.border}; color:${c.color}; padding: 10px 16px; border-radius: 10px; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(12px); max-width: 300px;`;
+        el.innerHTML = `<span style="font-size:1rem">${c.icon}</span><span style="color:#fff; font-weight:500">${message}</span>`;
+        container.appendChild(el);
+        requestAnimationFrame(() => el.classList.add('toast-in'));
+        setTimeout(() => {
+            el.classList.add('toast-out');
+            setTimeout(() => el.remove(), 400);
+        }, 4000);
+    }
+
+    async function pollReservationStatuses() {
+        let resList = [];
+        try {
+            resList = JSON.parse(localStorage.getItem('user_reservations') || '[]');
+            if (!Array.isArray(resList) || resList.length === 0) return;
+        } catch (e) { return; }
+
+        const ids = resList.map(r => r.id).filter(Boolean);
+        if (ids.length === 0) return;
+
+        try {
+            const response = await fetch('/api/reservations/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ids })
+            });
+            if (!response.ok) return;
+
+            const updatedList = await response.json();
+            let changed = false;
+
+            const mergedList = resList.map(localRes => {
+                const server = updatedList.find(u => u.id === localRes.id);
+                if (!server) return localRes;
+
+                const prevStatus = _prevStatuses[localRes.id];
+                const newStatus = server.status;
+
+                // Notify only if status actually changed from what we last knew
+                if (prevStatus !== undefined && prevStatus !== newStatus) {
+                    if (newStatus === 'confirmed') {
+                        showStatusToast('🎉 Your booking has been confirmed!', 'success');
+                    } else if (newStatus === 'cancelled') {
+                        showStatusToast('Your booking was cancelled by the restaurant.', 'error');
+                    } else if (newStatus === 'completed') {
+                        showStatusToast('Thanks for visiting! Your visit is marked complete.', 'info');
+                    }
+                }
+
+                _prevStatuses[localRes.id] = newStatus;
+                if (localRes.status !== newStatus) changed = true;
+                return { ...localRes, ...server };
+            });
+
+            // Remove entries deleted by user on server side
+            const activeList = mergedList.filter(r => r.deleted_by_user !== 1);
+
+            if (changed) {
+                localStorage.setItem('user_reservations', JSON.stringify(activeList));
+                // Refresh badge count
+                if (typeof checkResStatus === 'function') checkResStatus();
+            }
+        } catch (e) { /* silently ignore network errors */ }
+    }
+
+    // Start polling after a short delay (let page fully load first)
+    setTimeout(() => {
+        pollReservationStatuses(); // one immediate check
+        setInterval(pollReservationStatuses, 30000); // then every 30s
+    }, 3000);
+})();
