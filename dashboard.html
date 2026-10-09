@@ -9,7 +9,7 @@
         (function() {
             var t = localStorage.getItem('aurous_token');
             if (!t) {
-                window.location.replace('/login');
+                window.location.replace('/?admin=true');
             }
         })();
     </script>
@@ -2472,7 +2472,7 @@
 
     <script>
         const token = localStorage.getItem('aurous_token');
-        if (!token) window.location.href = '/login';
+        if (!token) window.location.href = '/?admin=true';
 
         let allReviewsData = [];
         let allReservationsData = [];
@@ -5302,12 +5302,12 @@ ${receiptHtml}
 
         function logout() {
             localStorage.removeItem('aurous_token');
-            window.location.replace('/login');
+            window.location.replace('/');
         }
 
         async function verifyAdminSession() {
             if (!token) {
-                window.location.replace('/login');
+                window.location.replace('/?admin=true');
                 return;
             }
             try {
@@ -5316,7 +5316,7 @@ ${receiptHtml}
                 });
                 if (res.status === 401 || res.status === 403) {
                     localStorage.removeItem('aurous_token');
-                    window.location.replace('/login');
+                    window.location.replace('/?admin=true');
                 }
             } catch(e) {}
         }

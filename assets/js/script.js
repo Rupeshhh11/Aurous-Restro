@@ -131,13 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
             preloaderEmoji.style.transform = 'translate(-50%, -50%)';
         }
 
-        const DURATION = 2800; // ms total
-        const DELAY = 250; // ms before start
+        const DURATION = 2000; // ms total — smooth, snappy, luxury feel
+        const DELAY = 150; // ms
         let startTime = null;
         let lastEmojiIndex = -1;
+        let lastDisplayed = -1;
 
-        // Smooth ease-in-out curve
-        const easeInOut = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        // Cubic Hermite smoothstep curve — smooth continuous acceleration & deceleration
+        const smoothProgress = (t) => t * t * (3 - 2 * t);
 
         const preloaderDone = () => {
             if (counter) counter.innerText = '100%';
@@ -156,14 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (nav) {
                     setTimeout(() => {
                         nav.classList.remove('opacity-0', '-translate-y-full');
-                    }, 400);
+                    }, 350);
                 }
 
                 const mobileNav = document.getElementById('mobile-nav');
                 if (mobileNav) {
                     setTimeout(() => {
                         mobileNav.classList.remove('translate-y-full');
-                    }, 400);
+                    }, 350);
                 }
 
                 if (heroContent) {
@@ -172,21 +173,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 setTimeout(() => {
                     document.body.style.overflow = '';
-                }, 1200);
-            }, 300);
+                }, 1000);
+            }, 200);
         };
 
         const animatePreloader = (timestamp) => {
             if (!startTime) startTime = timestamp;
             const elapsed = timestamp - startTime;
             const raw = Math.min(elapsed / DURATION, 1);
-            const progress = easeInOut(raw);
+            const progress = smoothProgress(raw);
 
-            // Update counter
-            const displayVal = Math.floor(progress * 100);
-            if (counter) counter.innerText = displayVal + '%';
+            // Update counter — only update DOM when numeric integer changes to preserve 60fps
+            const displayVal = Math.min(100, Math.floor(raw >= 1 ? 100 : progress * 100));
+            if (counter && displayVal !== lastDisplayed) {
+                lastDisplayed = displayVal;
+                counter.innerText = displayVal + '%';
+            }
 
-            // Move progress line via GPU transform (scaleX = no reflow)
+            // Move progress line via GPU transform (scaleX = zero reflow)
             if (progressLine) {
                 progressLine.style.transform = `scaleX(${progress})`;
             }
@@ -196,25 +200,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 preloaderEmoji.style.left = `${progress * 100}%`;
             }
 
-            // Swap emojis without triggering GSAP
+            // Swap emojis cleanly
             if (emojiInner) {
                 const emojiIndex = Math.min(Math.floor(progress * emojis.length), emojis.length - 1);
                 if (emojiIndex !== lastEmojiIndex) {
                     lastEmojiIndex = emojiIndex;
                     emojiInner.innerText = emojis[emojiIndex];
-                    emojiInner.style.transition = 'transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275)';
-                    emojiInner.style.transform = 'scale(1.35)';
-                    requestAnimationFrame(() => {
-                        requestAnimationFrame(() => {
-                            emojiInner.style.transform = 'scale(1)';
-                        });
-                    });
                 }
             }
 
             if (raw < 1) {
                 requestAnimationFrame(animatePreloader);
             } else {
+                if (counter) counter.innerText = '100%';
+                if (progressLine) progressLine.style.transform = 'scaleX(1)';
+                if (preloaderEmoji) preloaderEmoji.style.left = '100%';
                 preloaderDone();
             }
         };
@@ -702,6 +702,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (openListViewBtn) openListViewBtn.addEventListener('click', window.openMyRes);
     if (closeLoginBtn) closeLoginBtn.addEventListener('click', closeLogin);
     if (closeLoginBg) closeLoginBg.addEventListener('click', closeLogin);
+
+    // Auto-open built-in admin login modal if ?admin=true or hash #admin is in the URL
+    if (window.location.search.includes('admin=true') || window.location.hash === '#admin') {
+        openLogin();
+    }
 
     if (closeMyResBtn) closeMyResBtn.addEventListener('click', closeMyRes);
     if (closeMyResBg) closeMyResBg.addEventListener('click', closeMyRes);
@@ -2032,23 +2037,47 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // Instagram-style floating heart trigger
+        const triggerInstaHeartAnimation = () => {
+            if (!bigHeart) return;
+            const icon = bigHeart.querySelector('i');
+            bigHeart.classList.remove('insta-heart-active');
+            void bigHeart.offsetWidth; // Force reflow to re-trigger CSS keyframes
+            bigHeart.classList.add('insta-heart-active');
+
+            const onEnd = () => {
+                bigHeart.classList.remove('insta-heart-active');
+                if (icon) icon.removeEventListener('animationend', onEnd);
+            };
+            if (icon) {
+                icon.addEventListener('animationend', onEnd, { once: true });
+            } else {
+                setTimeout(() => bigHeart.classList.remove('insta-heart-active'), 850);
+            }
+        };
+
         let isLikingInProgress = false;
-        const handleVibeLike = async () => {
+        const handleVibeLike = async (isDoubleTap = false) => {
             if (vibePhotos.length === 0 || isLikingInProgress) return;
             const photo = vibePhotos[currentVibeIndex];
             if (!photo) return;
 
-            // Check if 1 device already liked (1 Phone 1 Like)
+            // Trigger Instagram center heart pop
+            triggerInstaHeartAnimation();
+
+            // Heart icon bouncy burst on button
+            if (heartIcon) {
+                heartIcon.classList.remove('heart-burst');
+                void heartIcon.offsetWidth;
+                heartIcon.classList.add('heart-burst');
+                setTimeout(() => heartIcon?.classList.remove('heart-burst'), 450);
+            }
+
+            // Check if 1 device already liked
             if (hasLikedVibePhoto(photo)) {
-                if (bigHeart) {
-                    bigHeart.style.transform = 'scale(1)';
-                    bigHeart.style.opacity = '1';
-                    setTimeout(() => {
-                        bigHeart.style.transform = 'scale(0)';
-                        bigHeart.style.opacity = '0';
-                    }, 400);
+                if (!isDoubleTap && window.showToast) {
+                    window.showToast('❤️ You already liked this photo!');
                 }
-                if (window.showToast) window.showToast('❤️ You already liked this photo!');
                 return;
             }
 
@@ -2062,16 +2091,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 likesCountSpan.textContent = photo.likes;
                 likesCountSpan.classList.add('count-pop');
                 setTimeout(() => likesCountSpan.classList.remove('count-pop'), 400);
-            }
-
-            // Big heart animation
-            if (bigHeart) {
-                bigHeart.style.transform = 'scale(1.2)';
-                bigHeart.style.opacity = '1';
-                setTimeout(() => {
-                    bigHeart.style.transform = 'scale(0)';
-                    bigHeart.style.opacity = '0';
-                }, 600);
             }
 
             try {
@@ -2125,9 +2144,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         likeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            handleVibeLike();
+            handleVibeLike(false);
         });
 
+        let tapTimeout = null;
         let lastTap = 0;
         let suppressNextClick = false;
         let touchStartX = 0;
@@ -2151,11 +2171,10 @@ document.addEventListener('DOMContentLoaded', () => {
             touchStartX = touch.clientX;
             touchStartY = touch.clientY;
             touchStartTime = Date.now();
-            console.log('ðŸ‘‰ Touch START:', { x: touchStartX, y: touchStartY });
         }, { passive: true });
 
         activeCard.addEventListener('touchmove', (e) => {
-            // Allow swipe to work by not preventing default on horizontal moves
+            // Passive touch move
         }, { passive: true });
 
         activeCard.addEventListener('touchend', (e) => {
@@ -2164,38 +2183,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const deltaY = touch.clientY - touchStartY;
             const deltaTime = Date.now() - touchStartTime;
 
-            console.log('âœ‹ Touch END:', { deltaX, deltaY, deltaTime });
-
-            // Swipe detection: if horizontal distance > vertical and > threshold
+            // Swipe detection
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 55 && deltaTime < 500) {
-                console.log('ðŸ‘ˆðŸ‘‰ SWIPE detected!', { deltaX });
                 handleSwipeNavigation(deltaX);
             }
         }, { passive: true });
 
+        // Debounced tap handling — double tap likes, single tap expands (NO JUMP / EXPAND ON LIKE!)
         activeCard.addEventListener('click', (e) => {
-            console.log('activeCard clicked');
-            // Don't trigger expand if we just swiped
             if (suppressNextClick) {
-                console.log('Suppressing click due to swipe');
                 suppressNextClick = false;
                 return;
             }
 
             const now = Date.now();
-            // Double tap to like
-            if (now - lastTap < 300) {
-                console.log(' Double tap detected - liking');
-                handleVibeLike();
+            if (now - lastTap < 320) {
+                // DOUBLE TAP: Like immediately, CANCEL single-tap expansion!
+                clearTimeout(tapTimeout);
+                tapTimeout = null;
                 lastTap = 0;
+                handleVibeLike(true);
             } else {
                 lastTap = now;
-                // Single tap to expand
-                console.log('Single tap detected. isVibeExpanded:', isVibeExpanded);
-                if (!isVibeExpanded) {
-                    console.log('Expanding gallery...');
-                    expandVibeGallery();
-                }
+                // SINGLE TAP: Wait 280ms before expanding
+                clearTimeout(tapTimeout);
+                tapTimeout = setTimeout(() => {
+                    if (!isVibeExpanded) {
+                        expandVibeGallery();
+                    }
+                }, 280);
             }
         });
 

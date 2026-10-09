@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, Query, status
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import text
@@ -917,7 +917,7 @@ def read_menu():
 
 @app.get("/login")
 def read_login():
-    return FileResponse("login.html")
+    return RedirectResponse(url="/?admin=true")
 
 @app.get("/dashboard")
 def read_dashboard():
