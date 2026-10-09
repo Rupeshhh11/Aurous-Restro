@@ -1494,55 +1494,77 @@ document.addEventListener('DOMContentLoaded', () => {
         function setupWheelScroll(wheelContainer, inputElement) {
             const items = wheelContainer.querySelectorAll('.wheel-item');
 
-            function updateActiveItem(targetItem, smoothScroll = false) {
-                let chosen = targetItem;
-                if (!chosen) {
-                    const containerCenter = wheelContainer.scrollTop + (wheelContainer.clientHeight / 2);
-                    let minDist = Infinity;
-                    items.forEach(item => {
-                        const itemCenter = item.offsetTop + (item.clientHeight / 2);
-                        const dist = Math.abs(containerCenter - itemCenter);
-                        if (dist < minDist) {
-                            minDist = dist;
-                            chosen = item;
-                        }
-                    });
-                }
-                if (!chosen && items.length > 0) chosen = items[0];
+            function updateSelection() {
+                if (!wheelContainer || items.length === 0) return;
+                const containerRect = wheelContainer.getBoundingClientRect();
+                if (containerRect.height === 0) return;
+
+                const targetY = containerRect.top + (containerRect.height / 2);
+                let closest = items[0];
+                let minDist = Infinity;
 
                 items.forEach(item => {
-                    if (item === chosen) {
-                        gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.15 });
-                        if (inputElement && chosen.dataset.value) {
-                            inputElement.value = chosen.dataset.value;
-                        }
-                    } else {
-                        gsap.to(item, { scale: 0.85, opacity: 0.4, color: 'rgba(255,255,255,0.5)', textShadow: 'none', duration: 0.15 });
+                    const r = item.getBoundingClientRect();
+                    const itemCenterY = r.top + (r.height / 2);
+                    const dist = Math.abs(targetY - itemCenterY);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = item;
                     }
                 });
 
-                if (chosen && smoothScroll) {
-                    const scrollPos = chosen.offsetTop - (wheelContainer.clientHeight / 2) + (chosen.clientHeight / 2);
-                    wheelContainer.scrollTo({ top: scrollPos, behavior: 'smooth' });
-                }
+                items.forEach(item => {
+                    if (item === closest) {
+                        item.style.transform = 'scale(1.15)';
+                        item.style.opacity = '1';
+                        item.style.color = '#E0115F';
+                        item.style.textShadow = '0 0 10px rgba(224,17,95,0.6)';
+                        if (inputElement && closest.dataset.value) {
+                            inputElement.value = closest.dataset.value;
+                        }
+                    } else {
+                        item.style.transform = 'scale(0.85)';
+                        item.style.opacity = '0.4';
+                        item.style.color = 'rgba(255,255,255,0.5)';
+                        item.style.textShadow = 'none';
+                    }
+                });
             }
 
-            wheelContainer.addEventListener('scroll', () => updateActiveItem(null, false));
+            let scrollTimer = null;
+            wheelContainer.addEventListener('scroll', () => {
+                updateSelection();
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(updateSelection, 80);
+            }, { passive: true });
 
             items.forEach(item => {
-                const handleClick = (e) => {
-                    if (e && e.cancelable && e.type === 'touchend') e.preventDefault();
-                    updateActiveItem(item, true);
-                };
-                item.addEventListener('click', handleClick);
-                item.addEventListener('touchend', handleClick, { passive: false });
+                item.addEventListener('click', () => {
+                    if (inputElement && item.dataset.value) {
+                        inputElement.value = item.dataset.value;
+                    }
+                    items.forEach(other => {
+                        if (other === item) {
+                            other.style.transform = 'scale(1.15)';
+                            other.style.opacity = '1';
+                            other.style.color = '#E0115F';
+                            other.style.textShadow = '0 0 10px rgba(224,17,95,0.6)';
+                        } else {
+                            other.style.transform = 'scale(0.85)';
+                            other.style.opacity = '0.4';
+                            other.style.color = 'rgba(255,255,255,0.5)';
+                            other.style.textShadow = 'none';
+                        }
+                    });
+                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(updateSelection, 250);
+                });
             });
 
-            if (items.length > 0) {
-                updateActiveItem(items[0], false);
-            }
+            // Initial selection update
+            updateSelection();
 
-            return () => updateActiveItem(null, false);
+            return updateSelection;
         }
 
         setTimeout(() => {
@@ -1562,6 +1584,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (reservationForm) {
         reservationForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            if (typeof window.refreshReservationWheels === 'function') {
+                window.refreshReservationWheels();
+            }
 
             const submitBtn = reservationForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerText;
