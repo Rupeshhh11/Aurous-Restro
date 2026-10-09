@@ -1936,23 +1936,28 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const fallbackVibePhotos = [
-            { id: 1, image_url: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes: 142, caption: "Aurous Moments \u2022 Experience the extraordinary vibe \u2728" },
-            { id: 2, image_url: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes: 98, caption: "Crafted to perfection \u2022 Every sip a memory \u{1F378}" },
-            { id: 3, image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes: 75, caption: "Warm ambience & golden nights \u2022 Welcome to Aurous \u{1F942}" }
+            { id: -1, image_url: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes: 0, caption: "Aurous Moments \u2022 Experience the extraordinary vibe \u2728" },
+            { id: -2, image_url: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes: 0, caption: "Crafted to perfection \u2022 Every sip a memory \u{1F378}" },
+            { id: -3, image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes: 0, caption: "Warm ambience & golden nights \u2022 Welcome to Aurous \u{1F942}" }
         ];
 
         const fetchVibePhotos = async () => {
-            try {
-                // Fetch with limit for initial load; rest loads lazily if user scrolls to next
-                const res = await fetch('/api/vibe-photos?limit=50&offset=0');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (Array.isArray(data) && data.length > 0) {
-                        vibePhotos = data;
+            let retries = 3;
+            while (retries > 0) {
+                try {
+                    const res = await fetch('/api/vibe-photos?limit=50&offset=0');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data) && data.length > 0) {
+                            vibePhotos = data;
+                            break; // Success, exit retry loop
+                        }
                     }
+                } catch (err) {
+                    console.warn(`Vibe photos fetch attempt failed (${4 - retries}/3):`, err);
                 }
-            } catch (err) {
-                console.warn("Vibe photos fetch warning:", err);
+                retries--;
+                if (retries > 0) await new Promise(r => setTimeout(r, 1500));
             }
 
             if (!vibePhotos || vibePhotos.length === 0) {
@@ -2465,35 +2470,40 @@ document.addEventListener('DOMContentLoaded', () => {
         })();
 
         const fetchVibeBanner = async () => {
-            try {
-                const res = await fetch('/api/vibe-banner');
-                if (res.ok) {
-                    const banner = await res.json();
-                    if (banner) {
-                        const bannerDesc = document.getElementById('vibe-banner-desc');
-                        if (bannerDesc && banner.description) {
-                            bannerDesc.textContent = banner.description;
+            let retries = 3;
+            while (retries > 0) {
+                try {
+                    const res = await fetch('/api/vibe-banner');
+                    if (res.ok) {
+                        const banner = await res.json();
+                        if (banner) {
+                            const bannerDesc = document.getElementById('vibe-banner-desc');
+                            if (bannerDesc && banner.description) {
+                                bannerDesc.textContent = banner.description;
+                            }
+                            if (banner.image_url) {
+                                bannerUrls = banner.image_url.split(',').map(u => u.trim()).filter(Boolean);
+                            }
+                            // Only build slides if we have real URLs from DB
+                            if (bannerUrls.length > 0) {
+                                const slidesEl = document.getElementById('vibe-banner-slides');
+                                const dotsEl = document.getElementById('vibe-banner-dots');
+                                buildBannerSlides(slidesEl, bannerUrls);
+                                buildBannerDots(dotsEl, bannerUrls.length, 0);
+                                bannerCurrentIdx = 0;
+                                if (slidesEl) slidesEl.style.transform = 'translateX(0%)';
+                                startBannerAutoTimer();
+                                // Seed lightbox slides too
+                                buildLightboxSlides(bannerUrls);
+                                break; // Success
+                            }
                         }
-                        if (banner.image_url) {
-                            bannerUrls = banner.image_url.split(',').map(u => u.trim()).filter(Boolean);
-                        } else {
-                            // Fallback single image
-                            bannerUrls = ['https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200'];
-                        }
-                        const slidesEl = document.getElementById('vibe-banner-slides');
-                        const dotsEl = document.getElementById('vibe-banner-dots');
-                        buildBannerSlides(slidesEl, bannerUrls);
-                        buildBannerDots(dotsEl, bannerUrls.length, 0);
-                        bannerCurrentIdx = 0;
-                        if (slidesEl) slidesEl.style.transform = 'translateX(0%)';
-                        startBannerAutoTimer();
-
-                        // Seed lightbox slides too
-                        buildLightboxSlides(bannerUrls);
                     }
+                } catch (err) {
+                    console.warn(`Banner fetch attempt failed (${4 - retries}/3):`, err);
                 }
-            } catch (err) {
-                console.error("Error loading vibe banner:", err);
+                retries--;
+                if (retries > 0) await new Promise(r => setTimeout(r, 1500));
             }
         };
 

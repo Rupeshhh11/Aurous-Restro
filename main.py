@@ -11,6 +11,13 @@ import os
 import shutil
 import uuid
 from typing import List, Optional
+from dotenv import load_dotenv
+
+# Load .env from the directory this file lives in (works locally and on Render)
+_env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+load_dotenv(_env_path)
+load_dotenv()  # also pick up any CWD .env
+
 import models
 from urllib.parse import urlparse
 import schemas
@@ -240,6 +247,13 @@ async def startup_event():
             db.commit()
     finally:
         db.close()
+
+    # After startup tables/seeds, sync PostgreSQL data to local SQLite backup
+    try:
+        from database import sync_sqlite_backup
+        sync_sqlite_backup()
+    except Exception as _sync_err:
+        print(f"[Startup] SQLite backup sync skipped: {_sync_err}")
 
 
 
@@ -678,26 +692,33 @@ def get_vibe_photos(limit: Optional[int] = Query(None, ge=1, le=500), offset: in
         query = query.offset(offset).limit(limit)
     photos = query.all()
     if not photos and offset == 0:
-        # Fallback premium Unsplash images if database is empty
+        # Fallback premium Unsplash images if database is empty.
+        # likes=0 so they are NOT fake — real count persists once liked via the like endpoint
         return [
-            schemas.VibePhotoResponse(id=-1, image_url="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes=142, approved=True, created_at=datetime.utcnow()),
-            schemas.VibePhotoResponse(id=-2, image_url="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes=98, approved=True, created_at=datetime.utcnow() - timedelta(days=1)),
-            schemas.VibePhotoResponse(id=-3, image_url="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes=75, approved=True, created_at=datetime.utcnow() - timedelta(days=2))
+            schemas.VibePhotoResponse(id=-1, image_url="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes=0, approved=True, created_at=datetime.utcnow()),
+            schemas.VibePhotoResponse(id=-2, image_url="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes=0, approved=True, created_at=datetime.utcnow() - timedelta(days=1)),
+            schemas.VibePhotoResponse(id=-3, image_url="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes=0, approved=True, created_at=datetime.utcnow() - timedelta(days=2))
         ]
     return photos
 
 @app.post("/api/vibe-photos/{photo_id}/like", response_model=schemas.VibePhotoResponse)
 def like_vibe_photo(photo_id: int, db: Session = Depends(get_db)):
     if photo_id < 0:
-        # It's a fallback image. Create a database record for it so the like is persistent!
+        # It's a negative-ID fallback image.
+        # First check if it already exists by URL so we don't duplicate rows.
         fallbacks = {
             -1: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470",
             -2: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470",
             -3: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470"
         }
-        url = fallbacks.get(photo_id, "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470")
-        db_photo = models.VibePhoto(image_url=url, likes=1, approved=True)
-        db.add(db_photo)
+        url = fallbacks.get(photo_id, fallbacks[-1])
+        # Look up by URL — it might have been inserted already
+        db_photo = db.query(models.VibePhoto).filter(models.VibePhoto.image_url == url).first()
+        if db_photo:
+            db_photo.likes += 1
+        else:
+            db_photo = models.VibePhoto(image_url=url, likes=1, approved=True)
+            db.add(db_photo)
         db.commit()
         db.refresh(db_photo)
         return db_photo
