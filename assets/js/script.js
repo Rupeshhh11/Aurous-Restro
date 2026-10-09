@@ -774,6 +774,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('aurous_token', data.access_token);
+                    // Set session cookie so the server can guard /dashboard from direct URL access
+                    const expires = new Date(Date.now() + 600 * 60 * 1000).toUTCString(); // 600 min = same as token
+                    document.cookie = `aurous_session=1; path=/; expires=${expires}; SameSite=Strict`;
                     window.location.href = '/dashboard';
                 } else {
                     error.classList.remove('hidden');

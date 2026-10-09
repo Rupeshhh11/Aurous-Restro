@@ -5413,6 +5413,8 @@ ${receiptHtml}
 
         function logout() {
             localStorage.removeItem('aurous_token');
+            // Clear the server-readable session cookie
+            document.cookie = 'aurous_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict';
             window.location.replace('/');
         }
 
@@ -5443,6 +5445,30 @@ ${receiptHtml}
                 fetchOrders();
             }
         }, 20000);
+
+        // Auto-refresh reservations every 30 seconds so new bookings appear without a page reload
+        setInterval(async () => {
+            try {
+                const latest = await apiFetch('/api/admin/reservations');
+                if (!latest || !Array.isArray(latest)) return;
+
+                // Check if anything changed (new reservation or status update)
+                const prevIds = new Set((allReservationsData || []).map(r => r.id));
+                const hasNew = latest.some(r => !prevIds.has(r.id));
+                const hasStatusChange = latest.some(r => {
+                    const old = (allReservationsData || []).find(o => o.id === r.id);
+                    return old && old.status !== r.status;
+                });
+
+                if (hasNew || hasStatusChange) {
+                    allReservationsData = latest;
+                    updateStatsValues();
+                    renderReservations(latest);
+                    if (currentHistoryTab) switchHistoryTab(currentHistoryTab);
+                    checkUpcomingReservations();
+                }
+            } catch (e) { /* silently ignore network errors */ }
+        }, 30000);
     </script>
 </body>
 

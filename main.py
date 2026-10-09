@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, Query, status
+from fastapi import FastAPI, Depends, HTTPException, Form, UploadFile, File, Query, status, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -954,7 +954,11 @@ def read_login():
     return RedirectResponse(url="/?admin=true")
 
 @app.get("/dashboard")
-def read_dashboard():
+def read_dashboard(request: Request):
+    # Server-side auth guard: require the session cookie set on login
+    session_cookie = request.cookies.get("aurous_session")
+    if not session_cookie:
+        return RedirectResponse(url="/?admin=true", status_code=302)
     return FileResponse("dashboard.html")
 
 @app.get("/reviews")
