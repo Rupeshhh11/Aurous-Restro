@@ -1381,6 +1381,12 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 reservationBox.style.opacity = '1';
             }
+
+            setTimeout(() => {
+                if (typeof window.refreshReservationWheels === 'function') {
+                    window.refreshReservationWheels();
+                }
+            }, 60);
         }
     }
 
@@ -1468,7 +1474,7 @@ document.addEventListener('DOMContentLoaded', () => {
             wheelMinute.appendChild(div);
         });
 
-        const ampmValues = ['PM'];
+        const ampmValues = ['PM', 'AM'];
         ampmValues.forEach(v => {
             const div = document.createElement('div');
             div.className = 'snap-center h-[37px] flex items-center justify-center text-white/50 text-[13px] md:text-base font-black cursor-pointer transition-all duration-300 wheel-item select-none';
@@ -1488,39 +1494,68 @@ document.addEventListener('DOMContentLoaded', () => {
         function setupWheelScroll(wheelContainer, inputElement) {
             const items = wheelContainer.querySelectorAll('.wheel-item');
 
-            function onScroll() {
-                const containerCenter = wheelContainer.scrollTop + (wheelContainer.offsetHeight / 2);
+            function updateActiveItem(targetItem, smoothScroll = false) {
+                let chosen = targetItem;
+                if (!chosen) {
+                    const containerCenter = wheelContainer.scrollTop + (wheelContainer.clientHeight / 2);
+                    let minDist = Infinity;
+                    items.forEach(item => {
+                        const itemCenter = item.offsetTop + (item.clientHeight / 2);
+                        const dist = Math.abs(containerCenter - itemCenter);
+                        if (dist < minDist) {
+                            minDist = dist;
+                            chosen = item;
+                        }
+                    });
+                }
+                if (!chosen && items.length > 0) chosen = items[0];
 
                 items.forEach(item => {
-                    const itemCenter = item.offsetTop + (item.offsetHeight / 2);
-                    const dist = Math.abs(containerCenter - itemCenter);
-
-                    if (dist < (item.offsetHeight / 2)) {
-                        gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.2 });
-                        if (inputElement) inputElement.value = item.dataset.value;
+                    if (item === chosen) {
+                        gsap.to(item, { scale: 1.15, opacity: 1, color: '#E0115F', textShadow: '0 0 10px rgba(224,17,95,0.6)', duration: 0.15 });
+                        if (inputElement && chosen.dataset.value) {
+                            inputElement.value = chosen.dataset.value;
+                        }
                     } else {
-                        gsap.to(item, { scale: 0.85, opacity: 0.4, color: 'rgba(255,255,255,0.5)', textShadow: 'none', duration: 0.2 });
+                        gsap.to(item, { scale: 0.85, opacity: 0.4, color: 'rgba(255,255,255,0.5)', textShadow: 'none', duration: 0.15 });
                     }
                 });
+
+                if (chosen && smoothScroll) {
+                    const scrollPos = chosen.offsetTop - (wheelContainer.clientHeight / 2) + (chosen.clientHeight / 2);
+                    wheelContainer.scrollTo({ top: scrollPos, behavior: 'smooth' });
+                }
             }
 
-            wheelContainer.addEventListener('scroll', onScroll);
-
-            onScroll();
+            wheelContainer.addEventListener('scroll', () => updateActiveItem(null, false));
 
             items.forEach(item => {
-                item.addEventListener('click', () => {
-                    const scrollPos = item.offsetTop - (wheelContainer.offsetHeight / 2) + (item.offsetHeight / 2);
-                    wheelContainer.scrollTo({ top: scrollPos, behavior: 'smooth' });
-                });
+                const handleClick = (e) => {
+                    if (e && e.cancelable && e.type === 'touchend') e.preventDefault();
+                    updateActiveItem(item, true);
+                };
+                item.addEventListener('click', handleClick);
+                item.addEventListener('touchend', handleClick, { passive: false });
             });
+
+            if (items.length > 0) {
+                updateActiveItem(items[0], false);
+            }
+
+            return () => updateActiveItem(null, false);
         }
 
         setTimeout(() => {
-            setupWheelScroll(wheelDate, selectedDateInput);
-            setupWheelScroll(wheelHour, selectedHourInput);
-            setupWheelScroll(wheelMinute, selectedMinuteInput);
-            setupWheelScroll(wheelAmpm, selectedAmpmInput);
+            const dateFn = setupWheelScroll(wheelDate, selectedDateInput);
+            const hourFn = setupWheelScroll(wheelHour, selectedHourInput);
+            const minFn = setupWheelScroll(wheelMinute, selectedMinuteInput);
+            const ampmFn = setupWheelScroll(wheelAmpm, selectedAmpmInput);
+            window.refreshReservationWheels = () => {
+                dateFn();
+                hourFn();
+                minFn();
+                ampmFn();
+            };
         }, 100);
     }
 
@@ -1534,14 +1569,14 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = true;
 
             const formData = {
-                name: document.getElementById('reserve-name').value,
-                phone: document.getElementById('reserve-phone').value,
-                occasion: document.getElementById('occasion').value,
-                date: document.getElementById('selected-date').value || document.querySelector('#wheel-date .wheel-item')?.dataset.value || '',
-                hour: document.getElementById('selected-hour').value || document.querySelector('#wheel-hour .wheel-item')?.dataset.value || '',
-                minute: document.getElementById('selected-minute').value || document.querySelector('#wheel-minute .wheel-item')?.dataset.value || '',
-                ampm: document.getElementById('selected-ampm').value || document.querySelector('#wheel-ampm .wheel-item')?.dataset.value || '',
-                guest_count: parseInt(document.getElementById('guest-input').value)
+                name: (document.getElementById('reserve-name')?.value || '').trim(),
+                phone: (document.getElementById('reserve-phone')?.value || '').trim(),
+                occasion: document.getElementById('occasion')?.value || 'casual',
+                date: document.getElementById('selected-date')?.value || document.querySelector('#wheel-date .wheel-item')?.dataset.value || '',
+                hour: document.getElementById('selected-hour')?.value || document.querySelector('#wheel-hour .wheel-item')?.dataset.value || '1',
+                minute: document.getElementById('selected-minute')?.value || document.querySelector('#wheel-minute .wheel-item')?.dataset.value || '00',
+                ampm: document.getElementById('selected-ampm')?.value || document.querySelector('#wheel-ampm .wheel-item')?.dataset.value || 'PM',
+                guest_count: parseInt(document.getElementById('guest-input')?.value) || 2
             };
 
             console.log("Submitting reservation:", formData);
@@ -2701,6 +2736,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start polling after a short delay (let page fully load first)
     setTimeout(() => {
         pollReservationStatuses(); // one immediate check
-        setInterval(pollReservationStatuses, 30000); // then every 30s
-    }, 3000);
+        setInterval(pollReservationStatuses, 8000); // every 8s for snappy updates
+    }, 1500);
 })();
