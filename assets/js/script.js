@@ -117,63 +117,109 @@ document.addEventListener('DOMContentLoaded', () => {
     const emojiInner = preloaderEmoji?.querySelector('.emoji-bounce');
     const emojis = ['\u{1F468}\u200D\u{1F373}', '\u{1F372}', '\u{1F958}', '\u{1F373}', '\u{1F371}', '\u{1F37D}\uFE0F', '\u{1F60B}'];
 
-
+    // GPU-accelerated smooth preloader — zero GSAP dependency
     if (preloader) {
-        const loaderTL = gsap.timeline({
-            delay: 0.2,
-            onUpdate: function () {
-                const progress = Math.floor(this.progress() * 100);
-                if (counter) counter.innerText = progress + "%";
+        // Make progress line use transform instead of width (GPU composited)
+        if (progressLine) {
+            progressLine.style.width = '100%';
+            progressLine.style.transformOrigin = 'left center';
+            progressLine.style.transform = 'scaleX(0)';
+            progressLine.style.transition = 'none';
+        }
+        if (preloaderEmoji) {
+            preloaderEmoji.style.left = '0%';
+            preloaderEmoji.style.transform = 'translate(-50%, -50%)';
+        }
 
+        const DURATION = 2800; // ms total
+        const DELAY = 250; // ms before start
+        let startTime = null;
+        let lastEmojiIndex = -1;
 
-                if (emojiInner) {
-                    const emojiIndex = Math.floor(this.progress() * (emojis.length - 1));
-                    if (emojiInner.innerText !== emojis[emojiIndex]) {
-                        emojiInner.innerText = emojis[emojiIndex];
-                        gsap.fromTo(emojiInner, { scale: 1.4 }, { scale: 1, duration: 0.3 });
-                    }
+        // Smooth ease-in-out curve
+        const easeInOut = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+        const preloaderDone = () => {
+            if (counter) counter.innerText = '100%';
+            setTimeout(() => {
+                preloader.classList.add('slide-up');
+
+                if (canvas) {
+                    canvas.classList.replace('opacity-100', 'opacity-0');
+                    setTimeout(() => snowActive = false, 1000);
                 }
-            },
-            onComplete: () => {
-                if (counter) counter.innerText = "100%";
-                setTimeout(() => {
-                    preloader.classList.add('slide-up');
 
-                    if (canvas) {
-                        canvas.classList.replace('opacity-100', 'opacity-0');
-                        setTimeout(() => snowActive = false, 1000);
-                    }
+                const heroBg = document.getElementById('hero-bg-wrapper');
+                if (heroBg) heroBg.classList.replace('scale-100', 'scale-105');
 
-                    const heroBg = document.getElementById('hero-bg-wrapper');
-                    if (heroBg) heroBg.classList.replace('scale-100', 'scale-105');
-
-                    const nav = document.getElementById('navbar');
-                    if (nav) {
-                        setTimeout(() => {
-                            nav.classList.remove('opacity-0', '-translate-y-full');
-                        }, 400);
-                    }
-
-                    const mobileNav = document.getElementById('mobile-nav');
-                    if (mobileNav) {
-                        setTimeout(() => {
-                            mobileNav.classList.remove('translate-y-full');
-                        }, 400);
-                    }
-
-                    if (heroContent) {
-                        heroContent.classList.remove('opacity-0', 'translate-y-16');
-                    }
-
+                const nav = document.getElementById('navbar');
+                if (nav) {
                     setTimeout(() => {
-                        document.body.style.overflow = '';
-                    }, 1200);
-                }, 400);
-            }
-        });
+                        nav.classList.remove('opacity-0', '-translate-y-full');
+                    }, 400);
+                }
 
-        loaderTL.to(progressLine, { width: "100%", duration: 2.5, ease: "power2.inOut" });
-        loaderTL.to(preloaderEmoji, { left: "100%", duration: 2.5, ease: "power2.inOut" }, 0);
+                const mobileNav = document.getElementById('mobile-nav');
+                if (mobileNav) {
+                    setTimeout(() => {
+                        mobileNav.classList.remove('translate-y-full');
+                    }, 400);
+                }
+
+                if (heroContent) {
+                    heroContent.classList.remove('opacity-0', 'translate-y-16');
+                }
+
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                }, 1200);
+            }, 300);
+        };
+
+        const animatePreloader = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const raw = Math.min(elapsed / DURATION, 1);
+            const progress = easeInOut(raw);
+
+            // Update counter
+            const displayVal = Math.floor(progress * 100);
+            if (counter) counter.innerText = displayVal + '%';
+
+            // Move progress line via GPU transform (scaleX = no reflow)
+            if (progressLine) {
+                progressLine.style.transform = `scaleX(${progress})`;
+            }
+
+            // Move emoji via GPU transform
+            if (preloaderEmoji) {
+                preloaderEmoji.style.left = `${progress * 100}%`;
+            }
+
+            // Swap emojis without triggering GSAP
+            if (emojiInner) {
+                const emojiIndex = Math.min(Math.floor(progress * emojis.length), emojis.length - 1);
+                if (emojiIndex !== lastEmojiIndex) {
+                    lastEmojiIndex = emojiIndex;
+                    emojiInner.innerText = emojis[emojiIndex];
+                    emojiInner.style.transition = 'transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275)';
+                    emojiInner.style.transform = 'scale(1.35)';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            emojiInner.style.transform = 'scale(1)';
+                        });
+                    });
+                }
+            }
+
+            if (raw < 1) {
+                requestAnimationFrame(animatePreloader);
+            } else {
+                preloaderDone();
+            }
+        };
+
+        setTimeout(() => requestAnimationFrame(animatePreloader), DELAY);
     }
 
 
@@ -1800,6 +1846,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let vibePhotos = [];
         let currentVibeIndex = 0;
         let vibeAutoPlayTimer = null;
+        let isVibeExpanded = false;
 
         const bgBlurImg = document.getElementById('vibe-bg-blur');
         const activeImg = document.getElementById('vibe-active-img');
@@ -1865,12 +1912,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // Pre-cache queue — always keep next & previous image loaded in memory
+        const imageCache = new Map();
+        let isRendering = false;
+
+        const preloadImage = (url) => {
+            if (!url || imageCache.has(url)) return;
+            const img = new Image();
+            img.src = url;
+            imageCache.set(url, img);
+        };
+
+        const preCacheNeighbours = (index) => {
+            const prev = (index - 1 + vibePhotos.length) % vibePhotos.length;
+            const next = (index + 1) % vibePhotos.length;
+            if (vibePhotos[prev]) preloadImage(vibePhotos[prev].image_url);
+            if (vibePhotos[next]) preloadImage(vibePhotos[next].image_url);
+        };
+
         const fetchVibePhotos = async () => {
             try {
-                const res = await fetch('/api/vibe-photos');
+                // Fetch with limit for initial load; rest loads lazily if user scrolls to next
+                const res = await fetch('/api/vibe-photos?limit=50&offset=0');
                 if (res.ok) {
                     vibePhotos = await res.json();
                     if (vibePhotos.length > 0) {
+                        // Pre-cache first 3 images immediately
+                        preloadImage(vibePhotos[0]?.image_url);
+                        preloadImage(vibePhotos[1]?.image_url);
+                        preloadImage(vibePhotos[2]?.image_url);
                         renderVibePhoto(0);
                         startVibeAutoplay();
                     }
@@ -1881,18 +1951,35 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const renderVibePhoto = (index) => {
-            if (!vibePhotos[index]) return;
+            if (!vibePhotos[index] || isRendering) return;
+            isRendering = true;
             const photo = vibePhotos[index];
 
+            // Fade out — only opacity+transform (GPU composited, zero layout cost)
             activeCard.style.opacity = '0';
-            activeCard.style.transform = 'scale(0.96)';
+            activeCard.style.transform = 'scale(0.97) translateY(6px)';
 
-            setTimeout(() => {
+            // Pre-cache neighbours in background while fading
+            preCacheNeighbours(index);
+
+            const applyPhoto = () => {
+                // Update main image
                 activeImg.src = photo.image_url;
-                if (bgBlurImg) bgBlurImg.src = photo.image_url;
+
+                // Update background blur only if already cached (prevents freeze)
+                if (bgBlurImg) {
+                    if (imageCache.has(photo.image_url)) {
+                        bgBlurImg.src = photo.image_url;
+                    } else {
+                        // Set after load to avoid decode block
+                        const tmpImg = new Image();
+                        tmpImg.onload = () => { bgBlurImg.src = photo.image_url; };
+                        tmpImg.src = photo.image_url;
+                    }
+                }
+
                 if (likesCountSpan) likesCountSpan.textContent = photo.likes || 0;
 
-                // Caption display - just the caption text, no branding
                 if (captionTextEl) {
                     if (photo.caption && photo.caption.trim()) {
                         captionTextEl.textContent = photo.caption.trim();
@@ -1902,14 +1989,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (activeSub) {
-                    activeSub.textContent = photo.created_at ? '• ' + new Date(photo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '• Featured';
+                    activeSub.textContent = photo.created_at
+                        ? '\u2022 ' + new Date(photo.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+                        : '\u2022 Featured';
                 }
 
                 updateLikeButtonState(photo);
 
-                activeCard.style.opacity = '1';
-                activeCard.style.transform = 'scale(1)';
-            }, 250);
+                // Fade in — requestAnimationFrame guarantees DOM painted before transition
+                requestAnimationFrame(() => {
+                    activeCard.style.opacity = '1';
+                    activeCard.style.transform = 'scale(1) translateY(0)';
+                    isRendering = false;
+                });
+            };
+
+            // If image is already cached, apply instantly after fade-out
+            if (imageCache.has(photo.image_url)) {
+                setTimeout(applyPhoto, 200);
+            } else {
+                // Preload, then apply — prevents blank flash
+                const img = new Image();
+                img.onload = () => {
+                    imageCache.set(photo.image_url, img);
+                    setTimeout(applyPhoto, 200);
+                };
+                img.onerror = () => setTimeout(applyPhoto, 200);
+                img.src = photo.image_url;
+                imageCache.set(photo.image_url, img);
+            }
         };
 
         let isLikingInProgress = false;
@@ -2101,7 +2209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const uploadLabel = document.getElementById('vibe-upload-label');
         const handHint = document.getElementById('vibe-hand-hint');
         const userUploadInput = document.getElementById('vibe-user-upload');
-        let isVibeExpanded = false;
+
 
         const expandVibeGallery = () => {
             console.log(' expandVibeGallery called, isVibeExpanded:', isVibeExpanded);

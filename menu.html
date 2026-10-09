@@ -3,13 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Aurous Restro | Live Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=2.1">
+    <link rel="stylesheet" href="assets/css/style.css?v=3.4">
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+        @media (max-width: 768px) {
+            #auth-table { font-size: 20px !important; }
+            #auth-code { font-size: 24px !important; }
+        }
+
         .menu-card {
             perspective: 1000px;
             -webkit-perspective: 1000px;
@@ -329,15 +337,16 @@
                         class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold text-left">Table
                         Number</label>
                     <input type="number" id="auth-table" required
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white text-center text-xl font-bold"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-lg focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white text-center font-bold"
+                        style="font-size: 1.25rem !important;"
                         placeholder="e.g. 5">
                 </div>
                 <div>
                     <label
                         class="block text-xs uppercase tracking-widest text-white/50 mb-2 font-semibold text-left">4-Digit
                         Access Code</label>
-                    <input type="text" id="auth-code" required maxlength="4" style="text-transform: uppercase;"
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white text-center text-2xl tracking-[0.5em] font-bold"
+                    <input type="text" id="auth-code" required maxlength="4" style="text-transform: uppercase; font-size: 1.5rem !important;"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-lg focus:outline-none focus:border-[#E0115F] focus:bg-white/10 transition-colors text-white text-center tracking-[0.5em] font-bold"
                         placeholder="••••">
                     <p class="text-[10px] text-white/30 mt-2 text-left">Ask your waiter for the table access code.</p>
                 </div>
@@ -452,9 +461,18 @@
 
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const tableNo = document.getElementById('auth-table').value;
-            const code = document.getElementById('auth-code').value.toUpperCase();
+            const tableInput = document.getElementById('auth-table');
+            const codeInput = document.getElementById('auth-code');
+            const tableNo = tableInput.value;
+            const code = codeInput.value.toUpperCase();
             const btn = document.getElementById('auth-btn');
+
+            // Force mobile keyboard to dismiss and reset mobile zoom state
+            if (tableInput) tableInput.blur();
+            if (codeInput) codeInput.blur();
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                document.activeElement.blur();
+            }
 
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
@@ -472,6 +490,9 @@
                     document.getElementById('table-auth-modal').style.display = 'none';
                     document.getElementById('main-content').classList.remove('hidden');
                     document.getElementById('display-table-no').innerText = tableNo;
+                    window.scrollTo(0, 0);
+                    // Double safeguard to reset mobile viewport scale
+                    setTimeout(() => window.scrollTo(0, 0), 50);
                     fetchMenu();
                 } else {
                     document.getElementById('auth-error').classList.remove('hidden');
@@ -486,10 +507,14 @@
         });
 
         function bypassAuth() {
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                document.activeElement.blur();
+            }
             activeTable = null;
             document.getElementById('table-auth-modal').style.display = 'none';
             document.getElementById('main-content').classList.remove('hidden');
             document.getElementById('display-table-no').innerText = "Browsing";
+            window.scrollTo(0, 0);
             fetchMenu();
         }
 

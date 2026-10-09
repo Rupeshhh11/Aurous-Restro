@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Aurous Restro | Bistupur, Jamshedpur</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=3.3">
+    <link rel="stylesheet" href="assets/css/style.css?v=3.4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @media (max-width: 768px) {
@@ -239,16 +239,16 @@
                             Aurous Gallery</h2>
                     </div>
 
-                    <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl group/vibe h-[320px] md:h-[450px] cursor-pointer"
-                        id="vibe-gallery-container">
+                    <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/90 group/vibe h-[320px] md:h-[450px] cursor-pointer"
+                        id="vibe-gallery-container" style="will-change:transform;">
                         <div id="vibe-active-card"
                             class="relative w-full h-full flex items-center justify-center overflow-hidden">
                             <img id="vibe-bg-blur" src=""
-                                class="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-105 pointer-events-none"
-                                alt="Aurous photo blur" />
+                                class="absolute inset-0 w-full h-full object-cover blur-xl opacity-15 scale-105 pointer-events-none"
+                                alt="" decoding="async" aria-hidden="true" />
                             <img id="vibe-active-img" src=""
-                                class="relative w-full h-full object-cover select-none transition-transform duration-300"
-                                alt="Aurous photo" />
+                                class="relative w-full h-full object-cover select-none"
+                                alt="Aurous photo" decoding="async" />
 
                             <!-- Top Overlay -->
                             <div
@@ -1026,8 +1026,7 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="/assets/js/script.js?v=3.3"></script>
+    <script src="/assets/js/script.js?v=3.4"></script>
 </body>
 
 </html>

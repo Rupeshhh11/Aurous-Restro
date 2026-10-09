@@ -672,9 +672,12 @@ async def upload_menu_image(file: UploadFile = File(...), current_member: models
 
 
 @app.get("/api/vibe-photos", response_model=List[schemas.VibePhotoResponse])
-def get_vibe_photos(db: Session = Depends(get_db)):
-    photos = db.query(models.VibePhoto).filter(models.VibePhoto.approved == True).order_by(models.VibePhoto.created_at.desc()).all()
-    if not photos:
+def get_vibe_photos(limit: Optional[int] = Query(None, ge=1, le=500), offset: int = Query(0, ge=0), db: Session = Depends(get_db)):
+    query = db.query(models.VibePhoto).filter(models.VibePhoto.approved == True).order_by(models.VibePhoto.created_at.desc())
+    if limit is not None:
+        query = query.offset(offset).limit(limit)
+    photos = query.all()
+    if not photos and offset == 0:
         # Fallback premium Unsplash images if database is empty
         return [
             schemas.VibePhotoResponse(id=-1, image_url="https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes=142, approved=True, created_at=datetime.utcnow()),
