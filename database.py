@@ -11,6 +11,10 @@ raw_db_url = os.getenv(
 if raw_db_url.startswith("postgres://"):
     raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
 
+# If internal Render hostname is used outside of Render, auto-fix to external public hostname
+if "@dpg-" in raw_db_url and ".render.com" not in raw_db_url and "RENDER" not in os.environ:
+    raw_db_url = raw_db_url.replace("@dpg-dalqnim1egvs73fhq9qg-a/", "@dpg-dalqnim1egvs73fhq9qg-a.oregon-postgres.render.com/")
+
 try:
     if raw_db_url.startswith("sqlite"):
         engine = create_engine(raw_db_url, connect_args={"check_same_thread": False})

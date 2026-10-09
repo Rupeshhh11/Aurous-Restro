@@ -1930,24 +1930,36 @@ document.addEventListener('DOMContentLoaded', () => {
             if (vibePhotos[next]) preloadImage(vibePhotos[next].image_url);
         };
 
+        const fallbackVibePhotos = [
+            { id: 1, image_url: "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&q=80&w=1470", likes: 142, caption: "Aurous Moments \u2022 Experience the extraordinary vibe \u2728" },
+            { id: 2, image_url: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1470", likes: 98, caption: "Crafted to perfection \u2022 Every sip a memory \u{1F378}" },
+            { id: 3, image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1470", likes: 75, caption: "Warm ambience & golden nights \u2022 Welcome to Aurous \u{1F942}" }
+        ];
+
         const fetchVibePhotos = async () => {
             try {
                 // Fetch with limit for initial load; rest loads lazily if user scrolls to next
                 const res = await fetch('/api/vibe-photos?limit=50&offset=0');
                 if (res.ok) {
-                    vibePhotos = await res.json();
-                    if (vibePhotos.length > 0) {
-                        // Pre-cache first 3 images immediately
-                        preloadImage(vibePhotos[0]?.image_url);
-                        preloadImage(vibePhotos[1]?.image_url);
-                        preloadImage(vibePhotos[2]?.image_url);
-                        renderVibePhoto(0);
-                        startVibeAutoplay();
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        vibePhotos = data;
                     }
                 }
             } catch (err) {
-                console.error("Error loading vibe gallery:", err);
+                console.warn("Vibe photos fetch warning:", err);
             }
+
+            if (!vibePhotos || vibePhotos.length === 0) {
+                vibePhotos = fallbackVibePhotos;
+            }
+
+            // Pre-cache first 3 images immediately
+            preloadImage(vibePhotos[0]?.image_url);
+            preloadImage(vibePhotos[1]?.image_url);
+            preloadImage(vibePhotos[2]?.image_url);
+            renderVibePhoto(0);
+            startVibeAutoplay();
         };
 
         const renderVibePhoto = (index) => {
