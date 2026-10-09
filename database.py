@@ -11,45 +11,59 @@ env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 load_dotenv(env_path)
 load_dotenv()  # also check current working directory
 
-# Default PostgreSQL database for Aurous
+# Default PostgreSQL database for Aurous (using explicit psycopg2 driver)
 DEFAULT_PG_URL = (
-    "postgresql://aurous_db1_user:2GS1JBtgYpsrrvnsuBvJOUNZ2pxbTUL3"
+    "postgresql+psycopg2://aurous_db1_user:2GS1JBtgYpsrrvnsuBvJOUNZ2pxbTUL3"
     "@dpg-dalqnim1egvs73fhq9qg-a.oregon-postgres.render.com/aurous_db1"
 )
 
 raw_db_url = os.getenv("DATABASE_URL", DEFAULT_PG_URL)
 
-if raw_db_url.startswith("postgres://"):
-    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
-
 sqlite_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "aurous.db")
 sqlite_url = f"sqlite:///{sqlite_file_path}"
+
+def normalize_pg_url(u: str) -> str:
+    """Ensures postgresql URLs specify the psycopg2 driver to avoid driver mismatch in SQLAlchemy 2.0"""
+    if u.startswith("postgres://"):
+        return u.replace("postgres://", "postgresql+psycopg2://", 1)
+    if u.startswith("postgresql://"):
+        return u.replace("postgresql://", "postgresql+psycopg2://", 1)
+    return u
 
 def generate_pg_candidates(primary_url: str):
     candidates = []
     
-    # 1. If URL has internal Render format (@dpg-something without .render.com),
-    # construct the public external Oregon host which is guaranteed to resolve from anywhere.
-    if "@dpg-" in primary_url and ".render.com" not in primary_url:
-        ext_url = re.sub(r'(@dpg-[^:/]+)(?::\d+)?(/|$)', r'\1.oregon-postgres.render.com\2', primary_url)
+    # 1. Primary choice: External Oregon host with psycopg2 driver and sslmode=require
+    ssl_default = DEFAULT_PG_URL + "?sslmode=require"
+    candidates.append(ssl_default)
+    candidates.append(DEFAULT_PG_URL)
+    
+    # 2. Normalized primary URL
+    norm_primary = normalize_pg_url(primary_url)
+    
+    # If primary URL has internal Render host (@dpg-... without .render.com),
+    # also add the public external Oregon equivalent
+    if "@dpg-" in norm_primary and ".render.com" not in norm_primary:
+        ext_url = re.sub(r'(@dpg-[^:/]+)(?::\d+)?(/|$)', r'\1.oregon-postgres.render.com\2', norm_primary)
         ssl_ext = ext_url + ('&' if '?' in ext_url else '?') + 'sslmode=require'
-        candidates.append(ssl_ext)
-        candidates.append(ext_url)
+        if ssl_ext not in candidates:
+            candidates.append(ssl_ext)
+        if ext_url not in candidates:
+            candidates.append(ext_url)
     else:
-        ssl_primary = primary_url + ('&' if '?' in primary_url else '?') + 'sslmode=require'
-        candidates.append(ssl_primary)
-        candidates.append(primary_url)
-        
-    # 2. Add the known default external Oregon PostgreSQL host as reliable backup
-    ssl_default = DEFAULT_PG_URL + '?sslmode=require'
-    if ssl_default not in candidates:
-        candidates.append(ssl_default)
-    if DEFAULT_PG_URL not in candidates:
-        candidates.append(DEFAULT_PG_URL)
-        
-    # 3. Also include primary URL as provided
-    if primary_url not in candidates:
-        candidates.append(primary_url)
+        ssl_p = norm_primary + ('&' if '?' in norm_primary else '?') + 'sslmode=require'
+        if ssl_p not in candidates:
+            candidates.append(ssl_p)
+        if norm_primary not in candidates:
+            candidates.append(norm_primary)
+            
+    # 3. Fallbacks using standard postgresql:// scheme (for psycopg 3 if available)
+    std_default = (
+        "postgresql://aurous_db1_user:2GS1JBtgYpsrrvnsuBvJOUNZ2pxbTUL3"
+        "@dpg-dalqnim1egvs73fhq9qg-a.oregon-postgres.render.com/aurous_db1?sslmode=require"
+    )
+    if std_default not in candidates:
+        candidates.append(std_default)
         
     return candidates
 
@@ -71,7 +85,6 @@ else:
     for candidate_url in candidates:
         masked_host = candidate_url.split("@")[-1] if "@" in candidate_url else "unknown"
         tested_candidates.append(masked_host)
-        # Try up to 2 attempts per candidate with small backoff
         for attempt in range(1, 3):
             try:
                 test_engine = create_engine(
