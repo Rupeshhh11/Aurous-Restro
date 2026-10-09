@@ -257,6 +257,17 @@ async def startup_event():
 
 
 
+@app.get("/api/db-status")
+def get_db_status():
+    from database import is_postgres, db_connection_info
+    return {
+        "status": "connected",
+        "is_postgres": is_postgres,
+        "database": "PostgreSQL (Render Persistent)" if is_postgres else "SQLite (Ephemeral Fallback)",
+        "info": db_connection_info,
+        "is_render": "RENDER" in os.environ
+    }
+
 @app.post("/api/reservations", response_model=schemas.ReservationResponse)
 def create_reservation(reservation: schemas.ReservationCreate, db: Session = Depends(get_db)):
     db_reservation = models.Reservation(**reservation.model_dump())
