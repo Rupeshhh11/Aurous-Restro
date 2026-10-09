@@ -155,6 +155,25 @@
             background: rgba(255, 68, 68, 0.1);
         }
 
+        .back-home-btn {
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            padding: 0.46rem 0.65rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 0.82rem;
+            font-weight: 500;
+            gap: 0.55rem;
+            text-decoration: none;
+        }
+
+        .back-home-btn:hover {
+            color: #ffffff;
+            background: var(--glass);
+        }
+
         .btn-shine {
             position: relative;
             overflow: hidden;
@@ -1178,7 +1197,10 @@
     <header class="mobile-header">
         <h1 class="logo" style="margin-bottom: 0; font-size: 1.2rem;">AUROUS <span
                 style="font-size: 0.7rem; letter-spacing: 2px;">ADMIN</span></h1>
-        <div onclick="logout()" style="color: #ff4444; font-size: 1.2rem;"><i class="fas fa-power-off"></i></div>
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
+            <a href="/" title="Back to Home" style="color: var(--text-dim); font-size: 1.15rem; text-decoration: none; display: flex; align-items: center;"><i class="fas fa-house"></i></a>
+            <div onclick="logout()" title="Logout" style="color: #ff4444; font-size: 1.15rem; cursor: pointer; display: flex; align-items: center;"><i class="fas fa-power-off"></i></div>
+        </div>
     </header>
 
     <nav class="mobile-nav">
@@ -1275,9 +1297,15 @@
                 </a>
             </li>
         </ul>
-        <div class="logout-btn" onclick="logout()">
-            <i class="fas fa-right-from-bracket"></i>
-            <span>Back to Home</span>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 0.25rem;">
+            <a href="/" class="back-home-btn" title="Back to Website Homepage">
+                <i class="fas fa-house"></i>
+                <span>Back to Home</span>
+            </a>
+            <div class="logout-btn" onclick="logout()" title="Logout of Admin Panel" style="margin-top: 0;">
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </div>
         </div>
     </aside>
 
