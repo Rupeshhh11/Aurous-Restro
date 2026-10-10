@@ -50,6 +50,20 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        /* Remove up/down spinner arrows from number inputs */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button,
+        #posDiscountInput::-webkit-outer-spin-button,
+        #posDiscountInput::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number],
+        #posDiscountInput {
+            -moz-appearance: textfield;
         }
 
         body {
@@ -1629,7 +1643,7 @@
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                             <span style="color:var(--text-dim); display:flex; align-items:center; gap:0.3rem;">
                                 Discount
-                                <input type="number" id="posDiscountInput" value="0" min="0" oninput="recalcPosBill()" style="background:rgba(0,0,0,0.5); border:1px solid var(--border); color:#2ecc71; width:50px; padding:2px 4px; border-radius:4px; font-size:0.75rem; text-align:right;">
+                                <input type="text" inputmode="numeric" id="posDiscountInput" value="0" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); recalcPosBill()" style="background:#141414; border:1px solid var(--border); color:#2ecc71; width:58px; padding:3px 6px; border-radius:6px; font-size:0.85rem; font-weight:700; text-align:center; outline:none;">
                                 <select id="posDiscountType" onchange="recalcPosBill()" style="background:#111; border:1px solid var(--border); color:white; border-radius:4px; font-size:0.7rem; padding:1px 2px;">
                                     <option value="flat">₹</option>
                                     <option value="percent">%</option>
@@ -4943,12 +4957,21 @@ ${receiptHtml}
             document.getElementById('posPayDue').classList.toggle('active', pay === 'due');
         }
 
-        function handlePosTableChange() {
+        let currentTablePendingOrderIds = [];
+
+        async function handlePosTableChange() {
             const tableNum = parseInt(document.getElementById('posTableSelect')?.value || 0);
             const nameInput = document.getElementById('posCustomerName');
             const phoneInput = document.getElementById('posCustomerPhone');
 
             if (!nameInput || !phoneInput) return;
+
+            // Make sure latest orders are loaded
+            if (!allOrdersData || allOrdersData.length === 0) {
+                await fetchOrders();
+            }
+
+            currentTablePendingOrderIds = [];
 
             if (tableNum > 0 && Array.isArray(allTablesData)) {
                 const table = allTablesData.find(t => t.table_number === tableNum);
@@ -4968,21 +4991,67 @@ ${receiptHtml}
                     nameInput.value = matchedRes.name;
                     phoneInput.value = matchedRes.phone || '';
 
-                    // Visual feedback highlighting auto-filled details
                     nameInput.style.borderColor = '#E0115F';
                     phoneInput.style.borderColor = '#E0115F';
                     setTimeout(() => {
                         nameInput.style.borderColor = 'var(--border)';
                         phoneInput.style.borderColor = 'var(--border)';
                     }, 1200);
+                } else {
+                    nameInput.value = '';
+                    phoneInput.value = '';
+                }
+
+                // Table-wise Order Aggregation: Load all pending/active orders for this table!
+                const tableOrders = allOrdersData.filter(o => {
+                    const matchTable = o.table_number === tableNum;
+                    const matchRes = (matchedRes && o.reservation_id === matchedRes.id) || (table && table.reservation_id && o.reservation_id === table.reservation_id);
+                    return (matchTable || matchRes) && o.status !== 'completed' && o.status !== 'cancelled';
+                });
+
+                if (tableOrders.length > 0) {
+                    currentTablePendingOrderIds = tableOrders.map(o => o.id);
+
+                    // Combine all items across multiple orders
+                    const combinedCart = [];
+                    tableOrders.forEach(o => {
+                        (o.items || []).forEach(it => {
+                            const existing = combinedCart.find(c => c.name.toLowerCase() === it.item_name.toLowerCase());
+                            if (existing) {
+                                existing.qty += it.quantity;
+                            } else {
+                                const menuItem = allMenuData.find(m => m.name.toLowerCase() === it.item_name.toLowerCase());
+                                combinedCart.push({
+                                    id: menuItem ? menuItem.id : ('tbl_item_' + it.id),
+                                    name: it.item_name,
+                                    price: it.price_per_item || (menuItem ? menuItem.price : 0),
+                                    qty: it.quantity,
+                                    is_veg: menuItem ? menuItem.is_veg : true
+                                });
+                            }
+                        });
+                    });
+
+                    posCart = combinedCart;
+                    renderPosCart();
+                    renderPosItemGrid();
+                    showToast(`📦 Table ${tableNum}: Loaded ${tableOrders.length} active order(s) (${combinedCart.reduce((s, i) => s + i.qty, 0)} items)`);
+                    return;
+                } else {
+                    posCart = [];
+                    renderPosCart();
+                    renderPosItemGrid();
                     return;
                 }
             }
 
             // For vacant table, General/Takeaway, or table without reservation:
-            // Clear so the user can enter walk-in customer details manually
             nameInput.value = '';
             phoneInput.value = '';
+            posCart = [];
+            currentTablePendingOrderIds = [];
+            renderPosCart();
+            renderPosItemGrid();
         }
 
         function renderPosItemGrid() {
@@ -5134,7 +5203,7 @@ ${receiptHtml}
                     </div>
                     <div style="display:flex; align-items:center; gap:0.4rem;">
                         <button onclick="updatePosCartQty(${idx}, -1)" style="background:rgba(255,255,255,0.08); border:none; color:white; width:24px; height:24px; border-radius:6px; cursor:pointer; font-weight:bold;">-</button>
-                        <span style="font-weight:700; color:white; font-size:0.88rem; min-width:18px; text-align:center;">${item.qty}</span>
+                        <input type="text" inputmode="numeric" value="${item.qty}" onchange="setPosCartQtyManual(${idx}, this.value)" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:white; width:32px; text-align:center; font-weight:700; font-size:0.85rem; border-radius:4px; padding:2px 0; outline:none;">
                         <button onclick="updatePosCartQty(${idx}, 1)" style="background:rgba(255,255,255,0.08); border:none; color:white; width:24px; height:24px; border-radius:6px; cursor:pointer; font-weight:bold;">+</button>
                         <span style="font-weight:700; color:white; font-size:0.88rem; min-width:45px; text-align:right;">₹${item.qty * item.price}</span>
                         <button onclick="removePosCartItem(${idx})" style="background:transparent; border:none; color:#ff4d4d; cursor:pointer; padding:2px 4px; font-size:0.8rem; margin-left:0.2rem;"><i class="fas fa-times"></i></button>
@@ -5143,6 +5212,18 @@ ${receiptHtml}
             `).join('');
 
             recalcPosBill();
+        }
+
+        function setPosCartQtyManual(index, val) {
+            if (!posCart[index]) return;
+            const num = parseInt(val) || 0;
+            if (num <= 0) {
+                posCart.splice(index, 1);
+            } else {
+                posCart[index].qty = num;
+            }
+            renderPosCart();
+            renderPosItemGrid();
         }
 
         async function posCheckoutAndPrint(settleImmediately = true) {
@@ -5180,6 +5261,16 @@ ${receiptHtml}
 
             const result = await apiFetch('/api/orders', 'POST', payload);
             if (result && result.id) {
+                // If table had pending sub-orders, mark them as completed
+                if (settleImmediately && currentTablePendingOrderIds && currentTablePendingOrderIds.length > 0) {
+                    for (const oldId of currentTablePendingOrderIds) {
+                        try {
+                            await apiFetch(`/api/admin/orders/${oldId}/status?status=completed`, 'PATCH');
+                        } catch (e) { console.error('Sub-order settle error:', oldId, e); }
+                    }
+                    currentTablePendingOrderIds = [];
+                }
+
                 showToast(settleImmediately ? '✅ Bill Generated & Settled!' : '🍳 Order Sent to Kitchen!');
                 openThermalReceiptModal(result);
                 fetchOrders();

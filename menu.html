@@ -9,9 +9,23 @@
     <link rel="stylesheet" href="assets/css/style.css?v=3.4">
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
+        * {
+            touch-action: manipulation;
+        }
+        button, a, input, select, .qty-btn, .menu-card, .cart-fab {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
         input, select, textarea {
             font-size: 16px !important;
+        }
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .qty-input {
+            -moz-appearance: textfield;
         }
         @media (max-width: 768px) {
             #auth-table { font-size: 20px !important; }
@@ -643,7 +657,7 @@
                                         <button type="button" data-qty-minus="${item.id}" class="qty-btn" aria-label="Decrease quantity">
                                             <i class="fa-solid fa-minus"></i>
                                         </button>
-                                        <span class="qty-value" id="qty-${item.id}">${qty}</span>
+                                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="qty-input" id="qty-${item.id}" value="${qty}" onchange="setCartQtyManual(${item.id}, this.value)" onclick="event.stopPropagation()" style="background:transparent; border:none; color:white; width:2.5rem; text-align:center; font-weight:700; font-size:16px; outline:none;">
                                         <button type="button" data-qty-plus="${item.id}" class="qty-btn qty-btn-plus" aria-label="Increase quantity">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -664,7 +678,7 @@
                 });
 
                 card.addEventListener('click', (e) => {
-                    if (e.target.closest('button')) return;
+                    if (e.target.closest('button, input')) return;
                     document.querySelectorAll('.menu-card').forEach(c => {
                         if (c !== card) c.classList.remove('flipped');
                     });
@@ -691,7 +705,8 @@
 
             const qtyEl = document.getElementById(`qty-${id}`);
             if (qtyEl) {
-                qtyEl.innerText = cart[id] ? cart[id].quantity : "0";
+                const val = cart[id] ? cart[id].quantity : 0;
+                qtyEl.value = val;
             }
 
             if (cart[id] && cart[id].quantity <= 0) {
@@ -715,6 +730,42 @@
                 }
             }
 
+            updateCartFab();
+        }
+
+        function setCartQtyManual(id, val) {
+            if (!activeTable) {
+                alert("You are in browsing mode. Please refresh and enter a Table Code to order.");
+                return;
+            }
+            const num = parseInt(val) || 0;
+            const item = menuData.find(m => m.id === id);
+            if (!item) return;
+
+            if (num <= 0) {
+                delete cart[id];
+            } else {
+                cart[id] = { ...item, quantity: num };
+            }
+
+            const qtyInput = document.getElementById(`qty-${id}`);
+            if (qtyInput) qtyInput.value = num > 0 ? num : 0;
+
+            const cardEl = document.querySelector(`[data-qty-plus="${id}"]`)?.closest('.menu-card');
+            if (cardEl) {
+                const ctaRow = cardEl.querySelector('.menu-card-front .flex.items-center.justify-between');
+                let pill = cardEl.querySelector('.menu-cart-pill');
+                if (num > 0) {
+                    if (!pill && ctaRow) {
+                        pill = document.createElement('span');
+                        pill.className = 'menu-cart-pill';
+                        ctaRow.appendChild(pill);
+                    }
+                    if (pill) pill.textContent = `${num} in cart`;
+                } else if (pill) {
+                    pill.remove();
+                }
+            }
             updateCartFab();
         }
 
@@ -774,7 +825,7 @@
                     </div>
                     <div class="flex items-center gap-2 bg-[#0a0a0a] rounded-full px-1 py-1 border border-white/10">
                         <button onclick="updateCartAndRender(${item.id}, -1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                        <span class="font-bold w-4 text-center text-sm">${item.quantity}</span>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" value="${item.quantity}" onchange="setCartQtyManualInModal(${item.id}, this.value)" style="background:transparent; border:none; color:white; width:2.2rem; text-align:center; font-weight:bold; font-size:16px; outline:none;">
                         <button onclick="updateCartAndRender(${item.id}, 1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
                     </div>
                 `;
@@ -782,6 +833,15 @@
             });
 
             document.getElementById('cart-final-total').innerText = `₹${total}`;
+        }
+
+        function setCartQtyManualInModal(id, val) {
+            setCartQtyManual(id, val);
+            if (Object.keys(cart).length === 0) {
+                closeCartModal();
+            } else {
+                renderCartItems();
+            }
         }
 
         function updateCartAndRender(id, change) {
@@ -839,6 +899,18 @@
                 renderMenu(e.target.dataset.cat);
             });
         });
+
+        // Double-tap zoom prevention on interactive buttons
+        let lastTouchTime = 0;
+        document.addEventListener('touchend', (e) => {
+            if (e.target.closest('button, .qty-btn, input, .menu-card, .cart-fab')) {
+                const now = Date.now();
+                if (now - lastTouchTime <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchTime = now;
+            }
+        }, { passive: false });
     </script>
 </body>
 
