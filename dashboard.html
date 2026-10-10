@@ -1265,6 +1265,10 @@
             <i class="fas fa-star"></i>
             <span>Reviews</span>
         </a>
+        <a class="mobile-nav-item" onclick="showSection('guests-crm')" id="m-nav-guests-crm">
+            <i class="fas fa-heart"></i>
+            <span>Guests</span>
+        </a>
     </nav>
 
     <aside class="sidebar">
@@ -1323,6 +1327,13 @@
                 <a class="nav-link" onclick="showSection('vibe-photos')">
                     <i class="fas fa-images"></i>
                     <span>Vibe</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" onclick="showSection('guests-crm')">
+                    <i class="fas fa-heart"></i>
+                    <span>Guests CRM</span>
+                    <span style="background:#7c3aed;color:white;font-size:0.52rem;font-weight:700;padding:1px 5px;border-radius:6px;margin-left:auto;">NEW</span>
                 </a>
             </li>
         </ul>
@@ -2019,6 +2030,129 @@
 
             </div>
         </section>
+
+        <!-- ==================== GUESTS CRM SECTION ==================== -->
+        <section id="guests-crmSection" class="content-section">
+
+            <style>
+                .crm-tabs { display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+                .crm-tab { padding:0.5rem 1.2rem; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text-dim); cursor:pointer; font-family:'Outfit',sans-serif; font-size:0.82rem; font-weight:600; transition:0.2s; }
+                .crm-tab.active { background:var(--primary); border-color:var(--primary); color:white; }
+                .crm-tab:hover:not(.active) { border-color:var(--primary); color:white; }
+
+                .crm-add-form { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:1.5rem; margin-bottom:1.5rem; }
+                .crm-form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1rem; }
+                .crm-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.9rem; color:white; font-family:'Outfit',sans-serif; font-size:0.87rem; outline:none; transition:0.2s; }
+                .crm-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(224,17,95,0.1); }
+                .crm-input option { background:#1a1a1a; }
+                .crm-save-btn { background:var(--primary); color:white; border:none; border-radius:10px; padding:0.6rem 1.5rem; font-family:'Outfit',sans-serif; font-size:0.87rem; font-weight:700; cursor:pointer; transition:0.2s; }
+                .crm-save-btn:hover { background:#ff2e7e; }
+
+                .crm-guest-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.2rem 1.4rem; display:flex; flex-direction:column; gap:0.6rem; transition:0.2s; }
+                .crm-guest-card:hover { border-color:rgba(224,17,95,0.3); }
+                .crm-guest-card.upcoming-soon { border-color:rgba(255,180,0,0.4); background:rgba(255,180,0,0.03); }
+                .crm-guest-card.today-occ { border-color:rgba(224,17,95,0.6); background:rgba(224,17,95,0.06); animation:crm-glow 2s infinite; }
+                @keyframes crm-glow { 0%,100%{box-shadow:0 0 0 rgba(224,17,95,0);} 50%{box-shadow:0 0 18px rgba(224,17,95,0.2);} }
+
+                .crm-guest-name { font-size:1rem; font-weight:700; color:white; }
+                .crm-guest-meta { font-size:0.78rem; color:var(--text-dim); display:flex; gap:1rem; flex-wrap:wrap; }
+                .crm-badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
+                .badge-birthday { background:rgba(255,100,100,0.15); color:#ff6464; border:1px solid rgba(255,100,100,0.25); }
+                .badge-anniversary { background:rgba(224,17,95,0.15); color:#E0115F; border:1px solid rgba(224,17,95,0.25); }
+                .badge-engagement { background:rgba(180,120,255,0.15); color:#b47aff; border:1px solid rgba(180,120,255,0.25); }
+                .badge-corporate { background:rgba(100,180,255,0.15); color:#64b4ff; border:1px solid rgba(100,180,255,0.25); }
+                .badge-casual { background:rgba(100,220,100,0.12); color:#64dc64; border:1px solid rgba(100,220,100,0.2); }
+                .badge-other { background:rgba(200,200,200,0.1); color:#ccc; border:1px solid rgba(200,200,200,0.15); }
+
+                .crm-days-badge { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
+                .days-today { background:rgba(224,17,95,0.2); color:#E0115F; }
+                .days-soon { background:rgba(255,180,0,0.15); color:#ffb400; }
+                .days-past { background:rgba(255,255,255,0.05); color:var(--text-dim); }
+
+                .crm-actions { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
+                .crm-action-btn { display:inline-flex; align-items:center; gap:0.4rem; padding:5px 12px; border-radius:8px; border:1px solid var(--border); background:transparent; color:white; font-family:'Outfit',sans-serif; font-size:0.75rem; cursor:pointer; transition:0.2s; }
+                .crm-action-btn:hover { border-color:var(--primary); color:var(--primary); }
+                .crm-action-btn.wp { border-color:rgba(37,211,102,0.4); color:#25d366; }
+                .crm-action-btn.wp:hover { background:rgba(37,211,102,0.1); }
+                .crm-action-btn.del { border-color:rgba(255,77,77,0.3); color:#ff4d4d; }
+                .crm-action-btn.del:hover { background:rgba(255,77,77,0.1); }
+
+                .crm-section-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin:1.5rem 0 0.75rem; padding-left:0.25rem; display:flex; align-items:center; gap:0.5rem; }
+                .crm-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+                .crm-empty { text-align:center; padding:3rem 1rem; color:var(--text-dim); font-size:0.9rem; }
+                .crm-guest-list { display:flex; flex-direction:column; gap:0.75rem; }
+
+                .crm-search-row { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+                .crm-search-input { flex:1; min-width:180px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.55rem 1rem; color:white; font-family:'Outfit',sans-serif; font-size:0.85rem; outline:none; }
+                .crm-search-input:focus { border-color:var(--primary); }
+            </style>
+
+            <!-- Add Guest Form -->
+            <div class="crm-add-form" id="crmAddFormWrap">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3 style="font-size:1rem; font-weight:700;"><i class="fas fa-user-plus" style="color:var(--primary); margin-right:0.4rem;"></i> Add / Edit Guest</h3>
+                    <button class="crm-save-btn" style="background:transparent; border:1px solid var(--border); color:var(--text-dim); padding:0.35rem 0.9rem; font-size:0.75rem;" onclick="crmToggleForm()">Hide</button>
+                </div>
+                <input type="hidden" id="crmEditId">
+                <div class="crm-form-grid">
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Full Name *</div>
+                        <input class="crm-input" id="crmName" placeholder="Guest Name" type="text">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Phone *</div>
+                        <input class="crm-input" id="crmPhone" placeholder="+91 XXXXXXXXXX" type="tel">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Occasion</div>
+                        <select class="crm-input" id="crmOccasion">
+                            <option value="casual">Casual / Regular Visitor</option>
+                            <option value="birthday">Birthday 🎂</option>
+                            <option value="anniversary">Anniversary 💑</option>
+                            <option value="engagement">Engagement 💍</option>
+                            <option value="corporate">Corporate / Business</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div id="crmDateWrap">
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Occasion Date</div>
+                        <input class="crm-input" id="crmDate" type="date">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Last Visit</div>
+                        <input class="crm-input" id="crmLastVisit" type="date">
+                    </div>
+                    <div>
+                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Fav Item / Note</div>
+                        <input class="crm-input" id="crmNote" placeholder="e.g. Loves Biryani, Veg only..." type="text">
+                    </div>
+                </div>
+                <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+                    <button class="crm-save-btn" onclick="crmSaveGuest()"><i class="fas fa-save" style="margin-right:0.4rem;"></i>Save Guest</button>
+                    <button class="crm-save-btn" style="background:transparent; border:1px solid var(--border); color:var(--text-dim);" onclick="crmClearForm()">Clear</button>
+                </div>
+            </div>
+
+            <!-- Search + Filter row -->
+            <div class="crm-search-row">
+                <input class="crm-search-input" id="crmSearch" placeholder="🔍  Search guest by name or phone..." oninput="crmRender()">
+                <div class="crm-tabs" style="margin:0;">
+                    <button class="crm-tab active" id="crm-tab-all" onclick="crmSetTab('all')">All</button>
+                    <button class="crm-tab" id="crm-tab-birthday" onclick="crmSetTab('birthday')">🎂 Birthday</button>
+                    <button class="crm-tab" id="crm-tab-anniversary" onclick="crmSetTab('anniversary')">💑 Anniversary</button>
+                    <button class="crm-tab" id="crm-tab-casual" onclick="crmSetTab('casual')">☕ Casual</button>
+                    <button class="crm-tab" id="crm-tab-other" onclick="crmSetTab('other')">More</button>
+                </div>
+                <button class="crm-save-btn" onclick="crmToggleForm()" style="font-size:0.8rem; padding:0.5rem 1rem;"><i class="fas fa-plus" style="margin-right:0.3rem;"></i>Add Guest</button>
+            </div>
+
+            <!-- Guest List -->
+            <div id="crmGuestList"></div>
+
+        </section>
+        <!-- ==================== END GUESTS CRM SECTION ==================== -->
+
     </main>
 
     <!-- Menu Item Modal -->
@@ -2945,6 +3079,8 @@
                 title = 'POS & Quick Billing';
             } else if (section === 'bill-settings') {
                 title = 'Bill & Receipt Settings';
+            } else if (section === 'guests-crm') {
+                title = 'Guests CRM';
             }
             document.getElementById('sectionTitle').textContent = title;
 
@@ -2991,6 +3127,8 @@
             } else if (section === 'vibe-photos') {
                 loadVibePhotos();
                 loadBannerSettings();
+            } else if (section === 'guests-crm') {
+                crmRender();
             }
         }
 
@@ -5612,6 +5750,328 @@ ${receiptHtml}
                 }
             } catch (e) { /* silently ignore network errors */ }
         }, 8000);
+
+        // ==================== GUESTS CRM JS ====================
+        let crmGuests = JSON.parse(localStorage.getItem('aurous_guests_crm') || '[]');
+        let crmCurrentTab = 'all';
+        let crmFormVisible = true;
+
+        function crmSave() {
+            localStorage.setItem('aurous_guests_crm', JSON.stringify(crmGuests));
+        }
+
+        function crmDaysUntilNext(dateStr) {
+            if (!dateStr) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const parts = dateStr.split('-');
+            if (parts.length < 3) return null;
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+            let next = new Date(today.getFullYear(), month, day);
+            if (next < today) {
+                next.setFullYear(today.getFullYear() + 1);
+            }
+            return Math.round((next - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function crmOccasionBadge(occ) {
+            const map = {
+                birthday: 'badge-birthday',
+                anniversary: 'badge-anniversary',
+                engagement: 'badge-engagement',
+                corporate: 'badge-corporate',
+                casual: 'badge-casual',
+                other: 'badge-other'
+            };
+            const labels = {
+                birthday: '🎂 Birthday',
+                anniversary: '💑 Anniversary',
+                engagement: '💍 Engagement',
+                corporate: '💼 Corporate',
+                casual: '☕ Casual Regular',
+                other: '🎉 Other'
+            };
+            return `<span class="crm-badge ${map[occ] || 'badge-other'}">${labels[occ] || occ}</span>`;
+        }
+
+        function crmDaysBadge(days) {
+            if (days === null || days === undefined) return '';
+            if (days === 0) return '<span class="crm-days-badge days-today">🎉 TODAY!</span>';
+            if (days === 1) return '<span class="crm-days-badge days-soon">Tomorrow!</span>';
+            if (days <= 7) return `<span class="crm-days-badge days-soon">in ${days} days</span>`;
+            if (days <= 30) return `<span class="crm-days-badge days-soon">in ${days} days</span>`;
+            return `<span class="crm-days-badge days-past">in ${days} days</span>`;
+        }
+
+        function crmWpMessage(id) {
+            const g = crmGuests.find(x => String(x.id) === String(id));
+            if (!g) return;
+            const isCasual = g.occasion === 'casual';
+            let msg = '';
+            if (isCasual) {
+                msg = `Hey ${g.name}! 😊 Dining at Aurous Restro feels incomplete without you. It's been a while since your last visit! Kab aa rahe ho wapas? Your favorite table is waiting for you! 🍽️✨ Book your spot today: https://aurous-restro.onrender.com`;
+            } else if (g.occasion === 'birthday') {
+                msg = `Happy Birthday ${g.name}! 🎂🎉 Wishing you a fabulous day filled with love and laughter! Celebrate your special day with us at Aurous Restro — we'd love to make it unforgettable for you! 🎁🥂✨`;
+            } else if (g.occasion === 'anniversary') {
+                msg = `Happy Anniversary ${g.name}! 💑❤️ Wishing you both a very happy anniversary! Celebrate this special milestone with a candlelit dinner at Aurous Restro. Reserve your romantic table: https://aurous-restro.onrender.com 🥂✨`;
+            } else if (g.occasion === 'engagement') {
+                msg = `Heartiest Congratulations ${g.name} on your engagement! 💍🎊 Aurous Restro would love to celebrate your happy beginnings with exquisite flavors! 🥂✨`;
+            } else if (g.occasion === 'corporate') {
+                msg = `Hello ${g.name}! 💼 Planning your next business lunch or dinner? Aurous Restro offers a premium ambiance and gourmet cuisine. Let us host your team! 🍽️✨`;
+            } else {
+                msg = `Hi ${g.name}! 🌟 We'd love to welcome you back to Aurous Restro soon! Experience amazing vibes and delicious food with us: https://aurous-restro.onrender.com ✨`;
+            }
+
+            const cleanPhone = (g.phone || '').replace(/\D/g, '');
+            const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
+            window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function crmToggleForm() {
+            crmFormVisible = !crmFormVisible;
+            const wrap = document.getElementById('crmAddFormWrap');
+            if (wrap) wrap.style.display = crmFormVisible ? 'block' : 'none';
+        }
+
+        function crmClearForm() {
+            document.getElementById('crmEditId').value = '';
+            document.getElementById('crmName').value = '';
+            document.getElementById('crmPhone').value = '';
+            document.getElementById('crmOccasion').value = 'casual';
+            document.getElementById('crmDate').value = '';
+            document.getElementById('crmLastVisit').value = '';
+            document.getElementById('crmNote').value = '';
+        }
+
+        function crmSaveGuest() {
+            const nameEl = document.getElementById('crmName');
+            const phoneEl = document.getElementById('crmPhone');
+            const name = nameEl ? nameEl.value.trim() : '';
+            const phone = phoneEl ? phoneEl.value.trim() : '';
+
+            if (!name || !phone) {
+                if (typeof showToast === 'function') showToast('⚠️ Name and Phone number are required!');
+                else alert('Name and Phone number are required!');
+                return;
+            }
+
+            const editId = document.getElementById('crmEditId').value;
+            const occasion = document.getElementById('crmOccasion').value;
+            const date = document.getElementById('crmDate').value;
+            const lastVisit = document.getElementById('crmLastVisit').value;
+            const note = document.getElementById('crmNote').value.trim();
+
+            if (editId) {
+                const idx = crmGuests.findIndex(g => String(g.id) === String(editId));
+                if (idx > -1) {
+                    crmGuests[idx] = {
+                        ...crmGuests[idx],
+                        name,
+                        phone,
+                        occasion,
+                        date,
+                        lastVisit,
+                        note,
+                        updatedAt: new Date().toISOString()
+                    };
+                }
+            } else {
+                const newGuest = {
+                    id: Date.now().toString(),
+                    name,
+                    phone,
+                    occasion,
+                    date,
+                    lastVisit,
+                    note,
+                    addedOn: new Date().toISOString()
+                };
+                crmGuests.push(newGuest);
+            }
+
+            crmSave();
+            crmClearForm();
+            crmRender();
+            if (typeof showToast === 'function') showToast('✅ Guest saved successfully!');
+        }
+
+        function crmEditGuest(id) {
+            const g = crmGuests.find(x => String(x.id) === String(id));
+            if (!g) return;
+            document.getElementById('crmEditId').value = g.id;
+            document.getElementById('crmName').value = g.name || '';
+            document.getElementById('crmPhone').value = g.phone || '';
+            document.getElementById('crmOccasion').value = g.occasion || 'casual';
+            document.getElementById('crmDate').value = g.date || '';
+            document.getElementById('crmLastVisit').value = g.lastVisit || '';
+            document.getElementById('crmNote').value = g.note || '';
+
+            if (!crmFormVisible) crmToggleForm();
+            const wrap = document.getElementById('crmAddFormWrap');
+            if (wrap) wrap.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function crmDeleteGuest(id) {
+            if (!confirm('Are you sure you want to delete this guest?')) return;
+            crmGuests = crmGuests.filter(g => String(g.id) !== String(id));
+            crmSave();
+            crmRender();
+            if (typeof showToast === 'function') showToast('🗑️ Guest removed');
+        }
+
+        function crmSetTab(tab) {
+            crmCurrentTab = tab;
+            document.querySelectorAll('.crm-tab').forEach(t => t.classList.remove('active'));
+            const el = document.getElementById('crm-tab-' + tab);
+            if (el) el.classList.add('active');
+            crmRender();
+        }
+
+        function crmCardHTML(g) {
+            const isRecurring = ['birthday', 'anniversary', 'engagement'].includes(g.occasion);
+            const days = (isRecurring && g.date) ? crmDaysUntilNext(g.date) : null;
+            const cardClass = days === 0 ? 'crm-guest-card today-occ' : (days !== null && days <= 7 ? 'crm-guest-card upcoming-soon' : 'crm-guest-card');
+            
+            let dateDisp = '';
+            if (g.date) {
+                try {
+                    const parts = g.date.split('-');
+                    if (parts.length === 3) {
+                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                        dateDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+                    }
+                } catch(e) { dateDisp = g.date; }
+            }
+
+            let lastVisitDisp = 'Not recorded';
+            if (g.lastVisit) {
+                try {
+                    const parts = g.lastVisit.split('-');
+                    if (parts.length === 3) {
+                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                        lastVisitDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                    }
+                } catch(e) { lastVisitDisp = g.lastVisit; }
+            }
+
+            return `
+            <div class="${cardClass}">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+                    <div>
+                        <div class="crm-guest-name">
+                            ${g.name} 
+                            ${crmOccasionBadge(g.occasion)} 
+                            ${days !== null ? crmDaysBadge(days) : ''}
+                        </div>
+                        <div class="crm-guest-meta" style="margin-top:0.4rem;">
+                            <span><i class="fas fa-phone" style="font-size:0.75rem; color:var(--primary);"></i> ${g.phone}</span>
+                            ${dateDisp ? `<span><i class="fas fa-calendar-alt" style="font-size:0.75rem; color:#ffb400;"></i> Event: ${dateDisp}</span>` : ''}
+                            <span><i class="fas fa-history" style="font-size:0.75rem; color:var(--text-dim);"></i> Last visit: ${lastVisitDisp}</span>
+                            ${g.note ? `<span><i class="fas fa-comment-alt" style="font-size:0.75rem; color:var(--text-dim);"></i> ${g.note}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="crm-actions">
+                    <button class="crm-action-btn wp" onclick="crmWpMessage('${g.id}')">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Message
+                    </button>
+                    <button class="crm-action-btn" onclick="crmEditGuest('${g.id}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="crm-action-btn del" onclick="crmDeleteGuest('${g.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>`;
+        }
+
+        function crmRender() {
+            const container = document.getElementById('crmGuestList');
+            if (!container) return;
+
+            const search = (document.getElementById('crmSearch')?.value || '').toLowerCase().trim();
+
+            let filtered = crmGuests.filter(g => {
+                let matchTab = true;
+                if (crmCurrentTab === 'other') {
+                    matchTab = !['birthday', 'anniversary', 'casual'].includes(g.occasion);
+                } else if (crmCurrentTab !== 'all') {
+                    matchTab = g.occasion === crmCurrentTab;
+                }
+                const matchSearch = !search ||
+                    (g.name && g.name.toLowerCase().includes(search)) ||
+                    (g.phone && g.phone.includes(search)) ||
+                    (g.note && g.note.toLowerCase().includes(search));
+                return matchTab && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="crm-empty">
+                        <i class="fas fa-address-book" style="font-size:2.5rem; margin-bottom:0.75rem; display:block; opacity:0.3; color:var(--primary);"></i>
+                        <p style="font-size:0.95rem; font-weight:600; color:#fff;">No guests recorded yet</p>
+                        <p style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">Add your guest details above to track occasions, birthdays, and automate WhatsApp reconnects!</p>
+                    </div>`;
+                return;
+            }
+
+            const isRecurring = occ => ['birthday', 'anniversary', 'engagement'].includes(occ);
+
+            // Separate occasion guests vs casual / regular visitors
+            const occasionGuests = filtered.filter(g => isRecurring(g.occasion) && g.date);
+            const casualGuests = filtered.filter(g => !(isRecurring(g.occasion) && g.date));
+
+            // Smart Sort for Occasion Guests:
+            // 1. Closest upcoming recurrence floats to top (0 = TODAY, then 1, 2, 3...)
+            occasionGuests.sort((a, b) => {
+                const da = crmDaysUntilNext(a.date);
+                const db = crmDaysUntilNext(b.date);
+                if (da !== null && db !== null) return da - db;
+                if (da !== null) return -1;
+                if (db !== null) return 1;
+                return 0;
+            });
+
+            // Smart Sort for Casual / Regular Guests:
+            // Most recent visit first
+            casualGuests.sort((a, b) => {
+                const va = a.lastVisit || '';
+                const vb = b.lastVisit || '';
+                return vb.localeCompare(va);
+            });
+
+            let html = '';
+
+            if (crmCurrentTab === 'all') {
+                if (occasionGuests.length > 0) {
+                    html += `
+                        <div class="crm-section-label">
+                            <i class="fas fa-calendar-check" style="color:var(--primary);"></i> 
+                            Upcoming Occasions & Celebrations (${occasionGuests.length})
+                        </div>
+                        <div class="crm-guest-list">
+                            ${occasionGuests.map(g => crmCardHTML(g)).join('')}
+                        </div>`;
+                }
+
+                if (casualGuests.length > 0) {
+                    html += `
+                        <div class="crm-section-label" style="margin-top:2rem;">
+                            <i class="fas fa-coffee" style="color:#64dc64;"></i> 
+                            Casual / Regular Visitors (${casualGuests.length}) — Reconnect Follow-up
+                        </div>
+                        <div class="crm-guest-list">
+                            ${casualGuests.map(g => crmCardHTML(g)).join('')}
+                        </div>`;
+                }
+            } else {
+                html += `<div class="crm-guest-list">${filtered.map(g => crmCardHTML(g)).join('')}</div>`;
+            }
+
+            container.innerHTML = html;
+        }
+        // ==================== END GUESTS CRM JS ====================
     </script>
 </body>
 
