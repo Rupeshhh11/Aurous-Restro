@@ -2035,103 +2035,298 @@
         <section id="guests-crmSection" class="content-section">
 
             <style>
-                .crm-tabs { display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap; }
-                .crm-tab { padding:0.5rem 1.2rem; border-radius:20px; border:1px solid var(--border); background:transparent; color:var(--text-dim); cursor:pointer; font-family:'Outfit',sans-serif; font-size:0.82rem; font-weight:600; transition:0.2s; }
-                .crm-tab.active { background:var(--primary); border-color:var(--primary); color:white; }
-                .crm-tab:hover:not(.active) { border-color:var(--primary); color:white; }
+                .crm-filter-bar {
+                    display: flex;
+                    gap: 0.75rem;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    background: var(--card-bg);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    padding: 0.85rem 1.2rem;
+                    margin-bottom: 1.2rem;
+                }
 
-                .crm-stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem; }
-                .crm-stat-box { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:4px; }
-                .crm-stat-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); }
-                .crm-stat-value { font-size:1.6rem; font-weight:700; color:white; }
+                .crm-search-input {
+                    flex: 1;
+                    min-width: 220px;
+                    background: rgba(255, 255, 255, 0.04);
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    padding: 0.55rem 0.9rem;
+                    color: white;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.85rem;
+                    outline: none;
+                }
+                .crm-search-input:focus { border-color: var(--primary); }
 
-                .crm-guest-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.2rem 1.4rem; display:flex; flex-direction:column; gap:0.6rem; transition:0.2s; }
-                .crm-guest-card:hover { border-color:rgba(224,17,95,0.3); }
-                .crm-guest-card.upcoming-soon { border-color:rgba(255,180,0,0.4); background:rgba(255,180,0,0.03); }
-                .crm-guest-card.today-occ { border-color:rgba(224,17,95,0.6); background:rgba(224,17,95,0.06); animation:crm-glow 2s infinite; }
-                @keyframes crm-glow { 0%,100%{box-shadow:0 0 0 rgba(224,17,95,0);} 50%{box-shadow:0 0 18px rgba(224,17,95,0.2);} }
+                .crm-select-filter {
+                    background: rgba(255, 255, 255, 0.04);
+                    border: 1px solid var(--border);
+                    border-radius: 8px;
+                    padding: 0.55rem 0.9rem;
+                    color: white;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.82rem;
+                    outline: none;
+                    cursor: pointer;
+                }
+                .crm-select-filter option { background: #181818; color: #fff; }
 
-                .crm-guest-name { font-size:1.05rem; font-weight:700; color:white; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
-                .crm-guest-meta { font-size:0.8rem; color:var(--text-dim); display:flex; gap:1.2rem; flex-wrap:wrap; }
-                .crm-badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
-                .badge-birthday { background:rgba(255,100,100,0.15); color:#ff6464; border:1px solid rgba(255,100,100,0.25); }
-                .badge-anniversary { background:rgba(224,17,95,0.15); color:#E0115F; border:1px solid rgba(224,17,95,0.25); }
-                .badge-engagement { background:rgba(180,120,255,0.15); color:#b47aff; border:1px solid rgba(180,120,255,0.25); }
-                .badge-corporate { background:rgba(100,180,255,0.15); color:#64b4ff; border:1px solid rgba(100,180,255,0.25); }
-                .badge-casual { background:rgba(100,220,100,0.12); color:#64dc64; border:1px solid rgba(100,220,100,0.2); }
-                .badge-other { background:rgba(200,200,200,0.1); color:#ccc; border:1px solid rgba(200,200,200,0.15); }
+                /* Clean Document / Table Layout (Word Style) */
+                .crm-table-container {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border);
+                    border-radius: 12px;
+                    overflow-x: auto;
+                }
 
-                /* Prominent Visit Frequency Badges */
-                .crm-visit-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; letter-spacing:0.3px; }
-                .crm-visit-badge.v-first { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
-                .crm-visit-badge.v-repeat { background:rgba(255,180,0,0.15); color:#ffb400; border:1px solid rgba(255,180,0,0.35); }
-                .crm-visit-badge.v-frequent { background:rgba(224,17,95,0.18); color:#ff2e7e; border:1px solid rgba(224,17,95,0.35); box-shadow:0 0 10px rgba(224,17,95,0.15); }
-                .crm-visit-badge.v-vip { background:linear-gradient(135deg, rgba(124,58,237,0.25), rgba(224,17,95,0.25)); color:#e9d5ff; border:1px solid rgba(180,120,255,0.4); box-shadow:0 0 12px rgba(180,120,255,0.2); }
+                .crm-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    text-align: left;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.86rem;
+                    min-width: 750px;
+                }
 
-                .crm-days-badge { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
-                .days-today { background:rgba(224,17,95,0.2); color:#E0115F; }
-                .days-soon { background:rgba(255,180,0,0.15); color:#ffb400; }
-                .days-past { background:rgba(255,255,255,0.05); color:var(--text-dim); }
+                .crm-table th {
+                    background: rgba(255, 255, 255, 0.03);
+                    color: var(--text-dim);
+                    padding: 0.85rem 1.1rem;
+                    font-weight: 600;
+                    font-size: 0.74rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.7px;
+                    border-bottom: 1px solid var(--border);
+                }
 
-                .crm-actions { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
-                .crm-action-btn { display:inline-flex; align-items:center; gap:0.4rem; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:transparent; color:white; font-family:'Outfit',sans-serif; font-size:0.78rem; cursor:pointer; transition:0.2s; }
-                .crm-action-btn:hover { border-color:var(--primary); color:var(--primary); }
-                .crm-action-btn.wp { border-color:rgba(37,211,102,0.5); color:#25d366; background:rgba(37,211,102,0.05); }
-                .crm-action-btn.wp:hover { background:rgba(37,211,102,0.15); }
+                .crm-table td {
+                    padding: 0.95rem 1.1rem;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                    color: #e6e6e6;
+                    vertical-align: middle;
+                }
 
-                .crm-section-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin:1.5rem 0 0.75rem; padding-left:0.25rem; display:flex; align-items:center; gap:0.5rem; }
-                .crm-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+                .crm-table tr:hover td {
+                    background: rgba(255, 255, 255, 0.02);
+                }
 
-                .crm-empty { text-align:center; padding:3rem 1rem; color:var(--text-dim); font-size:0.9rem; }
-                .crm-guest-list { display:flex; flex-direction:column; gap:0.75rem; }
+                .crm-table tr:last-child td {
+                    border-bottom: none;
+                }
 
-                .crm-search-row { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
-                .crm-search-input { flex:1; min-width:200px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.6rem 1rem; color:white; font-family:'Outfit',sans-serif; font-size:0.85rem; outline:none; }
-                .crm-search-input:focus { border-color:var(--primary); }
+                /* Clickable Visit Badge with View Details icon */
+                .crm-visit-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 5px 12px;
+                    border-radius: 6px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    background: rgba(255, 255, 255, 0.04);
+                    color: #fff;
+                    cursor: pointer;
+                    transition: 0.2s;
+                    font-family: 'Outfit', sans-serif;
+                }
+                .crm-visit-btn:hover {
+                    border-color: var(--primary);
+                    color: var(--primary);
+                    background: rgba(224, 17, 95, 0.08);
+                }
+                .crm-visit-btn.repeat {
+                    border-color: rgba(255, 180, 0, 0.4);
+                    color: #ffb400;
+                    background: rgba(255, 180, 0, 0.08);
+                }
+                .crm-visit-btn.repeat:hover {
+                    background: rgba(255, 180, 0, 0.18);
+                }
+
+                /* WhatsApp Button */
+                .crm-wp-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 6px 14px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(37, 211, 102, 0.4);
+                    background: rgba(37, 211, 102, 0.08);
+                    color: #25d366;
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: 0.2s;
+                }
+                .crm-wp-btn:hover {
+                    background: rgba(37, 211, 102, 0.2);
+                    border-color: #25d366;
+                }
+
+                /* Occasion badge */
+                .crm-occ-badge {
+                    display: inline-block;
+                    padding: 3px 8px;
+                    border-radius: 6px;
+                    font-size: 0.72rem;
+                    font-weight: 600;
+                }
+                .occ-birthday { background: rgba(255, 100, 100, 0.15); color: #ff6464; border: 1px solid rgba(255, 100, 100, 0.3); }
+                .occ-anniversary { background: rgba(224, 17, 95, 0.15); color: #E0115F; border: 1px solid rgba(224, 17, 95, 0.3); }
+                .occ-date_night { background: rgba(224, 17, 95, 0.15); color: #ff4d8d; border: 1px solid rgba(224, 17, 95, 0.3); }
+                .occ-corporate { background: rgba(100, 180, 255, 0.15); color: #64b4ff; border: 1px solid rgba(100, 180, 255, 0.3); }
+                .occ-casual { background: rgba(255, 255, 255, 0.06); color: #bbb; border: 1px solid rgba(255, 255, 255, 0.1); }
+                .occ-other { background: rgba(200, 200, 200, 0.1); color: #ccc; border: 1px solid rgba(200, 200, 200, 0.15); }
+
+                /* Days badge */
+                .crm-days-tag {
+                    display: inline-block;
+                    margin-left: 6px;
+                    padding: 2px 7px;
+                    border-radius: 4px;
+                    font-size: 0.68rem;
+                    font-weight: 700;
+                }
+                .crm-days-tag.today { background: rgba(224, 17, 95, 0.25); color: #ff2e7e; border: 1px solid rgba(224, 17, 95, 0.4); }
+                .crm-days-tag.soon { background: rgba(255, 180, 0, 0.2); color: #ffb400; border: 1px solid rgba(255, 180, 0, 0.35); }
+                .crm-days-tag.later { background: rgba(255, 255, 255, 0.05); color: var(--text-dim); }
+
+                /* Visit Detail Modal */
+                .crm-modal-card {
+                    background: #141414;
+                    border: 1px solid var(--border);
+                    border-radius: 16px;
+                    width: 95%;
+                    max-width: 680px;
+                    max-height: 85vh;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    box-shadow: 0 10px 40px rgba(0,0,0,0.85);
+                }
+
+                .crm-modal-header {
+                    padding: 1.2rem 1.5rem;
+                    border-bottom: 1px solid var(--border);
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background: rgba(255, 255, 255, 0.02);
+                }
+
+                .crm-modal-body {
+                    padding: 1.2rem 1.5rem;
+                    overflow-y: auto;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.85rem;
+                }
+
+                .crm-history-item {
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border-radius: 10px;
+                    padding: 1rem 1.2rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .crm-history-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                    gap: 0.75rem;
+                    font-size: 0.82rem;
+                }
+
+                .crm-history-meta {
+                    color: var(--text-dim);
+                    font-size: 0.7rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                .crm-history-val {
+                    color: #fff;
+                    font-weight: 600;
+                    margin-top: 2px;
+                }
             </style>
 
-            <!-- Stats Bar -->
-            <div class="crm-stats-grid">
-                <div class="crm-stat-box">
-                    <span class="crm-stat-label">Total Unique Guests</span>
-                    <span class="crm-stat-value" id="crmStatTotal">0</span>
-                </div>
-                <div class="crm-stat-box">
-                    <span class="crm-stat-label">Repeat Visitors</span>
-                    <span class="crm-stat-value" id="crmStatRepeat" style="color:#ffb400;">0</span>
-                </div>
-                <div class="crm-stat-box">
-                    <span class="crm-stat-label">Celebration Occasions</span>
-                    <span class="crm-stat-value" id="crmStatCelebrations" style="color:#ff6464;">0</span>
-                </div>
-                <div class="crm-stat-box" style="justify-content:center;">
-                    <div style="font-size:0.72rem; color:#2ecc71; font-weight:700; display:flex; align-items:center; gap:6px;">
-                        <i class="fas fa-check-circle"></i> Auto-Synced
-                    </div>
-                    <div style="font-size:0.72rem; color:var(--text-dim); margin-top:3px;">
-                        Captures all reservation customers
-                    </div>
+            <!-- Search + Filters Bar (Replaced Counter Boxes) -->
+            <div class="crm-filter-bar">
+                <input class="crm-search-input" id="crmSearch" placeholder="🔍 Search by name or phone..." oninput="crmRender()">
+
+                <select class="crm-select-filter" id="crmFilterOccasion" onchange="crmRender()">
+                    <option value="all">All Occasions</option>
+                    <option value="birthday">🎂 Birthday</option>
+                    <option value="anniversary">💑 Anniversary</option>
+                    <option value="date_night">🥂 Date Night</option>
+                    <option value="corporate">💼 Corporate</option>
+                    <option value="casual">☕ Casual Dining</option>
+                    <option value="other">Other Occasion</option>
+                </select>
+
+                <select class="crm-select-filter" id="crmFilterVisits" onchange="crmRender()">
+                    <option value="all">All Visit Counts</option>
+                    <option value="repeat">🔥 Repeat Guests (2+ Visits)</option>
+                    <option value="single">👤 Single Visit (1 Visit)</option>
+                </select>
+
+                <select class="crm-select-filter" id="crmFilterTiming" onchange="crmRender()">
+                    <option value="all">All Event Dates</option>
+                    <option value="today">🎉 Today's Occasion</option>
+                    <option value="week">⏳ Upcoming (Next 7 Days)</option>
+                    <option value="month">📅 Upcoming (Next 30 Days)</option>
+                </select>
+
+                <div style="font-size:0.8rem; color:var(--text-dim); margin-left:auto; display:flex; align-items:center; gap:6px;">
+                    <span id="crmCountDisplay" style="color:#fff; font-weight:700;">0</span> guests recorded
                 </div>
             </div>
 
-            <!-- Search + Filter row -->
-            <div class="crm-search-row">
-                <input class="crm-search-input" id="crmSearch" placeholder="🔍 Search guest by name or phone..." oninput="crmRender()">
-                <div class="crm-tabs" style="margin:0;">
-                    <button class="crm-tab active" id="crm-tab-all" onclick="crmSetTab('all')">All Guests</button>
-                    <button class="crm-tab" id="crm-tab-repeat" onclick="crmSetTab('repeat')">🔥 Repeat Visitors</button>
-                    <button class="crm-tab" id="crm-tab-birthday" onclick="crmSetTab('birthday')">🎂 Birthday</button>
-                    <button class="crm-tab" id="crm-tab-anniversary" onclick="crmSetTab('anniversary')">💑 Anniversary</button>
-                    <button class="crm-tab" id="crm-tab-casual" onclick="crmSetTab('casual')">☕ Casual</button>
-                    <button class="crm-tab" id="crm-tab-other" onclick="crmSetTab('other')">More</button>
-                </div>
+            <!-- Clean Document / Table View -->
+            <div class="crm-table-container">
+                <table class="crm-table">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Phone</th>
+                            <th>Total Visits</th>
+                            <th>Occasion &amp; Event</th>
+                            <th>Last Visit Details</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="crmTableBody">
+                        <!-- Populated by crmRender() -->
+                    </tbody>
+                </table>
             </div>
-
-            <!-- Guest List -->
-            <div id="crmGuestList"></div>
 
         </section>
         <!-- ==================== END GUESTS CRM SECTION ==================== -->
+
+        <!-- Visit History Breakdown Modal -->
+        <div id="crmVisitsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:4500; align-items:center; justify-content:center; padding:1rem;" onclick="if(event.target===this) crmCloseVisitsModal();">
+            <div class="crm-modal-card">
+                <div class="crm-modal-header">
+                    <div>
+                        <h3 id="crmModalGuestName" style="color:#fff; font-size:1.1rem; font-weight:700; margin:0;">Guest Visit History</h3>
+                        <p id="crmModalGuestPhone" style="color:var(--text-dim); font-size:0.8rem; margin:2px 0 0;"></p>
+                    </div>
+                    <button onclick="crmCloseVisitsModal()" style="background:transparent; border:none; color:var(--text-dim); font-size:1.3rem; cursor:pointer; padding:4px 8px;">✕</button>
+                </div>
+                <div class="crm-modal-body" id="crmModalVisitsList">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
 
     </main>
 
@@ -5736,7 +5931,6 @@ ${receiptHtml}
 
         // ==================== GUESTS CRM JS ====================
         let crmGuests = JSON.parse(localStorage.getItem('aurous_guests_crm') || '[]');
-        let crmCurrentTab = 'all';
 
         function crmNormalizePhone(phone) {
             if (!phone) return '';
@@ -5759,7 +5953,6 @@ ${receiptHtml}
         // Automatic Sync: Aggregates reservations into unique customer CRM profiles
         function crmSyncFromReservations() {
             if (!Array.isArray(allReservationsData) || allReservationsData.length === 0) {
-                crmUpdateStats();
                 return;
             }
 
@@ -5817,14 +6010,12 @@ ${receiptHtml}
 
                 const existing = existingMap.get(phoneKey) || {};
 
-                // Summary note: recent party size & any special request
+                // Summary note
                 let note = existing.note || '';
                 if (!note) {
                     const reqs = resList.map(r => r.special_request).filter(Boolean);
                     if (reqs.length > 0) {
                         note = reqs[reqs.length - 1];
-                    } else if (latestRes.guest_count) {
-                        note = `Recent booking for ${latestRes.guest_count} guests`;
                     }
                 }
 
@@ -5839,23 +6030,26 @@ ${receiptHtml}
                     lastVisit: latestRes.date || existing.lastVisit || '',
                     firstVisit: earliestRes.date || '',
                     note: note,
-                    lastStatus: latestRes.status || ''
+                    lastGuestCount: latestRes.guest_count,
+                    lastStatus: latestRes.status || '',
+                    history: resList.map(r => ({
+                        id: r.id,
+                        date: r.date,
+                        hour: r.hour,
+                        minute: r.minute,
+                        ampm: r.ampm,
+                        time: r.time,
+                        guest_count: r.guest_count,
+                        occasion: r.occasion,
+                        table_id: r.table_id,
+                        status: r.status,
+                        special_request: r.special_request
+                    }))
                 });
             });
 
             crmGuests = syncedGuests;
             localStorage.setItem('aurous_guests_crm', JSON.stringify(crmGuests));
-            crmUpdateStats();
-        }
-
-        function crmUpdateStats() {
-            const totalEl = document.getElementById('crmStatTotal');
-            const repeatEl = document.getElementById('crmStatRepeat');
-            const celebEl = document.getElementById('crmStatCelebrations');
-
-            if (totalEl) totalEl.textContent = crmGuests.length;
-            if (repeatEl) repeatEl.textContent = crmGuests.filter(g => g.visits > 1).length;
-            if (celebEl) celebEl.textContent = crmGuests.filter(g => ['birthday', 'anniversary', 'engagement', 'date_night'].includes(g.occasion)).length;
         }
 
         function crmDaysUntilNext(dateStr) {
@@ -5875,13 +6069,13 @@ ${receiptHtml}
 
         function crmOccasionBadge(occ) {
             const map = {
-                birthday: 'badge-birthday',
-                anniversary: 'badge-anniversary',
-                engagement: 'badge-engagement',
-                date_night: 'badge-anniversary',
-                corporate: 'badge-corporate',
-                casual: 'badge-casual',
-                other: 'badge-other'
+                birthday: 'occ-birthday',
+                anniversary: 'occ-anniversary',
+                engagement: 'occ-anniversary',
+                date_night: 'occ-date_night',
+                corporate: 'occ-corporate',
+                casual: 'occ-casual',
+                other: 'occ-other'
             };
             const labels = {
                 birthday: '🎂 Birthday',
@@ -5889,61 +6083,106 @@ ${receiptHtml}
                 engagement: '💍 Engagement',
                 date_night: '🥂 Date Night',
                 corporate: '💼 Corporate',
-                casual: '☕ Casual Visitor',
+                casual: '☕ Casual',
                 other: '🎉 Other'
             };
-            return `<span class="crm-badge ${map[occ] || 'badge-other'}">${labels[occ] || occ}</span>`;
+            return `<span class="crm-occ-badge ${map[occ] || 'occ-other'}">${labels[occ] || occ}</span>`;
         }
 
-        function crmVisitBadge(visits) {
-            const count = visits || 1;
-            if (count >= 4) {
-                return `<span class="crm-visit-badge v-vip" title="VIP Regular Guest"><i class="fas fa-crown"></i> ⭐ VIP (${count} Visits)</span>`;
-            } else if (count >= 2) {
-                return `<span class="crm-visit-badge v-repeat" title="Repeat Customer"><i class="fas fa-fire"></i> 🔥 ${count} Visits (Repeat Guest)</span>`;
+        // Modal: Click on Visit count to see breakdown of all visits
+        function crmShowVisits(phoneKey) {
+            const g = crmGuests.find(x => x.phoneKey === phoneKey);
+            if (!g) return;
+
+            document.getElementById('crmModalGuestName').textContent = `${g.name} — Visit History (${g.visits} Bookings)`;
+            document.getElementById('crmModalGuestPhone').textContent = `📞 ${g.phone} | Last Visited: ${g.lastVisit || 'N/A'}`;
+
+            const container = document.getElementById('crmModalVisitsList');
+            if (!container) return;
+
+            const list = Array.isArray(g.history) ? [...g.history] : [];
+            list.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:2rem; color:var(--text-dim);">No detailed booking records found.</div>`;
             } else {
-                return `<span class="crm-visit-badge v-first" title="First Time Guest"><i class="fas fa-user-check"></i> 1st Visit</span>`;
+                container.innerHTML = list.map((v, idx) => {
+                    let timeStr = '';
+                    if (v.hour && v.minute && v.ampm) {
+                        timeStr = `${v.hour}:${v.minute} ${v.ampm}`;
+                    } else if (v.time) {
+                        timeStr = v.time;
+                    }
+
+                    let dateDisp = v.date || 'Date not recorded';
+                    try {
+                        const parts = v.date.split('-');
+                        if (parts.length === 3) {
+                            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                            dateDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                        }
+                    } catch(e) {}
+
+                    const statusColor = v.status === 'completed' ? '#2ecc71' : (v.status === 'confirmed' ? '#3498db' : (v.status === 'cancelled' ? '#ff4d4d' : '#f39c12'));
+
+                    return `
+                    <div class="crm-history-item">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06); padding-bottom:6px;">
+                            <span style="font-weight:700; color:#fff; font-size:0.88rem;">
+                                Visit #${list.length - idx}: <span style="color:var(--primary);">${dateDisp}</span> ${timeStr ? `at ${timeStr}` : ''}
+                            </span>
+                            <span style="font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; background:${statusColor}22; color:${statusColor}; border:1px solid ${statusColor}44;">
+                                ${v.status || 'Booked'}
+                            </span>
+                        </div>
+                        <div class="crm-history-grid" style="margin-top:4px;">
+                            <div>
+                                <div class="crm-history-meta">Guest Count</div>
+                                <div class="crm-history-val"><i class="fas fa-users" style="color:var(--primary); font-size:0.75rem; margin-right:4px;"></i>${v.guest_count || 1} Guests</div>
+                            </div>
+                            <div>
+                                <div class="crm-history-meta">Occasion</div>
+                                <div class="crm-history-val">${v.occasion || 'Casual Dining'}</div>
+                            </div>
+                            <div>
+                                <div class="crm-history-meta">Table</div>
+                                <div class="crm-history-val">${v.table_id ? 'Table ' + v.table_id : 'Standard'}</div>
+                            </div>
+                            ${v.special_request ? `
+                            <div style="grid-column: 1 / -1;">
+                                <div class="crm-history-meta">Special Request</div>
+                                <div class="crm-history-val" style="font-weight:400; color:#ccc;">${v.special_request}</div>
+                            </div>` : ''}
+                        </div>
+                    </div>`;
+                }).join('');
             }
+
+            const modal = document.getElementById('crmVisitsModal');
+            if (modal) modal.style.display = 'flex';
         }
 
-        function crmDaysBadge(days) {
-            if (days === null || days === undefined) return '';
-            if (days === 0) return '<span class="crm-days-badge days-today">🎉 TODAY!</span>';
-            if (days === 1) return '<span class="crm-days-badge days-soon">Tomorrow!</span>';
-            if (days <= 7) return `<span class="crm-days-badge days-soon">in ${days} days</span>`;
-            if (days <= 30) return `<span class="crm-days-badge days-soon">in ${days} days</span>`;
-            return `<span class="crm-days-badge days-past">in ${days} days</span>`;
+        function crmCloseVisitsModal() {
+            const modal = document.getElementById('crmVisitsModal');
+            if (modal) modal.style.display = 'none';
         }
 
+        // Professional & dignified WhatsApp Restaurant messaging
         function crmWpMessage(id) {
             const g = crmGuests.find(x => String(x.id) === String(id));
             if (!g) return;
-            const isCasual = g.occasion === 'casual';
-            const isRepeat = (g.visits || 1) > 1;
-            let msg = '';
 
-            if (isCasual) {
-                if (isRepeat) {
-                    // Flirty & warm reconnect message for repeat regulars
-                    msg = `Hey ${g.name}! 😊 Dining at Aurous Restro feels incomplete without you. You've visited us ${g.visits} times, and we truly miss our favorite regular! Kab aa rahe ho wapas? Your favorite table is waiting for you! 🍽️✨ Book your spot today: https://aurous-restro.onrender.com`;
-                } else {
-                    // Warm invitation for 1st time visitors
-                    msg = `Hi ${g.name}! 😊 Hope you had a lovely time during your visit at Aurous Restro. It's been a few days, and we'd love to treat you to another memorable dining experience! Kab mil rahe hain? 🍽️✨ Book now: https://aurous-restro.onrender.com`;
-                }
-            } else if (g.occasion === 'birthday') {
-                if (isRepeat) {
-                    msg = `Happy Birthday ${g.name}! 🎂🎉 Aurous Restro wishes you a phenomenal year ahead! Since you're one of our beloved regular guests (${g.visits} visits!), we have a special celebration treat waiting for you. Come celebrate your special day with us! 🎁🥂✨`;
-                } else {
-                    msg = `Happy Birthday ${g.name}! 🎂🎉 Wishing you an amazing day filled with joy! Celebrate your special moments with exquisite dining at Aurous Restro — a special surprise awaits you! 🎁🥂✨`;
-                }
+            let msg = '';
+            const cleanName = (g.name || 'Sir/Ma\'am').trim();
+
+            if (g.occasion === 'birthday') {
+                msg = `Namaste ${cleanName} ji! 🎂 Aurous Restro parivaar ki taraf se aapko Janamdin ki dher saari shubhkaamnayein! Aasha hai aapka aane wala saal khushiyon se bhara ho. Apne is khaas din par family aur friends ke saath celebration dinner ke liye Aurous Restro me table reserve karein: https://aurous-restro.onrender.com ✨`;
             } else if (g.occasion === 'anniversary' || g.occasion === 'date_night') {
-                msg = `Happy Anniversary ${g.name}! 💑❤️ Celebrating love is always magical at Aurous Restro. Let us make tonight unforgettable with a romantic candlelit dinner. Reserve your special table: https://aurous-restro.onrender.com 🥂🕯️✨`;
-            } else if (g.occasion === 'engagement') {
-                msg = `Heartiest Congratulations ${g.name} on your engagement! 💍🎊 Aurous Restro would love to celebrate your happy beginnings with delicious culinary treats! 🥂✨`;
+                msg = `Namaste ${cleanName} ji! 💑 Aurous Restro ki taraf se aapko Saalgirah ki hardik shubhkaamnayein! Is khaas avsar par romantic candlelit dinner ke liye Aurous Restro me table reserve karein: https://aurous-restro.onrender.com ✨`;
             } else if (g.occasion === 'corporate') {
-                msg = `Hello ${g.name}! 💼 Planning your next business lunch or team dinner? Aurous Restro offers a premium ambiance and gourmet cuisine. Let us host you! 🍽️✨`;
+                msg = `Namaste ${cleanName} ji! 💼 Aurous Restro me business meetings aur corporate dining ke liye premium ambiance aur delicious cuisine available hai. Table reservation ke liye: https://aurous-restro.onrender.com`;
             } else {
-                msg = `Hi ${g.name}! 🌟 We'd love to welcome you back to Aurous Restro soon. Experience amazing vibes and delicious food with us: https://aurous-restro.onrender.com ✨`;
+                msg = `Namaste ${cleanName} ji! Aurous Restro me aapka swagat hai. Kafi din ho gaye aapko dekhe huye, aasha hai aap theek honge. Jab bhi bahar khane ya dining ka plan bane, Aurous Restro me table reserve karein: https://aurous-restro.onrender.com 🍽️✨`;
             }
 
             const cleanPhone = (g.phone || '').toString().replace(/\D/g, '');
@@ -5951,155 +6190,148 @@ ${receiptHtml}
             window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function crmSetTab(tab) {
-            crmCurrentTab = tab;
-            document.querySelectorAll('.crm-tab').forEach(t => t.classList.remove('active'));
-            const el = document.getElementById('crm-tab-' + tab);
-            if (el) el.classList.add('active');
-            crmRender();
-        }
-
-        function crmCardHTML(g) {
-            const isRecurring = ['birthday', 'anniversary', 'engagement', 'date_night'].includes(g.occasion);
-            const days = (isRecurring && g.date) ? crmDaysUntilNext(g.date) : null;
-            const cardClass = days === 0 ? 'crm-guest-card today-occ' : (days !== null && days <= 7 ? 'crm-guest-card upcoming-soon' : 'crm-guest-card');
-
-            let dateDisp = '';
-            if (g.date) {
-                try {
-                    const parts = g.date.split('-');
-                    if (parts.length === 3) {
-                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
-                        dateDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-                    }
-                } catch(e) { dateDisp = g.date; }
-            }
-
-            let lastVisitDisp = 'Not recorded';
-            if (g.lastVisit) {
-                try {
-                    const parts = g.lastVisit.split('-');
-                    if (parts.length === 3) {
-                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
-                        lastVisitDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-                    }
-                } catch(e) { lastVisitDisp = g.lastVisit; }
-            }
-
-            return `
-            <div class="${cardClass}">
-                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-                    <div>
-                        <div class="crm-guest-name">
-                            <span>${g.name}</span>
-                            ${crmVisitBadge(g.visits)}
-                            ${crmOccasionBadge(g.occasion)}
-                            ${days !== null ? crmDaysBadge(days) : ''}
-                        </div>
-                        <div class="crm-guest-meta" style="margin-top:0.5rem;">
-                            <span><i class="fas fa-phone" style="font-size:0.75rem; color:var(--primary);"></i> ${g.phone}</span>
-                            ${dateDisp ? `<span><i class="fas fa-calendar-alt" style="font-size:0.75rem; color:#ffb400;"></i> Event: ${dateDisp}</span>` : ''}
-                            <span><i class="fas fa-history" style="font-size:0.75rem; color:var(--text-dim);"></i> Last visit: ${lastVisitDisp}</span>
-                            ${g.note ? `<span><i class="fas fa-comment-dots" style="font-size:0.75rem; color:var(--text-dim);"></i> ${g.note}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                <div class="crm-actions">
-                    <button class="crm-action-btn wp" onclick="crmWpMessage('${g.id}')">
-                        <i class="fab fa-whatsapp"></i> WhatsApp Reconnect Message
-                    </button>
-                </div>
-            </div>`;
-        }
-
+        // Render Table Rows with Document / Word style layout
         function crmRender() {
-            const container = document.getElementById('crmGuestList');
-            if (!container) return;
-
-            crmUpdateStats();
+            const tbody = document.getElementById('crmTableBody');
+            if (!tbody) return;
 
             const search = (document.getElementById('crmSearch')?.value || '').toLowerCase().trim();
-
-            let filtered = crmGuests.filter(g => {
-                let matchTab = true;
-                if (crmCurrentTab === 'repeat') {
-                    matchTab = (g.visits || 1) > 1;
-                } else if (crmCurrentTab === 'other') {
-                    matchTab = !['birthday', 'anniversary', 'casual', 'date_night'].includes(g.occasion);
-                } else if (crmCurrentTab !== 'all') {
-                    matchTab = g.occasion === crmCurrentTab;
-                }
-                const matchSearch = !search ||
-                    (g.name && g.name.toLowerCase().includes(search)) ||
-                    (g.phone && g.phone.includes(search)) ||
-                    (g.note && g.note.toLowerCase().includes(search));
-                return matchTab && matchSearch;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="crm-empty">
-                        <i class="fas fa-users-slash" style="font-size:2.5rem; margin-bottom:0.75rem; display:block; opacity:0.3; color:var(--primary);"></i>
-                        <p style="font-size:0.95rem; font-weight:600; color:#fff;">No guests matching this filter</p>
-                        <p style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">As soon as customers make reservations, they will automatically appear here!</p>
-                    </div>`;
-                return;
-            }
+            const occasionFilter = document.getElementById('crmFilterOccasion')?.value || 'all';
+            const visitsFilter = document.getElementById('crmFilterVisits')?.value || 'all';
+            const timingFilter = document.getElementById('crmFilterTiming')?.value || 'all';
 
             const isRecurring = occ => ['birthday', 'anniversary', 'engagement', 'date_night'].includes(occ);
 
-            // Separate occasion guests vs casual / regulars
-            const occasionGuests = filtered.filter(g => isRecurring(g.occasion) && g.date);
-            const casualGuests = filtered.filter(g => !(isRecurring(g.occasion) && g.date));
+            let filtered = crmGuests.filter(g => {
+                // Search
+                if (search) {
+                    const match = (g.name && g.name.toLowerCase().includes(search)) ||
+                                  (g.phone && g.phone.includes(search)) ||
+                                  (g.note && g.note.toLowerCase().includes(search));
+                    if (!match) return false;
+                }
 
-            // Smart Sort for Occasion Guests:
-            // 1. Closest upcoming recurrence floats to top (0 = TODAY, then 1, 2, 3...)
-            occasionGuests.sort((a, b) => {
-                const da = crmDaysUntilNext(a.date);
-                const db = crmDaysUntilNext(b.date);
+                // Occasion filter
+                if (occasionFilter !== 'all') {
+                    if (occasionFilter === 'other') {
+                        if (['birthday', 'anniversary', 'date_night', 'corporate', 'casual'].includes(g.occasion)) return false;
+                    } else if (g.occasion !== occasionFilter) {
+                        return false;
+                    }
+                }
+
+                // Visits filter
+                if (visitsFilter === 'repeat' && (g.visits || 1) < 2) return false;
+                if (visitsFilter === 'single' && (g.visits || 1) !== 1) return false;
+
+                // Timing filter
+                if (timingFilter !== 'all') {
+                    const days = (isRecurring(g.occasion) && g.date) ? crmDaysUntilNext(g.date) : null;
+                    if (timingFilter === 'today' && days !== 0) return false;
+                    if (timingFilter === 'week' && (days === null || days < 0 || days > 7)) return false;
+                    if (timingFilter === 'month' && (days === null || days < 0 || days > 30)) return false;
+                }
+
+                return true;
+            });
+
+            const countDisplay = document.getElementById('crmCountDisplay');
+            if (countDisplay) countDisplay.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 3rem;">
+                            <i class="fas fa-folder-open" style="font-size: 2rem; opacity: 0.3; display: block; margin-bottom: 0.5rem;"></i>
+                            No guest records matching your filters.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            // Sort: Occasions upcoming first, then most recent visit date
+            filtered.sort((a, b) => {
+                const da = (isRecurring(a.occasion) && a.date) ? crmDaysUntilNext(a.date) : null;
+                const db = (isRecurring(b.occasion) && b.date) ? crmDaysUntilNext(b.date) : null;
                 if (da !== null && db !== null) return da - db;
                 if (da !== null) return -1;
                 if (db !== null) return 1;
-                return 0;
+                return (b.lastVisit || '').localeCompare(a.lastVisit || '');
             });
 
-            // Smart Sort for Casual / Regular Guests:
-            // Most recent visit first
-            casualGuests.sort((a, b) => {
-                const va = a.lastVisit || '';
-                const vb = b.lastVisit || '';
-                return vb.localeCompare(va);
-            });
-
-            let html = '';
-
-            if (crmCurrentTab === 'all') {
-                if (occasionGuests.length > 0) {
-                    html += `
-                        <div class="crm-section-label">
-                            <i class="fas fa-calendar-check" style="color:var(--primary);"></i> 
-                            Upcoming Occasions & Celebrations (${occasionGuests.length})
-                        </div>
-                        <div class="crm-guest-list">
-                            ${occasionGuests.map(g => crmCardHTML(g)).join('')}
-                        </div>`;
+            tbody.innerHTML = filtered.map(g => {
+                const days = (isRecurring(g.occasion) && g.date) ? crmDaysUntilNext(g.date) : null;
+                let daysHtml = '';
+                if (days === 0) {
+                    daysHtml = '<span class="crm-days-tag today">🎉 TODAY!</span>';
+                } else if (days !== null && days <= 7) {
+                    daysHtml = `<span class="crm-days-tag soon">in ${days} days</span>`;
+                } else if (days !== null) {
+                    daysHtml = `<span class="crm-days-tag later">in ${days} days</span>`;
                 }
 
-                if (casualGuests.length > 0) {
-                    html += `
-                        <div class="crm-section-label" style="margin-top:2rem;">
-                            <i class="fas fa-coffee" style="color:#64dc64;"></i> 
-                            Casual / Regular Visitors (${casualGuests.length}) — Reconnect Target List
-                        </div>
-                        <div class="crm-guest-list">
-                            ${casualGuests.map(g => crmCardHTML(g)).join('')}
-                        </div>`;
+                let dateDisp = '';
+                if (g.date) {
+                    try {
+                        const parts = g.date.split('-');
+                        if (parts.length === 3) {
+                            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                            dateDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+                        }
+                    } catch(e) { dateDisp = g.date; }
                 }
-            } else {
-                html += `<div class="crm-guest-list">${filtered.map(g => crmCardHTML(g)).join('')}</div>`;
-            }
 
-            container.innerHTML = html;
+                let lastVisitDisp = 'Not recorded';
+                if (g.lastVisit) {
+                    try {
+                        const parts = g.lastVisit.split('-');
+                        if (parts.length === 3) {
+                            const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                            lastVisitDisp = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                        }
+                    } catch(e) { lastVisitDisp = g.lastVisit; }
+                }
+
+                const visitCount = g.visits || 1;
+                const isRepeat = visitCount > 1;
+
+                return `
+                <tr>
+                    <td style="font-weight: 600; color: #fff;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-user-circle" style="color: var(--primary); font-size: 1.1rem;"></i>
+                            <span>${g.name}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-family: monospace; font-size: 0.88rem; color: #ccc;">${g.phone}</span>
+                    </td>
+                    <td>
+                        <button class="crm-visit-btn ${isRepeat ? 'repeat' : ''}" onclick="crmShowVisits('${g.phoneKey}')" title="Click to view complete visit history">
+                            <span>${visitCount} Visit${visitCount > 1 ? 's' : ''}</span>
+                            <i class="fas fa-list-ul" style="font-size: 0.72rem; opacity: 0.8;"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 4px;">
+                            ${crmOccasionBadge(g.occasion)}
+                            ${dateDisp ? `<span style="font-size: 0.78rem; color: #bbb;">(${dateDisp})</span>` : ''}
+                            ${daysHtml}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.82rem; color: #bbb;">
+                            <div>${lastVisitDisp}</div>
+                            ${g.lastGuestCount ? `<div style="font-size: 0.72rem; color: var(--text-dim);">${g.lastGuestCount} Guests party</div>` : ''}
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <button class="crm-wp-btn" onclick="crmWpMessage('${g.id}')" title="Send polite restaurant WhatsApp message">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </button>
+                    </td>
+                </tr>`;
+            }).join('');
         }
         // ==================== END GUESTS CRM JS ====================
     </script>
