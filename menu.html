@@ -9,23 +9,9 @@
     <link rel="stylesheet" href="assets/css/style.css?v=3.4">
     <link rel="stylesheet" href="assets/css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        * {
-            touch-action: manipulation;
-        }
-        button, a, input, select, .qty-btn, .menu-card, .cart-fab {
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-        }
+    <style>
         input, select, textarea {
             font-size: 16px !important;
-        }
-        .qty-input::-webkit-outer-spin-button,
-        .qty-input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .qty-input {
-            -moz-appearance: textfield;
         }
         @media (max-width: 768px) {
             #auth-table { font-size: 20px !important; }
@@ -320,11 +306,34 @@
             background: #E0115F;
         }
 
+        .menu-qty-stepper .qty-btn {
+            touch-action: manipulation;
+        }
+
         .menu-qty-stepper .qty-value {
             font-size: 0.875rem;
             font-weight: 700;
             min-width: 1.15rem;
             text-align: center;
+        }
+
+        /* Editable qty input — same look as the span */
+        .menu-qty-stepper .qty-input-edit {
+            font-size: 0.875rem;
+            font-weight: 700;
+            min-width: 2rem;
+            width: 2rem;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            -moz-appearance: textfield;
+        }
+        .menu-qty-stepper .qty-input-edit::-webkit-outer-spin-button,
+        .menu-qty-stepper .qty-input-edit::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .cart-fab span,
@@ -657,7 +666,7 @@
                                         <button type="button" data-qty-minus="${item.id}" class="qty-btn" aria-label="Decrease quantity">
                                             <i class="fa-solid fa-minus"></i>
                                         </button>
-                                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="qty-input" id="qty-${item.id}" value="${qty}" onchange="setCartQtyManual(${item.id}, this.value)" onclick="event.stopPropagation()" style="background:transparent; border:none; color:white; width:2.5rem; text-align:center; font-weight:700; font-size:16px; outline:none;">
+                                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="qty-input-edit" id="qty-${item.id}" value="${qty}" onchange="setCartQtyManual(${item.id}, this.value)" onclick="event.stopPropagation()" onfocus="this.select()">
                                         <button type="button" data-qty-plus="${item.id}" class="qty-btn qty-btn-plus" aria-label="Increase quantity">
                                             <i class="fa-solid fa-plus"></i>
                                         </button>
@@ -705,8 +714,8 @@
 
             const qtyEl = document.getElementById(`qty-${id}`);
             if (qtyEl) {
-                const val = cart[id] ? cart[id].quantity : 0;
-                qtyEl.value = val;
+                const newQty = cart[id] ? cart[id].quantity : 0;
+                qtyEl.value !== undefined ? (qtyEl.value = newQty) : (qtyEl.innerText = newQty);
             }
 
             if (cart[id] && cart[id].quantity <= 0) {
@@ -748,8 +757,8 @@
                 cart[id] = { ...item, quantity: num };
             }
 
-            const qtyInput = document.getElementById(`qty-${id}`);
-            if (qtyInput) qtyInput.value = num > 0 ? num : 0;
+            const qtyEl = document.getElementById(`qty-${id}`);
+            if (qtyEl) qtyEl.value = num > 0 ? num : 0;
 
             const cardEl = document.querySelector(`[data-qty-plus="${id}"]`)?.closest('.menu-card');
             if (cardEl) {
@@ -824,9 +833,9 @@
                         <p class="text-xs text-[#E0115F]">₹${item.price} x ${item.quantity}</p>
                     </div>
                     <div class="flex items-center gap-2 bg-[#0a0a0a] rounded-full px-1 py-1 border border-white/10">
-                        <button onclick="updateCartAndRender(${item.id}, -1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors"><i class="fa-solid fa-minus text-[10px]"></i></button>
-                        <input type="text" inputmode="numeric" pattern="[0-9]*" value="${item.quantity}" onchange="setCartQtyManualInModal(${item.id}, this.value)" style="background:transparent; border:none; color:white; width:2.2rem; text-align:center; font-weight:bold; font-size:16px; outline:none;">
-                        <button onclick="updateCartAndRender(${item.id}, 1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                        <button onclick="updateCartAndRender(${item.id}, -1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors" style="touch-action:manipulation;"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" value="${item.quantity}" onchange="setCartQtyManualInModal(${item.id}, this.value)" onfocus="this.select()" style="background:transparent;border:none;color:white;width:2rem;text-align:center;font-weight:700;font-size:0.875rem;outline:none;">
+                        <button onclick="updateCartAndRender(${item.id}, 1)" class="w-7 h-7 rounded-full bg-white/5 hover:bg-[#E0115F] flex items-center justify-center transition-colors" style="touch-action:manipulation;"><i class="fa-solid fa-plus text-[10px]"></i></button>
                     </div>
                 `;
                 container.appendChild(el);
@@ -899,18 +908,6 @@
                 renderMenu(e.target.dataset.cat);
             });
         });
-
-        // Double-tap zoom prevention on interactive buttons
-        let lastTouchTime = 0;
-        document.addEventListener('touchend', (e) => {
-            if (e.target.closest('button, .qty-btn, input, .menu-card, .cart-fab')) {
-                const now = Date.now();
-                if (now - lastTouchTime <= 300) {
-                    e.preventDefault();
-                }
-                lastTouchTime = now;
-            }
-        }, { passive: false });
     </script>
 </body>
 
