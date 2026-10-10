@@ -2040,13 +2040,10 @@
                 .crm-tab.active { background:var(--primary); border-color:var(--primary); color:white; }
                 .crm-tab:hover:not(.active) { border-color:var(--primary); color:white; }
 
-                .crm-add-form { background:var(--card-bg); border:1px solid var(--border); border-radius:18px; padding:1.5rem; margin-bottom:1.5rem; }
-                .crm-form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-bottom:1rem; }
-                .crm-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.6rem 0.9rem; color:white; font-family:'Outfit',sans-serif; font-size:0.87rem; outline:none; transition:0.2s; }
-                .crm-input:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(224,17,95,0.1); }
-                .crm-input option { background:#1a1a1a; }
-                .crm-save-btn { background:var(--primary); color:white; border:none; border-radius:10px; padding:0.6rem 1.5rem; font-family:'Outfit',sans-serif; font-size:0.87rem; font-weight:700; cursor:pointer; transition:0.2s; }
-                .crm-save-btn:hover { background:#ff2e7e; }
+                .crm-stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+                .crm-stat-box { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.1rem 1.3rem; display:flex; flex-direction:column; gap:4px; }
+                .crm-stat-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-dim); }
+                .crm-stat-value { font-size:1.6rem; font-weight:700; color:white; }
 
                 .crm-guest-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:1.2rem 1.4rem; display:flex; flex-direction:column; gap:0.6rem; transition:0.2s; }
                 .crm-guest-card:hover { border-color:rgba(224,17,95,0.3); }
@@ -2054,8 +2051,8 @@
                 .crm-guest-card.today-occ { border-color:rgba(224,17,95,0.6); background:rgba(224,17,95,0.06); animation:crm-glow 2s infinite; }
                 @keyframes crm-glow { 0%,100%{box-shadow:0 0 0 rgba(224,17,95,0);} 50%{box-shadow:0 0 18px rgba(224,17,95,0.2);} }
 
-                .crm-guest-name { font-size:1rem; font-weight:700; color:white; }
-                .crm-guest-meta { font-size:0.78rem; color:var(--text-dim); display:flex; gap:1rem; flex-wrap:wrap; }
+                .crm-guest-name { font-size:1.05rem; font-weight:700; color:white; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap; }
+                .crm-guest-meta { font-size:0.8rem; color:var(--text-dim); display:flex; gap:1.2rem; flex-wrap:wrap; }
                 .crm-badge { display:inline-block; padding:2px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
                 .badge-birthday { background:rgba(255,100,100,0.15); color:#ff6464; border:1px solid rgba(255,100,100,0.25); }
                 .badge-anniversary { background:rgba(224,17,95,0.15); color:#E0115F; border:1px solid rgba(224,17,95,0.25); }
@@ -2064,18 +2061,23 @@
                 .badge-casual { background:rgba(100,220,100,0.12); color:#64dc64; border:1px solid rgba(100,220,100,0.2); }
                 .badge-other { background:rgba(200,200,200,0.1); color:#ccc; border:1px solid rgba(200,200,200,0.15); }
 
+                /* Prominent Visit Frequency Badges */
+                .crm-visit-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; letter-spacing:0.3px; }
+                .crm-visit-badge.v-first { background:rgba(255,255,255,0.06); color:#aaa; border:1px solid rgba(255,255,255,0.12); }
+                .crm-visit-badge.v-repeat { background:rgba(255,180,0,0.15); color:#ffb400; border:1px solid rgba(255,180,0,0.35); }
+                .crm-visit-badge.v-frequent { background:rgba(224,17,95,0.18); color:#ff2e7e; border:1px solid rgba(224,17,95,0.35); box-shadow:0 0 10px rgba(224,17,95,0.15); }
+                .crm-visit-badge.v-vip { background:linear-gradient(135deg, rgba(124,58,237,0.25), rgba(224,17,95,0.25)); color:#e9d5ff; border:1px solid rgba(180,120,255,0.4); box-shadow:0 0 12px rgba(180,120,255,0.2); }
+
                 .crm-days-badge { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:700; }
                 .days-today { background:rgba(224,17,95,0.2); color:#E0115F; }
                 .days-soon { background:rgba(255,180,0,0.15); color:#ffb400; }
                 .days-past { background:rgba(255,255,255,0.05); color:var(--text-dim); }
 
                 .crm-actions { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.3rem; }
-                .crm-action-btn { display:inline-flex; align-items:center; gap:0.4rem; padding:5px 12px; border-radius:8px; border:1px solid var(--border); background:transparent; color:white; font-family:'Outfit',sans-serif; font-size:0.75rem; cursor:pointer; transition:0.2s; }
+                .crm-action-btn { display:inline-flex; align-items:center; gap:0.4rem; padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:transparent; color:white; font-family:'Outfit',sans-serif; font-size:0.78rem; cursor:pointer; transition:0.2s; }
                 .crm-action-btn:hover { border-color:var(--primary); color:var(--primary); }
-                .crm-action-btn.wp { border-color:rgba(37,211,102,0.4); color:#25d366; }
-                .crm-action-btn.wp:hover { background:rgba(37,211,102,0.1); }
-                .crm-action-btn.del { border-color:rgba(255,77,77,0.3); color:#ff4d4d; }
-                .crm-action-btn.del:hover { background:rgba(255,77,77,0.1); }
+                .crm-action-btn.wp { border-color:rgba(37,211,102,0.5); color:#25d366; background:rgba(37,211,102,0.05); }
+                .crm-action-btn.wp:hover { background:rgba(37,211,102,0.15); }
 
                 .crm-section-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin:1.5rem 0 0.75rem; padding-left:0.25rem; display:flex; align-items:center; gap:0.5rem; }
                 .crm-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
@@ -2084,67 +2086,45 @@
                 .crm-guest-list { display:flex; flex-direction:column; gap:0.75rem; }
 
                 .crm-search-row { display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
-                .crm-search-input { flex:1; min-width:180px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.55rem 1rem; color:white; font-family:'Outfit',sans-serif; font-size:0.85rem; outline:none; }
+                .crm-search-input { flex:1; min-width:200px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; padding:0.6rem 1rem; color:white; font-family:'Outfit',sans-serif; font-size:0.85rem; outline:none; }
                 .crm-search-input:focus { border-color:var(--primary); }
             </style>
 
-            <!-- Add Guest Form -->
-            <div class="crm-add-form" id="crmAddFormWrap">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                    <h3 style="font-size:1rem; font-weight:700;"><i class="fas fa-user-plus" style="color:var(--primary); margin-right:0.4rem;"></i> Add / Edit Guest</h3>
-                    <button class="crm-save-btn" style="background:transparent; border:1px solid var(--border); color:var(--text-dim); padding:0.35rem 0.9rem; font-size:0.75rem;" onclick="crmToggleForm()">Hide</button>
+            <!-- Stats Bar -->
+            <div class="crm-stats-grid">
+                <div class="crm-stat-box">
+                    <span class="crm-stat-label">Total Unique Guests</span>
+                    <span class="crm-stat-value" id="crmStatTotal">0</span>
                 </div>
-                <input type="hidden" id="crmEditId">
-                <div class="crm-form-grid">
-                    <div>
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Full Name *</div>
-                        <input class="crm-input" id="crmName" placeholder="Guest Name" type="text">
-                    </div>
-                    <div>
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Phone *</div>
-                        <input class="crm-input" id="crmPhone" placeholder="+91 XXXXXXXXXX" type="tel">
-                    </div>
-                    <div>
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Occasion</div>
-                        <select class="crm-input" id="crmOccasion">
-                            <option value="casual">Casual / Regular Visitor</option>
-                            <option value="birthday">Birthday 🎂</option>
-                            <option value="anniversary">Anniversary 💑</option>
-                            <option value="engagement">Engagement 💍</option>
-                            <option value="corporate">Corporate / Business</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div id="crmDateWrap">
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Occasion Date</div>
-                        <input class="crm-input" id="crmDate" type="date">
-                    </div>
-                    <div>
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Last Visit</div>
-                        <input class="crm-input" id="crmLastVisit" type="date">
-                    </div>
-                    <div>
-                        <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase;">Fav Item / Note</div>
-                        <input class="crm-input" id="crmNote" placeholder="e.g. Loves Biryani, Veg only..." type="text">
-                    </div>
+                <div class="crm-stat-box">
+                    <span class="crm-stat-label">Repeat Visitors</span>
+                    <span class="crm-stat-value" id="crmStatRepeat" style="color:#ffb400;">0</span>
                 </div>
-                <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
-                    <button class="crm-save-btn" onclick="crmSaveGuest()"><i class="fas fa-save" style="margin-right:0.4rem;"></i>Save Guest</button>
-                    <button class="crm-save-btn" style="background:transparent; border:1px solid var(--border); color:var(--text-dim);" onclick="crmClearForm()">Clear</button>
+                <div class="crm-stat-box">
+                    <span class="crm-stat-label">Celebration Occasions</span>
+                    <span class="crm-stat-value" id="crmStatCelebrations" style="color:#ff6464;">0</span>
+                </div>
+                <div class="crm-stat-box" style="justify-content:center;">
+                    <div style="font-size:0.72rem; color:#2ecc71; font-weight:700; display:flex; align-items:center; gap:6px;">
+                        <i class="fas fa-check-circle"></i> Auto-Synced
+                    </div>
+                    <div style="font-size:0.72rem; color:var(--text-dim); margin-top:3px;">
+                        Captures all reservation customers
+                    </div>
                 </div>
             </div>
 
             <!-- Search + Filter row -->
             <div class="crm-search-row">
-                <input class="crm-search-input" id="crmSearch" placeholder="🔍  Search guest by name or phone..." oninput="crmRender()">
+                <input class="crm-search-input" id="crmSearch" placeholder="🔍 Search guest by name or phone..." oninput="crmRender()">
                 <div class="crm-tabs" style="margin:0;">
-                    <button class="crm-tab active" id="crm-tab-all" onclick="crmSetTab('all')">All</button>
+                    <button class="crm-tab active" id="crm-tab-all" onclick="crmSetTab('all')">All Guests</button>
+                    <button class="crm-tab" id="crm-tab-repeat" onclick="crmSetTab('repeat')">🔥 Repeat Visitors</button>
                     <button class="crm-tab" id="crm-tab-birthday" onclick="crmSetTab('birthday')">🎂 Birthday</button>
                     <button class="crm-tab" id="crm-tab-anniversary" onclick="crmSetTab('anniversary')">💑 Anniversary</button>
                     <button class="crm-tab" id="crm-tab-casual" onclick="crmSetTab('casual')">☕ Casual</button>
                     <button class="crm-tab" id="crm-tab-other" onclick="crmSetTab('other')">More</button>
                 </div>
-                <button class="crm-save-btn" onclick="crmToggleForm()" style="font-size:0.8rem; padding:0.5rem 1rem;"><i class="fas fa-plus" style="margin-right:0.3rem;"></i>Add Guest</button>
             </div>
 
             <!-- Guest List -->
@@ -3128,6 +3108,7 @@
                 loadVibePhotos();
                 loadBannerSettings();
             } else if (section === 'guests-crm') {
+                crmSyncFromReservations();
                 crmRender();
             }
         }
@@ -3168,6 +3149,7 @@
                 allReservationsData = reservations;
                 updateStatsValues();
                 renderReservations(reservations);
+                crmSyncFromReservations();
 
                 switchHistoryTab('completed');
 
@@ -5747,6 +5729,7 @@ ${receiptHtml}
                     renderReservations(latest);
                     if (currentHistoryTab) switchHistoryTab(currentHistoryTab);
                     checkUpcomingReservations();
+                    crmSyncFromReservations();
                 }
             } catch (e) { /* silently ignore network errors */ }
         }, 8000);
@@ -5754,10 +5737,125 @@ ${receiptHtml}
         // ==================== GUESTS CRM JS ====================
         let crmGuests = JSON.parse(localStorage.getItem('aurous_guests_crm') || '[]');
         let crmCurrentTab = 'all';
-        let crmFormVisible = true;
 
-        function crmSave() {
+        function crmNormalizePhone(phone) {
+            if (!phone) return '';
+            const cleaned = phone.toString().replace(/\D/g, '');
+            return cleaned.length > 10 ? cleaned.slice(-10) : cleaned;
+        }
+
+        function crmNormalizeOccasion(occ) {
+            if (!occ) return 'casual';
+            const s = occ.toString().toLowerCase();
+            if (s.includes('birth')) return 'birthday';
+            if (s.includes('anniv')) return 'anniversary';
+            if (s.includes('date')) return 'date_night';
+            if (s.includes('engag')) return 'engagement';
+            if (s.includes('corp') || s.includes('busin')) return 'corporate';
+            if (s.includes('casual') || s.includes('walk')) return 'casual';
+            return 'other';
+        }
+
+        // Automatic Sync: Aggregates reservations into unique customer CRM profiles
+        function crmSyncFromReservations() {
+            if (!Array.isArray(allReservationsData) || allReservationsData.length === 0) {
+                crmUpdateStats();
+                return;
+            }
+
+            // Map existing stored guest profiles (for any saved custom notes)
+            const existingMap = new Map();
+            crmGuests.forEach(g => {
+                if (g.phoneKey) existingMap.set(g.phoneKey, g);
+            });
+
+            // Group all reservations by normalized phone
+            const grouped = new Map();
+
+            allReservationsData.forEach(res => {
+                let phoneKey = crmNormalizePhone(res.phone);
+                if (!phoneKey) {
+                    phoneKey = (res.name || 'guest').trim().toLowerCase();
+                }
+
+                if (!grouped.has(phoneKey)) {
+                    grouped.set(phoneKey, []);
+                }
+                grouped.get(phoneKey).push(res);
+            });
+
+            const syncedGuests = [];
+
+            grouped.forEach((resList, phoneKey) => {
+                // Sort reservations by date ascending
+                resList.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+
+                const latestRes = resList[resList.length - 1];
+                const earliestRes = resList[0];
+                const visitCount = resList.length;
+
+                // Detect occasion: check if any reservation had a major celebration
+                let detectedOccasion = 'casual';
+                let detectedOccasionDate = null;
+
+                for (const r of resList) {
+                    const normOcc = crmNormalizeOccasion(r.occasion);
+                    if (['birthday', 'anniversary', 'engagement', 'date_night', 'corporate'].includes(normOcc)) {
+                        detectedOccasion = normOcc;
+                        detectedOccasionDate = r.date;
+                        break;
+                    }
+                }
+
+                // If no major occasion detected, check latest reservation occasion
+                if (detectedOccasion === 'casual' && latestRes.occasion) {
+                    detectedOccasion = crmNormalizeOccasion(latestRes.occasion);
+                    if (['birthday', 'anniversary', 'engagement'].includes(detectedOccasion)) {
+                        detectedOccasionDate = latestRes.date;
+                    }
+                }
+
+                const existing = existingMap.get(phoneKey) || {};
+
+                // Summary note: recent party size & any special request
+                let note = existing.note || '';
+                if (!note) {
+                    const reqs = resList.map(r => r.special_request).filter(Boolean);
+                    if (reqs.length > 0) {
+                        note = reqs[reqs.length - 1];
+                    } else if (latestRes.guest_count) {
+                        note = `Recent booking for ${latestRes.guest_count} guests`;
+                    }
+                }
+
+                syncedGuests.push({
+                    id: existing.id || 'crm_' + phoneKey,
+                    phoneKey,
+                    name: latestRes.name || existing.name || 'Guest',
+                    phone: latestRes.phone || existing.phone || phoneKey,
+                    visits: visitCount,
+                    occasion: detectedOccasion,
+                    date: detectedOccasionDate || existing.date || null,
+                    lastVisit: latestRes.date || existing.lastVisit || '',
+                    firstVisit: earliestRes.date || '',
+                    note: note,
+                    lastStatus: latestRes.status || ''
+                });
+            });
+
+            crmGuests = syncedGuests;
             localStorage.setItem('aurous_guests_crm', JSON.stringify(crmGuests));
+            crmUpdateStats();
+        }
+
+        function crmUpdateStats() {
+            const totalEl = document.getElementById('crmStatTotal');
+            const repeatEl = document.getElementById('crmStatRepeat');
+            const celebEl = document.getElementById('crmStatCelebrations');
+
+            if (totalEl) totalEl.textContent = crmGuests.length;
+            if (repeatEl) repeatEl.textContent = crmGuests.filter(g => g.visits > 1).length;
+            if (celebEl) celebEl.textContent = crmGuests.filter(g => ['birthday', 'anniversary', 'engagement', 'date_night'].includes(g.occasion)).length;
         }
 
         function crmDaysUntilNext(dateStr) {
@@ -5780,6 +5878,7 @@ ${receiptHtml}
                 birthday: 'badge-birthday',
                 anniversary: 'badge-anniversary',
                 engagement: 'badge-engagement',
+                date_night: 'badge-anniversary',
                 corporate: 'badge-corporate',
                 casual: 'badge-casual',
                 other: 'badge-other'
@@ -5788,11 +5887,23 @@ ${receiptHtml}
                 birthday: '🎂 Birthday',
                 anniversary: '💑 Anniversary',
                 engagement: '💍 Engagement',
+                date_night: '🥂 Date Night',
                 corporate: '💼 Corporate',
-                casual: '☕ Casual Regular',
+                casual: '☕ Casual Visitor',
                 other: '🎉 Other'
             };
             return `<span class="crm-badge ${map[occ] || 'badge-other'}">${labels[occ] || occ}</span>`;
+        }
+
+        function crmVisitBadge(visits) {
+            const count = visits || 1;
+            if (count >= 4) {
+                return `<span class="crm-visit-badge v-vip" title="VIP Regular Guest"><i class="fas fa-crown"></i> ⭐ VIP (${count} Visits)</span>`;
+            } else if (count >= 2) {
+                return `<span class="crm-visit-badge v-repeat" title="Repeat Customer"><i class="fas fa-fire"></i> 🔥 ${count} Visits (Repeat Guest)</span>`;
+            } else {
+                return `<span class="crm-visit-badge v-first" title="First Time Guest"><i class="fas fa-user-check"></i> 1st Visit</span>`;
+            }
         }
 
         function crmDaysBadge(days) {
@@ -5808,116 +5919,36 @@ ${receiptHtml}
             const g = crmGuests.find(x => String(x.id) === String(id));
             if (!g) return;
             const isCasual = g.occasion === 'casual';
+            const isRepeat = (g.visits || 1) > 1;
             let msg = '';
+
             if (isCasual) {
-                msg = `Hey ${g.name}! 😊 Dining at Aurous Restro feels incomplete without you. It's been a while since your last visit! Kab aa rahe ho wapas? Your favorite table is waiting for you! 🍽️✨ Book your spot today: https://aurous-restro.onrender.com`;
+                if (isRepeat) {
+                    // Flirty & warm reconnect message for repeat regulars
+                    msg = `Hey ${g.name}! 😊 Dining at Aurous Restro feels incomplete without you. You've visited us ${g.visits} times, and we truly miss our favorite regular! Kab aa rahe ho wapas? Your favorite table is waiting for you! 🍽️✨ Book your spot today: https://aurous-restro.onrender.com`;
+                } else {
+                    // Warm invitation for 1st time visitors
+                    msg = `Hi ${g.name}! 😊 Hope you had a lovely time during your visit at Aurous Restro. It's been a few days, and we'd love to treat you to another memorable dining experience! Kab mil rahe hain? 🍽️✨ Book now: https://aurous-restro.onrender.com`;
+                }
             } else if (g.occasion === 'birthday') {
-                msg = `Happy Birthday ${g.name}! 🎂🎉 Wishing you a fabulous day filled with love and laughter! Celebrate your special day with us at Aurous Restro — we'd love to make it unforgettable for you! 🎁🥂✨`;
-            } else if (g.occasion === 'anniversary') {
-                msg = `Happy Anniversary ${g.name}! 💑❤️ Wishing you both a very happy anniversary! Celebrate this special milestone with a candlelit dinner at Aurous Restro. Reserve your romantic table: https://aurous-restro.onrender.com 🥂✨`;
+                if (isRepeat) {
+                    msg = `Happy Birthday ${g.name}! 🎂🎉 Aurous Restro wishes you a phenomenal year ahead! Since you're one of our beloved regular guests (${g.visits} visits!), we have a special celebration treat waiting for you. Come celebrate your special day with us! 🎁🥂✨`;
+                } else {
+                    msg = `Happy Birthday ${g.name}! 🎂🎉 Wishing you an amazing day filled with joy! Celebrate your special moments with exquisite dining at Aurous Restro — a special surprise awaits you! 🎁🥂✨`;
+                }
+            } else if (g.occasion === 'anniversary' || g.occasion === 'date_night') {
+                msg = `Happy Anniversary ${g.name}! 💑❤️ Celebrating love is always magical at Aurous Restro. Let us make tonight unforgettable with a romantic candlelit dinner. Reserve your special table: https://aurous-restro.onrender.com 🥂🕯️✨`;
             } else if (g.occasion === 'engagement') {
-                msg = `Heartiest Congratulations ${g.name} on your engagement! 💍🎊 Aurous Restro would love to celebrate your happy beginnings with exquisite flavors! 🥂✨`;
+                msg = `Heartiest Congratulations ${g.name} on your engagement! 💍🎊 Aurous Restro would love to celebrate your happy beginnings with delicious culinary treats! 🥂✨`;
             } else if (g.occasion === 'corporate') {
-                msg = `Hello ${g.name}! 💼 Planning your next business lunch or dinner? Aurous Restro offers a premium ambiance and gourmet cuisine. Let us host your team! 🍽️✨`;
+                msg = `Hello ${g.name}! 💼 Planning your next business lunch or team dinner? Aurous Restro offers a premium ambiance and gourmet cuisine. Let us host you! 🍽️✨`;
             } else {
-                msg = `Hi ${g.name}! 🌟 We'd love to welcome you back to Aurous Restro soon! Experience amazing vibes and delicious food with us: https://aurous-restro.onrender.com ✨`;
+                msg = `Hi ${g.name}! 🌟 We'd love to welcome you back to Aurous Restro soon. Experience amazing vibes and delicious food with us: https://aurous-restro.onrender.com ✨`;
             }
 
-            const cleanPhone = (g.phone || '').replace(/\D/g, '');
+            const cleanPhone = (g.phone || '').toString().replace(/\D/g, '');
             const finalPhone = cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone;
             window.open(`https://wa.me/${finalPhone}?text=${encodeURIComponent(msg)}`, '_blank');
-        }
-
-        function crmToggleForm() {
-            crmFormVisible = !crmFormVisible;
-            const wrap = document.getElementById('crmAddFormWrap');
-            if (wrap) wrap.style.display = crmFormVisible ? 'block' : 'none';
-        }
-
-        function crmClearForm() {
-            document.getElementById('crmEditId').value = '';
-            document.getElementById('crmName').value = '';
-            document.getElementById('crmPhone').value = '';
-            document.getElementById('crmOccasion').value = 'casual';
-            document.getElementById('crmDate').value = '';
-            document.getElementById('crmLastVisit').value = '';
-            document.getElementById('crmNote').value = '';
-        }
-
-        function crmSaveGuest() {
-            const nameEl = document.getElementById('crmName');
-            const phoneEl = document.getElementById('crmPhone');
-            const name = nameEl ? nameEl.value.trim() : '';
-            const phone = phoneEl ? phoneEl.value.trim() : '';
-
-            if (!name || !phone) {
-                if (typeof showToast === 'function') showToast('⚠️ Name and Phone number are required!');
-                else alert('Name and Phone number are required!');
-                return;
-            }
-
-            const editId = document.getElementById('crmEditId').value;
-            const occasion = document.getElementById('crmOccasion').value;
-            const date = document.getElementById('crmDate').value;
-            const lastVisit = document.getElementById('crmLastVisit').value;
-            const note = document.getElementById('crmNote').value.trim();
-
-            if (editId) {
-                const idx = crmGuests.findIndex(g => String(g.id) === String(editId));
-                if (idx > -1) {
-                    crmGuests[idx] = {
-                        ...crmGuests[idx],
-                        name,
-                        phone,
-                        occasion,
-                        date,
-                        lastVisit,
-                        note,
-                        updatedAt: new Date().toISOString()
-                    };
-                }
-            } else {
-                const newGuest = {
-                    id: Date.now().toString(),
-                    name,
-                    phone,
-                    occasion,
-                    date,
-                    lastVisit,
-                    note,
-                    addedOn: new Date().toISOString()
-                };
-                crmGuests.push(newGuest);
-            }
-
-            crmSave();
-            crmClearForm();
-            crmRender();
-            if (typeof showToast === 'function') showToast('✅ Guest saved successfully!');
-        }
-
-        function crmEditGuest(id) {
-            const g = crmGuests.find(x => String(x.id) === String(id));
-            if (!g) return;
-            document.getElementById('crmEditId').value = g.id;
-            document.getElementById('crmName').value = g.name || '';
-            document.getElementById('crmPhone').value = g.phone || '';
-            document.getElementById('crmOccasion').value = g.occasion || 'casual';
-            document.getElementById('crmDate').value = g.date || '';
-            document.getElementById('crmLastVisit').value = g.lastVisit || '';
-            document.getElementById('crmNote').value = g.note || '';
-
-            if (!crmFormVisible) crmToggleForm();
-            const wrap = document.getElementById('crmAddFormWrap');
-            if (wrap) wrap.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function crmDeleteGuest(id) {
-            if (!confirm('Are you sure you want to delete this guest?')) return;
-            crmGuests = crmGuests.filter(g => String(g.id) !== String(id));
-            crmSave();
-            crmRender();
-            if (typeof showToast === 'function') showToast('🗑️ Guest removed');
         }
 
         function crmSetTab(tab) {
@@ -5929,10 +5960,10 @@ ${receiptHtml}
         }
 
         function crmCardHTML(g) {
-            const isRecurring = ['birthday', 'anniversary', 'engagement'].includes(g.occasion);
+            const isRecurring = ['birthday', 'anniversary', 'engagement', 'date_night'].includes(g.occasion);
             const days = (isRecurring && g.date) ? crmDaysUntilNext(g.date) : null;
             const cardClass = days === 0 ? 'crm-guest-card today-occ' : (days !== null && days <= 7 ? 'crm-guest-card upcoming-soon' : 'crm-guest-card');
-            
+
             let dateDisp = '';
             if (g.date) {
                 try {
@@ -5960,27 +5991,22 @@ ${receiptHtml}
                 <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
                     <div>
                         <div class="crm-guest-name">
-                            ${g.name} 
-                            ${crmOccasionBadge(g.occasion)} 
+                            <span>${g.name}</span>
+                            ${crmVisitBadge(g.visits)}
+                            ${crmOccasionBadge(g.occasion)}
                             ${days !== null ? crmDaysBadge(days) : ''}
                         </div>
-                        <div class="crm-guest-meta" style="margin-top:0.4rem;">
+                        <div class="crm-guest-meta" style="margin-top:0.5rem;">
                             <span><i class="fas fa-phone" style="font-size:0.75rem; color:var(--primary);"></i> ${g.phone}</span>
                             ${dateDisp ? `<span><i class="fas fa-calendar-alt" style="font-size:0.75rem; color:#ffb400;"></i> Event: ${dateDisp}</span>` : ''}
                             <span><i class="fas fa-history" style="font-size:0.75rem; color:var(--text-dim);"></i> Last visit: ${lastVisitDisp}</span>
-                            ${g.note ? `<span><i class="fas fa-comment-alt" style="font-size:0.75rem; color:var(--text-dim);"></i> ${g.note}</span>` : ''}
+                            ${g.note ? `<span><i class="fas fa-comment-dots" style="font-size:0.75rem; color:var(--text-dim);"></i> ${g.note}</span>` : ''}
                         </div>
                     </div>
                 </div>
                 <div class="crm-actions">
                     <button class="crm-action-btn wp" onclick="crmWpMessage('${g.id}')">
-                        <i class="fab fa-whatsapp"></i> WhatsApp Message
-                    </button>
-                    <button class="crm-action-btn" onclick="crmEditGuest('${g.id}')">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button class="crm-action-btn del" onclick="crmDeleteGuest('${g.id}')">
-                        <i class="fas fa-trash"></i> Delete
+                        <i class="fab fa-whatsapp"></i> WhatsApp Reconnect Message
                     </button>
                 </div>
             </div>`;
@@ -5990,12 +6016,16 @@ ${receiptHtml}
             const container = document.getElementById('crmGuestList');
             if (!container) return;
 
+            crmUpdateStats();
+
             const search = (document.getElementById('crmSearch')?.value || '').toLowerCase().trim();
 
             let filtered = crmGuests.filter(g => {
                 let matchTab = true;
-                if (crmCurrentTab === 'other') {
-                    matchTab = !['birthday', 'anniversary', 'casual'].includes(g.occasion);
+                if (crmCurrentTab === 'repeat') {
+                    matchTab = (g.visits || 1) > 1;
+                } else if (crmCurrentTab === 'other') {
+                    matchTab = !['birthday', 'anniversary', 'casual', 'date_night'].includes(g.occasion);
                 } else if (crmCurrentTab !== 'all') {
                     matchTab = g.occasion === crmCurrentTab;
                 }
@@ -6009,16 +6039,16 @@ ${receiptHtml}
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div class="crm-empty">
-                        <i class="fas fa-address-book" style="font-size:2.5rem; margin-bottom:0.75rem; display:block; opacity:0.3; color:var(--primary);"></i>
-                        <p style="font-size:0.95rem; font-weight:600; color:#fff;">No guests recorded yet</p>
-                        <p style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">Add your guest details above to track occasions, birthdays, and automate WhatsApp reconnects!</p>
+                        <i class="fas fa-users-slash" style="font-size:2.5rem; margin-bottom:0.75rem; display:block; opacity:0.3; color:var(--primary);"></i>
+                        <p style="font-size:0.95rem; font-weight:600; color:#fff;">No guests matching this filter</p>
+                        <p style="font-size:0.8rem; color:var(--text-dim); margin-top:4px;">As soon as customers make reservations, they will automatically appear here!</p>
                     </div>`;
                 return;
             }
 
-            const isRecurring = occ => ['birthday', 'anniversary', 'engagement'].includes(occ);
+            const isRecurring = occ => ['birthday', 'anniversary', 'engagement', 'date_night'].includes(occ);
 
-            // Separate occasion guests vs casual / regular visitors
+            // Separate occasion guests vs casual / regulars
             const occasionGuests = filtered.filter(g => isRecurring(g.occasion) && g.date);
             const casualGuests = filtered.filter(g => !(isRecurring(g.occasion) && g.date));
 
@@ -6059,7 +6089,7 @@ ${receiptHtml}
                     html += `
                         <div class="crm-section-label" style="margin-top:2rem;">
                             <i class="fas fa-coffee" style="color:#64dc64;"></i> 
-                            Casual / Regular Visitors (${casualGuests.length}) — Reconnect Follow-up
+                            Casual / Regular Visitors (${casualGuests.length}) — Reconnect Target List
                         </div>
                         <div class="crm-guest-list">
                             ${casualGuests.map(g => crmCardHTML(g)).join('')}
